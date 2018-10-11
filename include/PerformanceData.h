@@ -33,7 +33,7 @@ public:
      * Prepare a set recon protocol include CPIsync, InteractiveCPIsync, and IBLTsync
      * @param base_set_proto one of teh tree protocol
      */
-    void prepareSetComm(StringReconProtocol string_recon_proto, GenSync::SyncProtocol base_set_proto, string Alice_txt = "", string Bob_txt="");
+    void prepareSetComm(StringReconProtocol string_recon_proto, GenSync::SyncProtocol base_set_proto, string Alice_txt="", string Bob_txt="");
 
     /**
      * Generate a report for Time and Comm cost
@@ -68,7 +68,6 @@ private:
     //GenPlot
     map<string,vector<vector<long>>> data3D; // map<label,content(X,Y,Z)>
     map<string,vector<vector<long>>> data2D; // map<label,content(X,Y)>
-    string fileName;
 
 
     /**
