@@ -201,16 +201,16 @@ void GenSync::delElemGroup(list<DataObject *> newDatumList) {
     // There are only 2 types, numbes of strings (check fact) handle both
     Logger::gLog(Logger::METHOD, "Entering GenSync::delElem");
 
-    vector<string> delList;
-    for (auto item : newDatumList) {
-        delList.push_back(item->to_string());
+    vector<ZZ> delList;
+    for (auto it : newDatumList) {
+        delList.push_back(it->to_ZZ());
     }
     sort(delList.begin(), delList.end());
 
-
+    list<DataObject *> lst;
     for (auto item : myData) {
-        if (binary_search(delList.begin(), delList.end(), item->to_string())) {
-
+        if (binary_search(delList.begin(), delList.end(), item->to_ZZ())) {
+            lst.push_back(item);
             for (auto itAgt = mySyncVec.begin(); itAgt != mySyncVec.end(); ++itAgt) {
                 if (!(*itAgt)->delElem(item)) {
                     Logger::error_and_quit("Could not del item . check if item is first inserted.");
@@ -218,11 +218,15 @@ void GenSync::delElemGroup(list<DataObject *> newDatumList) {
             }
         }
     }
-    for (auto item = myData.begin(); item != myData.end();++item) {
-        if (binary_search(delList.begin(), delList.end(), (*item)->to_string())) {
-            myData.erase(item);
-        }
+
+    for (auto it = lst.begin(); it != lst.end(); ++it) {
+        myData.remove(*it);
     }
+//    for (auto item = myData.begin(); item != myData.end(); ++item) {
+//        if (binary_search(lst.begin(), lst.end(), *item)) {
+//            myData.erase(item);
+//        }
+//    }
 
 //    for (auto item = myData.begin(); item != myData.end();++item) {
 //        if (binary_search(delList.begin(), delList.end(), (*item)->to_string())) {

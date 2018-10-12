@@ -12,11 +12,11 @@ void KshingleSyncPerf::testklgperf() {
     PerformanceData test;
 
     // Test Pts per graph
-    int tesPts = 2;
+    int tesPts = 20;
     // Confidence interval
-    int confidence = 3;
+    int confidence = 10;
 
-    auto strSizeRange = make_pair(50, 100);
+    auto strSizeRange = make_pair(500, 1000);
     int strSizeinterval = floor((strSizeRange.second - strSizeRange.first) / tesPts);
 
     // Increment string size
@@ -26,7 +26,7 @@ void KshingleSyncPerf::testklgperf() {
         int shingleLen = ceil(log2(strSize));
 
         auto editDistRange = make_pair(1, floor(strSize / shingleLen));
-        int editDistinterval = floor((strSizeRange.second - strSizeRange.first) / tesPts);
+        int editDistinterval = floor((editDistRange.second - editDistRange.first) / tesPts);
         for (int editDist = editDistRange.first; editDist <= editDistRange.second; editDist += editDistinterval) {
 
 
@@ -44,6 +44,7 @@ void KshingleSyncPerf::testklgperf() {
                     exit(-1);
                 }
             }
+
             pthread_exit(NULL);
         }
     }
