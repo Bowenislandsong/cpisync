@@ -24,7 +24,7 @@ using namespace NTL;
 
 typedef unsigned int idx_t;
 
-static const double MAX_TIME = 300; // secs
+static const double MAX_TIME = 100; // secs
 static const size_t MAX_VM_SIZE = 1e10; //bytes
 
 class K_Shingle {

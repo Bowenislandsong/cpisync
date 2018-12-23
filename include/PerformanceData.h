@@ -31,6 +31,7 @@ public:
         UNDEFINED,
         BEGIN,
         KshinglingSync = BEGIN,
+        SetsOfContent,
         END
     };
 
@@ -44,18 +45,8 @@ public:
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 
 private:
-//    vector<ZZ> Alice_shingleSet;// final form will all be in ZZ for each shingle
-//    vector<ZZ> Bob_shingleSet;// final form will all be in ZZ for each shingle
-//    // assume configurations are the same, else put them in the set
 
-    //set protocols
-    GenSync::SyncProtocol baseSetProto;
-    StringReconProtocol stringReconProto;
-
-    string stringReconProtoName;
-    string setReconProtoName;
-    // parameters
-    int stringSize, shingleLen, mbar, editDist, numParts, tesPts;
+    int  mbar, tesPts;
     size_t bits;
 
     string AliceTxt, BobTxt;

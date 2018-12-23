@@ -18,20 +18,11 @@ const int shingleLen = 4;
 const int editDist = 20;
 const int strSize = 5;
 
-//const pair<int,int> strSizeRange = make_pair(500, 50000);
-//const pair<int,int> shingleLenRange = make_pair(2,ceil(log2(strSizeRange.second)));
-
 const int tesPts = 6;// Test Pts per graph
-const int target_confidence = 20;// Confidence interval
+const int target_confidence = 100;// Confidence interval
 const int confidenceCap = 40; // after edit distance exceed confidenceCap, confidence go to 1.
 
-//const pair<int,int> editDistRange = make_pair(1, 1000); // range of edit distance
-// Declear what set reconciliation we are testing
-//auto setReconProto = {GenSync::SyncProtocol::CPISync,GenSync::SyncProtocol::InteractiveCPISync
-//                      ,GenSync::SyncProtocol::IBLTSyncSetDiff};
-auto setReconProto = {GenSync::SyncProtocol::IBLTSyncSetDiff};
-// Declear what string reconciliation we are testing
-auto strRecon = PerformanceData::StringReconProtocol::KshinglingSync;
+
 
 
 
@@ -82,9 +73,9 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.kshingle3D(GenSync::SyncProtocol::IBLTSyncSetDiff,editDistRange,strSizeRange,target_confidence, randSampleTxt);
 
 
-    vector<int> strSizeRange = {100000, 400000, 800000, 1000000, 1400000, 1800000};
-    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, target_confidence, randSampleTxt, 8002);
-    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, target_confidence, randAsciiStr, 8003);
+    vector<int> strSizeRange = {100000, 400000, 800000, 1200000, 1600000, 2000000};
+    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, target_confidence, randSampleTxt, 8001);
+//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, target_confidence, randSampleTxt, 8001);
 }
 
 void KshingleSyncPerf::testStrataEst3D() {

@@ -26,7 +26,7 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
     for (int str_size : str_sizeRange) {
         cout << to_string(str_size) << endl;
         edit_distRange.clear();
-        for (int i = 1; i <= tesPts; ++i) edit_distRange.push_back((int) ((str_size * i) / 400));
+        for (int i = 1; i <= tesPts; ++i) edit_distRange.push_back((int) ((str_size * i) / 4000));
         for (int edit_dist : edit_distRange) {
 
 //            int shingle_len = ceil(log2(str_size));
@@ -113,27 +113,26 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
     PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type,
                                      {"Str Size", "Edit Diff", "Comm (bits)", "Time Set(s)", "Time Str(s)",
-                                      "Space (bits)", "Set Recon True", "Str Recon True"});
+                                      "Str Recon True"});
     //TODO: Separate Comm, and Time, Separate Faile rate.
 
     for (int str_size : str_sizeRange) {
         cout << to_string(str_size) << endl;
         edit_distRange.clear();
-        for (int i = 1; i <= tesPts; ++i) edit_distRange.push_back((int) ((str_size * i) / 400));
+        for (int i = 1; i <= tesPts; ++i) edit_distRange.push_back((int) ((str_size * i) / 4000));
         for (int edit_dist : edit_distRange) {
 
 //            int shingle_len = ceil(log2(str_size));
 
             for (int con = 0; con < confidence; ++con) {
                 try {
-                    size_t terminalStrSize = (log10(str_size))*50;
                     GenSync Alice = GenSync::Builder().
                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                             setProtocol(setReconProto).
                             setComm(GenSync::SyncComm::socket).
-                            setTerminalStrSize(200).
+                            setTerminalStrSize(100).
                             setNumPartitions(10).
-                            setlvl(1).
+                            setlvl(2).
                             setPort(portnum).
                             build();
 
@@ -146,9 +145,9 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                             setProtocol(setReconProto).
                             setComm(GenSync::SyncComm::socket).
-                            setTerminalStrSize(200).
+                            setTerminalStrSize(100).
                             setNumPartitions(10).
-                            setlvl(1).
+                            setlvl(2).
                             setPort(portnum).
                             build();
 
@@ -165,7 +164,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
 
                     plot.add({to_string(str_size), to_string(edit_dist), to_string(report.bytesTot+report.bytesRTot),
-                              to_string(report.CPUtime), to_string(success_StrRecon)});
+                              to_string(report.CPUtime), to_string(report.totalTime), to_string(success_StrRecon)});
 
                     delete Alicetxt;
                     delete Bobtxt;

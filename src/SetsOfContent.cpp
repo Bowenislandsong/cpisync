@@ -628,7 +628,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
 
     for (auto groupcyc : my_group_of_concern_tosend){
         commSync->commSend(groupcyc.second);
-        cout<<groupcyc.first<<":"<<groupcyc.second<<endl;
+//        cout<<groupcyc.first<<":"<<groupcyc.second<<endl;
     }
     int dic_size = my_dic_of_concern.size();
     commSync->commSend(dic_size);
@@ -736,7 +736,7 @@ void SetsOfContent::configure(shared_ptr<SyncMethod>& setHost, long mbar) {
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol)
         setHost = make_shared<IBLTSync_SetDiff>(mbar, sizeof(shingle_hash), true);
     else if (GenSync::SyncProtocol::InteractiveCPISync == baseSyncProtocol)
-        setHost = make_shared<InterCPISync>(5, sizeof(shingle_hash) * 8, 8, 7, true);
+        setHost = make_shared<InterCPISync>(5, sizeof(shingle_hash) * 8, 64, 7, true);
 }
 
 bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *> &theirsMinusMine,
