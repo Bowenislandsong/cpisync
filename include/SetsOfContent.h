@@ -35,7 +35,7 @@ using namespace NTL;
  * occurrence, how manny time this occrred
  * origin is the last origining substring
  */
-struct shingle_hash{ // TODO: change all size_t to unsigned int to cut doen element size by half. see if it limites the hashes
+struct shingle_hash{ // TODO: change all size_t to unsigned int to cut down element size by half. see if it limites the hashes
     size_t first, second, groupID;
     int occurr, cycleVal, lvl;
 };
@@ -77,7 +77,10 @@ static vector<ZZ> ShingleHashtoZZ_vec(vector<shingle_hash> shingle_vec) {
     return SHINGLE_VEC;
 }
 
-
+static string print_hashed_shingle(const shingle_hash shingle){
+    return "fst: "+ to_string(shingle.first)+", sec: " + to_string(shingle.second) + ", lvl: "+ to_string(shingle.lvl)+", id: " + to_string(shingle.groupID)
+    + ", occ: " + to_string(shingle.occurr) + ", cyc: "+ to_string(shingle.cycleVal);
+}
 
 class SetsOfContent : public SyncMethod {
 public:
@@ -105,8 +108,17 @@ public:
     //getShinglesAt
     vector<ZZ> getShingles_ZZ() {
         vector<ZZ> res;
+        std::map<ZZ,vector<shingle_hash>> check_dup; // Check Duplication TODO: Delete this
         for(auto treelvl : myTree) {
             for (auto item:treelvl) {
+                if (check_dup[ShingleHashtoZZ(item)].empty())
+                    check_dup[ShingleHashtoZZ(item)].push_back(item);
+                else {
+                    cout << ShingleHashtoZZ(item) << endl; // Check Duplication TODO: Delete this
+                    check_dup[ShingleHashtoZZ(item)].push_back(item);
+                    auto it  = check_dup.find(ShingleHashtoZZ(item));
+                    cout<<it->first<<endl;
+                }
                 res.push_back(ShingleHashtoZZ(item));
             }
         }
