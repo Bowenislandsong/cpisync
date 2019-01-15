@@ -468,7 +468,7 @@ shingle_hash SetsOfContent::get_nxt_edge(size_t& current_edge, shingle_hash _shi
 string SetsOfContent::retriveString() {
     // retrace cycles bottom-up and delete from query after tracing
     string substring;
-    for (auto lvl : theirTree) for (auto item:lvl) cout << item << endl; // TODO: detele this print tree function
+//    for (auto lvl : theirTree) for (auto item:lvl) cout << item << endl; // TODO: detele this print tree function
     for (int i = theirTree.size() - 1; i >= 0; --i) {
         for (shingle_hash shingle : theirTree[i]) {
             auto it = cyc_query.find(shingle.second);
@@ -482,6 +482,7 @@ string SetsOfContent::retriveString() {
                         cout << "Recover may have failed - Dictionary lookup failed" << endl;
                     substring += Dictionary[hash];
                 }
+                add_to_dictionary(substring);
             }
         }
     }
@@ -591,17 +592,13 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
     }
     list<DataObject *> mine, others;
     vector<shingle_hash> theirs_hash, mine_hash;
-    cout<< "im ready to sync - Server"<<endl;
+
     setHost->SyncServer(commSync, mine, others);
     for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
-    cout<<"Server has: "<<mine.size()<<" other: "<<others.size()<<endl;
-
     prepare_concerns(theirs_hash,mine_hash);
 
-    for(auto shingle : cyc_concern) cout<<"concern Cyc: "<<shingle.first<<endl;
-    for(auto shingle : term_concern) cout<<"concern term: "<<shingle.first<<endl;
     cout<< "Server - cyc concern size : "<< cyc_concern.size()<<endl;
     cout<< "Server - Term concern size : "<< term_concern.size()<<endl;
 
@@ -617,22 +614,6 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         else
             commSync->commSend("$");
     }
-//
-//    commSync->commSend((size_t) Dif_Group.size());
-//    commSync->commSend((size_t) Dif_Dict.size());
-//
-//    for (long cyc : Dif_Group) {
-//        commSync->commSend(cyc);
-//    }
-//    for (auto dic : Dif_Dict) {
-//        string tmp = dictionary[dic];
-//        if (!tmp.empty())commSync->commSend(tmp);
-//        else commSync->commSend("$");
-//
-//    }
-
-
-//
 
 //    commSync->commSend(SYNC_SUCCESS);
     cout<<"Server Close"<<endl;
@@ -674,21 +655,15 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     list<DataObject *> mine, others;
     vector<shingle_hash> theirs_hash, mine_hash;
 
-    cout<< "I'm ready to sync"<<endl;
-
     setHost->SyncClient(commSync, mine, others);
     for (auto shingle : others)
         theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
-    cout<<"Client has: "<<mine.size()<<" other: "<<others.size()<<endl;
 
-    for(auto shingle : mine_hash) cout<<"mine: "<<shingle<<endl;
-    for(auto shingle : theirs_hash) cout<<"their: "<<shingle<<endl;
+
     prepare_querys(theirs_hash,mine_hash);
 
-    for(auto shingle : cyc_query) cout<<"query Cyc: "<<shingle.first<<endl;
-    for(auto shingle : term_query) cout<<"query term: "<<shingle.first<<endl;
     cout<< "cyc query size : "<< cyc_query.size()<<endl;
     cout<< "Term query size : "<< term_query.size()<<endl;
 
@@ -720,8 +695,6 @@ void SetsOfContent::configure(shared_ptr<SyncMethod>& setHost, long mbar) {
 
 bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *> &theirsMinusMine,
                                       const list<DataObject *> &mineMinusTheirs) {
-
-
     myString = retriveString();
     recovered_string = new DataObject(myString);
     return true;

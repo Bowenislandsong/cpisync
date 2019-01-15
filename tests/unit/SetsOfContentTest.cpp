@@ -35,7 +35,7 @@ void SetsOfContentTest::SelfUnitTest() {
 
 
 void SetsOfContentTest::testAll() {
-    string alicetxt = randSampleTxt(10000); // 20MB is top on MAC
+    string alicetxt = randSampleTxt(2000000); // 20MB is top on MAC
 
     DataObject *atxt = new DataObject(alicetxt);
 //    auto Alice = SetsOfContent(100);
