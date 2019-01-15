@@ -13,8 +13,8 @@
 class SetsOfContentTest : public CPPUNIT_NS::TestFixture{
 
 CPPUNIT_TEST_SUITE(SetsOfContentTest);
-        CPPUNIT_TEST(setDiff);
-        CPPUNIT_TEST(testAll);
+        CPPUNIT_TEST(SelfUnitTest);
+//        CPPUNIT_TEST(testAll);
     CPPUNIT_TEST_SUITE_END();
 public:
 
@@ -26,7 +26,7 @@ public:
     };
 
     void testAll();
-    void setDiff();
+    void SelfUnitTest();
 };
 
 
