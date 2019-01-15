@@ -6,7 +6,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 
 void SetsOfContentTest::SelfUnitTest() {
 //
-    shingle_hash Shingle_A{.first = {298273671273648,1231313213}, .second = 198273671273645, .occurr = 1990, .lvl = 3,
+    shingle_hash Shingle_A{.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3,
             .compose = cycle{.cyc = 1, .head = 123, .tail = 333}};
 //    shingle_hash Shingle_B{.first = {298273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
 //
@@ -18,13 +18,11 @@ void SetsOfContentTest::SelfUnitTest() {
 
 //    vector<size_t> tmp{298273671273648};
 //    auto t = recursion(tmp);
-auto what= ZZtoShingleHash(ShingleHashtoZZ(Shingle_A));
-cout<<"what"<<endl;
+    CPPUNIT_ASSERT(Shingle_A == ZZtoShingleHash(ShingleHashtoZZ(Shingle_A)));
 
 //    CPPUNIT_ASSERT(Shingle_A != Shingle_B);
 //    CPPUNIT_ASSERT(Shingle_C < Shingle_A);
-//    CPPUNIT_ASSERT(isFollowed(Shingle_A, Shingle_B));
-//    CPPUNIT_ASSERT(not isFollowed(Shingle_C, Shingle_B));
+
 //
 ////    cout << Shingle_A << endl;
 //    cycle cyc_A{.head = 298273671273645, .tail = 1231239, .cyc = 9128};

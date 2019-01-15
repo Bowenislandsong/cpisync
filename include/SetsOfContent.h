@@ -50,52 +50,6 @@ static ostream& operator<<(ostream &os, const cycle cyc) {
 };
 
 
-static vector<size_t> recursion(vector<size_t> it){
-    std::vector<unsigned char> udata;
-    for (int i = 0; i < it.size(); ++i) {
-        std::vector<unsigned char> foo(sizeof(size_t));
-//        ::memcpy(foo.data(), &it[i], sizeof(size_t));
-        udata.insert(udata.end(),foo.begin(),foo.end());
-    }
-
-    ZZ tmp = ZZFromBytes((const unsigned char *) &udata[0], udata.size());
-
-
-    vector<unsigned char> tmp_vec;
-    tmp_vec.resize(NumBytes(tmp)+1,0);
-    BytesFromZZ((unsigned char *) &tmp_vec[0],tmp,tmp_vec.size());
-    vector<size_t> res;
-    for (size_t j = 0; j<tmp_vec.size(); j+=sizeof(size_t)) {
-        res.push_back(*reinterpret_cast<size_t*>(&vector<unsigned char>{tmp_vec.begin()+j,tmp_vec.begin()+j+sizeof(size_t)}[0]));
-    }
-
-    return res;
-}
-
-static ZZ size_t_vecToZZ(vector<size_t> s_vec){
-    std::vector<unsigned char> udata;
-    for (int i = 0; i < s_vec.size(); ++i) {
-        size_t a = s_vec[i];
-//        std::vector<unsigned char> foo(sizeof(size_t));
-        auto foo=reinterpret_cast<unsigned char*>(&a);
-        vector<uint8_t> tmp{foo, foo + sizeof(size_t)};
-        udata.insert(udata.end(),tmp.begin(),tmp.end());
-    }
-    return ZZFromBytes((const unsigned char *) &udata[0], udata.size());
-}
-
-static vector<size_t> ZZTosize_t_vec(ZZ zz) {
-    vector<unsigned char> tmp_vec;
-    tmp_vec.resize(16,0);
-    BytesFromZZ((unsigned char *) &tmp_vec[0],zz,tmp_vec.size());
-    vector<size_t> res;
-    for (size_t j = 0; j<tmp_vec.size(); j+=sizeof(size_t)) {
-        res.push_back(*reinterpret_cast<size_t*>(&vector<unsigned char>{tmp_vec.begin()+j,tmp_vec.begin()+j+sizeof(size_t)}[0]));
-    }
-    return res;
-}
-
-
 /**
  * first is the first part of a shingle
  * second is the second part of the shingle
@@ -103,22 +57,9 @@ static vector<size_t> ZZTosize_t_vec(ZZ zz) {
  * compose states the composite of second
  */
 struct shingle_hash{
-    vector<size_t> first;
-    size_t second, occurr;
+    size_t first, second, occurr;
     cycle compose;
     sm_i lvl;
-};
-
-// see if a is followed by b. used in kshingling
-static bool isFollowed(const shingle_hash& a, const shingle_hash& b) {
-    if (a.first.size() != b.first.size())throw invalid_argument("Comparing different shingles in isFollowed fxn");
-
-    if (b.first.size() == 1)
-        return (a.second == b.first.back());
-    else if (b.first.size() > 1)
-        return (a.second == b.first.back() and std::equal(b.first.begin(), b.first.end() - 1, a.first.begin() + 1));
-
-    else throw invalid_argument("Comparing empty shingles in isFollowed fxn");
 };
 
 
@@ -140,34 +81,16 @@ static bool operator!=(const shingle_hash& a, const shingle_hash& b) {
     return !(a == b);
 };
 
-struct packet{
-    ZZ first;
-    size_t second, occurr;
-    cycle compose;
-    sm_i lvl;
-};
-
 static shingle_hash ZZtoShingleHash(const ZZ& zz){
-    packet p;
-    BytesFromZZ((uint8_t *) &p, zz, sizeof(packet));
-    return shingle_hash{.first = ZZTosize_t_vec(p.first), .second = p.second,.lvl = p.lvl, .occurr = p.occurr,
-            .compose = cycle{.cyc= p.compose.cyc, .head = p.compose.head, .tail = p.compose.tail}};
-
-
-//    shingle_hash shingle;
-//    BytesFromZZ((uint8_t *) &shingle, zz, sizeof(shingle_hash));
-//    return shingle;
+    shingle_hash shingle;
+    BytesFromZZ((uint8_t *) &shingle, zz, sizeof(shingle_hash));
+    return shingle;
 }
 
 
 static ZZ ShingleHashtoZZ(shingle_hash shingle) {
-    packet p = packet{.first = size_t_vecToZZ(shingle.first), .second = shingle.second, .lvl = shingle.lvl, .occurr = shingle.occurr,
-                      .compose = cycle{.cyc= shingle.compose.cyc, .head = shingle.compose.head, .tail = shingle.compose.tail}};
-    char *my_s_bytes = reinterpret_cast<char *>(&p);
-    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(packet));
-
-//    char *my_s_bytes = reinterpret_cast<char *>(&shingle);
-//    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(shingle_hash));
+    char *my_s_bytes = reinterpret_cast<char *>(&shingle);
+    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(shingle_hash));
 }
 
 
@@ -181,20 +104,21 @@ static ostream& operator<<(ostream &os, const shingle_hash shingle) {
 
 class SetsOfContent : public SyncMethod {
 public:
-    SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto, size_t shingle_size = 2);
+    SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto,
+                  size_t shingle_size = 2);
 
     ~SetsOfContent();
 
     string retriveString();
 
 // functions for SyncMethods
-    bool addStr(DataObject* str, vector<DataObject*> &datum,  bool sync) override;
+    bool addStr(DataObject *str, vector<DataObject *> &datum, bool sync) override;
 
     bool SyncClient(const shared_ptr<Communicant> &commSync, shared_ptr<SyncMethod> &setHost) override;
 
     bool SyncServer(const shared_ptr<Communicant> &commSync, shared_ptr<SyncMethod> &setHost) override;
 
-    string getName() override {return "Sets of Content";}
+    string getName() override { return "Sets of Content"; }
 
     /**
      * Get the terminal strings to reconcile with another set
@@ -234,7 +158,7 @@ private:
 
     GenSync::SyncProtocol baseSyncProtocol;
 
-    vector<DataObject*> setPointers; // garbage collector
+    vector<DataObject *> setPointers; // garbage collector
 
     vector<std::set<shingle_hash>> myTree, theirTree; // the hash shingle tree   // RECONCILLING TARGET
 
@@ -244,8 +168,8 @@ private:
     map<size_t, vector<size_t>> Cyc_dict; // has to be unique
 
     //requests
-    map<size_t,string> term_concern, term_query;
-    map<size_t,size_t> cyc_concern, cyc_query;
+    map<size_t, string> term_concern, term_query;
+    map<size_t, size_t> cyc_concern, cyc_query;
 
     size_t str_to_hash(string str) {
         return std::hash<std::string>{}(str);
@@ -260,7 +184,7 @@ private:
      * @param shingle_size inter-relation of the string
      * @return vector of substring hashes in origin string order
      */
-    vector<size_t> create_HashSet(string str,size_t win_size, size_t space=NOT_SET, size_t shingle_size=NOT_SET);
+    vector<size_t> create_HashSet(string str, size_t win_size, size_t space = NOT_SET, size_t shingle_size = NOT_SET);
 
     vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size);
 
@@ -272,11 +196,11 @@ private:
      */
     size_t add_to_dictionary(string str);
 
-    inline size_t min_between(const vector<size_t> &nums,size_t from, size_t to){
+    inline size_t min_between(const vector<size_t> &nums, size_t from, size_t to) {
         if (nums.empty()) throw invalid_argument("min function does not take empty vector");
         size_t min = nums[0];
         for (size_t i = from; i <= to; ++i) {
-            if (nums[i]<min) min = nums[i];
+            if (nums[i] < min) min = nums[i];
         }
         return min;
     }
@@ -285,7 +209,7 @@ private:
     vector<size_t> unique_substr_hash(std::set<shingle_hash> hash_set) {
         set < size_t > tmp;
         for (shingle_hash item : hash_set) {
-            for (auto sub_item: item.first)tmp.insert(sub_item);
+            tmp.insert(item.first);
             tmp.insert(item.second);
         }
         return vector<size_t>(tmp.begin(), tmp.end());
@@ -301,13 +225,11 @@ private:
      * @param str_order
      * @param final_str a hash train in string order
      */
-    bool shingle2hash_train(cycle& cyc_info, set<shingle_hash> shingle_set, vector<size_t>& final_str);
+    bool shingle2hash_train(cycle &cyc_info, set <shingle_hash> shingle_set, vector<size_t> &final_str);
 
-    std::map<vector<size_t>, vector<shingle_hash>> tree2shingle_dict(std::set<shingle_hash> tree_lvl);
+    std::map<size_t, vector<shingle_hash>> tree2shingle_dict(std::set<shingle_hash> tree_lvl);
 
-    shingle_hash get_nxt_edge(vector<size_t>& current_edge, shingle_hash _shingle);
-
-    bool empty_state(vector<shingle_hash> state);
+    shingle_hash get_nxt_edge(size_t &current_edge, shingle_hash _shingle);
 
     /**
      * sub fucntion for "get_all_strs_from" extracting string from a group of shigle_hashes
@@ -331,24 +253,20 @@ private:
      * @return hashes of unknown
      */
     void prepare_querys(vector<shingle_hash> shingle_hash_theirs, vector<shingle_hash> shingle_hash_mine);
-    void prepare_concerns(vector<shingle_hash> shingle_hash_theirs, vector<shingle_hash> shingle_hash_mine);
 
-    // helper function , extract all in a shingle into a map of bool
-    void extract2map(shingle_hash shingle, map<size_t,bool> & hash_map){
-        hash_map[shingle.second] = true;
-        for(size_t hash : shingle.first) hash_map[hash] = true;
-    }
+    void prepare_concerns(vector<shingle_hash> shingle_hash_theirs, vector<shingle_hash> shingle_hash_mine);
 
     void go_through_tree();
 
-        // functions for Sync Methods
+    // functions for Sync Methods
 
-    void SendSyncParam(const shared_ptr<Communicant>& commSync, bool oneWay = false) override;
+    void SendSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false) override;
 
-    void RecvSyncParam(const shared_ptr<Communicant>& commSync, bool oneWay = false) override;
+    void RecvSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false) override;
 
-    void configure(shared_ptr<SyncMethod>& setHost, long mbar);
+    void configure(shared_ptr<SyncMethod> &setHost, long mbar);
 
-    bool reconstructString(DataObject* & recovered_string, const list<DataObject *> & theirsMinusMine, const list<DataObject *> & mineMinusTheirs)override;
+    bool reconstructString(DataObject *&recovered_string, const list<DataObject *> &theirsMinusMine,
+                           const list<DataObject *> &mineMinusTheirs) override;
 };
 #endif //CPISYNCLIB_SETSOFCONTENT_H

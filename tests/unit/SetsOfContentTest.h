@@ -14,7 +14,7 @@ class SetsOfContentTest : public CPPUNIT_NS::TestFixture{
 
 CPPUNIT_TEST_SUITE(SetsOfContentTest);
         CPPUNIT_TEST(SelfUnitTest);
-//        CPPUNIT_TEST(testAll);
+        CPPUNIT_TEST(testAll);
     CPPUNIT_TEST_SUITE_END();
 public:
 
