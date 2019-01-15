@@ -305,11 +305,9 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash> shingl
 
     for (auto head_shingles : changed_shingle_set[(size_t)0]) {
         if (cyc_info.head == head_shingles.second) {
-            if (curEdge!=0)
-                throw invalid_argument(
-                        "multiple heads? look into it"); // TODO: delete and add break if never triggered.
             str.push_back(head_shingles.second);
             curEdge = head_shingles.second;
+            break;
         }
     }
 
@@ -514,14 +512,19 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 
     go_through_tree();
 
+    //show the info of the tree
+    for(auto lvl:myTree) {
+        vector<size_t> lvl_vec;
+        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) :lvl_vec.push_back(Dictionary[item.second].size());
+        sort(lvl_vec.begin(),lvl_vec.end());
+        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<endl;
+    }//TODO: delete this
 
     for (DataObject *dop : setPointers) delete dop;
     for (ZZ item : getShingles_ZZ()) {
         setPointers.push_back(new DataObject(item));
     }
     datum = setPointers;
-
-
     return true;
 }
 void SetsOfContent::SendSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay) {
@@ -656,8 +659,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     vector<shingle_hash> theirs_hash, mine_hash;
 
     setHost->SyncClient(commSync, mine, others);
-    for (auto shingle : others)
-        theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
+    for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
 

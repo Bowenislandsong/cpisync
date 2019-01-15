@@ -38,8 +38,6 @@ void SetsOfContentTest::testAll() {
     string alicetxt = randSampleTxt(2000000); // 20MB is top on MAC
 
     DataObject *atxt = new DataObject(alicetxt);
-//    auto Alice = SetsOfContent(100);
-//    Alice.injectString(alicetxt);
 
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -57,8 +55,7 @@ void SetsOfContentTest::testAll() {
     string bobtxt = randStringEditBurst(alicetxt, 25);
 
     DataObject *btxt = new DataObject(bobtxt);
-//    auto Bob = SetsOfContent(100);
-//    Bob.injectString(bobtxt);
+
     GenSync Bob = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
             setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).

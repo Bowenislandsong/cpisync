@@ -129,18 +129,8 @@ public:
     //getShinglesAt
     vector<ZZ> getShingles_ZZ() {
         vector<ZZ> res;
-//        std::map<ZZ,vector<shingle_hash>> check_dup; // Check Duplication TODO: Delete this
         for (auto treelvl : myTree) {
             for (auto item:treelvl) {
-//                if (check_dup[ShingleHashtoZZ(item)].empty())
-//                    check_dup[ShingleHashtoZZ(item)].push_back(item);
-//                else {
-//                    cout<<"we have duplicates"<<endl;
-//                    cout << ShingleHashtoZZ(item) << endl; // Check Duplication TODO: Delete this
-//                    check_dup[ShingleHashtoZZ(item)].push_back(item);
-//                    auto it  = check_dup.find(ShingleHashtoZZ(item));
-//                    cout<<it->first<<endl;
-//                }
                 res.push_back(ShingleHashtoZZ(item));
             }
         }
