@@ -102,7 +102,7 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 
 
 void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
-                                 vector<int> str_sizeRange, int confidence, string (*stringInput)(int), int portnum) {
+                                 vector<int> str_sizeRange, int lvl, int confidence, string (*stringInput)(int), int portnum) {
     string protoName, str_type;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == setReconProto) protoName = "IBLTSyncSetDiff";
     if (GenSync::SyncProtocol::InteractiveCPISync == setReconProto) protoName = "InteractiveCPISync";
@@ -111,18 +111,16 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (*stringInput == randSampleTxt) str_type = "RandText";
     if (*stringInput == randSampleCode) str_type = "RandCode";
 
-    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type,
+    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "("+to_string(lvl)+" lvl)",
                                      {"Str Size", "Edit Diff", "Comm (bits)", "Time Set(s)", "Time Str(s)",
                                       "Str Recon True"});
     //TODO: Separate Comm, and Time, Separate Faile rate.
 
     for (int str_size : str_sizeRange) {
         cout << to_string(str_size) << endl;
-        edit_distRange.clear();
-        for (int i = 1; i <= tesPts; ++i) edit_distRange.push_back((int) ((str_size * i) / 4000));
+//        edit_distRange.clear();
+//        for (int i = 1; i <= tesPts; ++i) edit_distRange.push_back((int) ((str_size * i) / 4000));
         for (int edit_dist : edit_distRange) {
-
-//            int shingle_len = ceil(log2(str_size));
 
             for (int con = 0; con < confidence; ++con) {
                 try {
@@ -132,14 +130,12 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             setComm(GenSync::SyncComm::socket).
                             setTerminalStrSize(100).
                             setNumPartitions(10).
-                            setlvl(2).
+                            setlvl(lvl).
                             setPort(portnum).
                             build();
 
 
                     DataObject *Alicetxt = new DataObject(stringInput(str_size));
-
-                    Alice.addStr(Alicetxt, false);
 
                     GenSync Bob = GenSync::Builder().
                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -147,29 +143,32 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             setComm(GenSync::SyncComm::socket).
                             setTerminalStrSize(100).
                             setNumPartitions(10).
-                            setlvl(2).
+                            setlvl(lvl).
                             setPort(portnum).
                             build();
 
 
-                    DataObject *Bobtxt = new DataObject(randStringEditBurst((*Alicetxt).to_string(), edit_dist));
+                    DataObject *Bobtxt = new DataObject(randStringEditBurst((*Alicetxt).to_string(), (int)(str_size/edit_dist)));
 
                     Bob.addStr(Bobtxt, false);
 
-
-
+                    clock_t strStart = clock();
+                    Alice.addStr(Alicetxt, false);
                     forkHandleReport report = forkHandle(Alice, Bob, false);
+                    auto str_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
 
                     bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
 
-                    plot.add({to_string(str_size), to_string(edit_dist), to_string(report.bytesTot+report.bytesRTot),
-                              to_string(report.CPUtime), to_string(report.totalTime), to_string(success_StrRecon)});
+                    plot.add({to_string(str_size), to_string((double)1/edit_dist), to_string(report.bytesTot+report.bytesRTot),
+                              to_string(report.CPUtime), to_string(str_time), to_string(success_StrRecon)});
 
                     delete Alicetxt;
                     delete Bobtxt;
                 } catch (std::exception) {
                     cout << "we failed once" << endl;
+                    plot.add({to_string(str_size), to_string((double)1/edit_dist), to_string(0),
+                              to_string(0), to_string(0), to_string(0)});
                 }
             }
         }

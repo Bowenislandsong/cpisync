@@ -7,7 +7,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 void SetsOfContentTest::SelfUnitTest() {
 //
     shingle_hash Shingle_A{.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3,
-            .compose = cycle{.cyc = 1, .head = 123, .tail = 333}};
+            .compose = cycle{.cyc = 1, .head = 123, .len = 333}};
 //    shingle_hash Shingle_B{.first = {298273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
 //
 //    shingle_hash Shingle_C{.first = {198273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
@@ -41,28 +41,28 @@ void SetsOfContentTest::testAll() {
 
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
-            setlvl(3).
+            setlvl(4).
             setPort(8003).
             build();
 
     Alice.addStr(atxt, false);
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
-    string bobtxt = randStringEditBurst(alicetxt, 25);
+    string bobtxt = randStringEditBurst(alicetxt, 100000);
 
     DataObject *btxt = new DataObject(bobtxt);
 
     GenSync Bob = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
-            setlvl(3).
+            setlvl(4).
             setPort(8003).
             build();
 

@@ -40,7 +40,7 @@ public:
                     vector<int> str_sizeRange, int confidence, string (*stringInput)(int), int portnum);
 
     void setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
-                       vector<int> str_sizeRange, int confidence, string (*stringInput)(int), int portnum);
+                       vector<int> str_sizeRange, int lvl, int confidence, string (*stringInput)(int), int portnum);
 
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 

@@ -32,11 +32,11 @@ typedef unsigned short sm_i; // small index for lvl, MAX = 65,535 which is termi
 
 // describes a cycling using first and last and cycle number. Used in backtracking. We pointou the first, then the last, then cycle value./
 struct cycle {
-    size_t head, tail, cyc;
+    size_t head, len, cyc;
 };
 
 static bool operator==(const cycle& a, const cycle& b){
-    return a.head == b.head and a.tail == b.tail and a.cyc == b.cyc;
+    return a.head == b.head and a.len == b.len and a.cyc == b.cyc;
 };
 
 static bool operator!=(const cycle& a, const cycle& b) {
@@ -44,7 +44,7 @@ static bool operator!=(const cycle& a, const cycle& b) {
 };
 
 static ostream& operator<<(ostream &os, const cycle cyc) {
-    os << "head: " + to_string(cyc.head) + ", tail: " + to_string(cyc.tail) + ", cyc: " +
+    os << "head: " + to_string(cyc.head) + ", len: " + to_string(cyc.len) + ", cyc: " +
           to_string(cyc.cyc);
     return os;
 };
@@ -120,11 +120,6 @@ public:
 
     string getName() override { return "Sets of Content"; }
 
-    /**
-     * Get the terminal strings to reconcile with another set
-     * @return a vector of terminla string
-     */
-    vector<string> getTerminalDiffStr(vector<shingle_hash> diff_shingle);
 
     //getShinglesAt
     vector<ZZ> getShingles_ZZ() {
@@ -161,7 +156,7 @@ private:
     map<size_t, string> term_concern, term_query;
     map<size_t, size_t> cyc_concern, cyc_query;
 
-    size_t str_to_hash(string str) {
+    size_t str_to_hash(const string &str) {
         return std::hash<std::string>{}(str);
     };
 
@@ -184,7 +179,7 @@ private:
      * @return hash of the string
      * @throw if there is duplicates, suggest using new/multiple hashfunctions
      */
-    size_t add_to_dictionary(string str);
+    size_t add_to_dictionary(const string &str);
 
     inline size_t min_between(const vector<size_t> &nums, size_t from, size_t to) {
         if (nums.empty()) throw invalid_argument("min function does not take empty vector");
@@ -208,6 +203,11 @@ private:
 
     void update_tree_shingles(vector<size_t> hash_vector, sm_i level);
 
+    // getting the poteintial list of next shingles
+    vector<shingle_hash>
+    get_nxt_shingle_vec(const size_t cur_edge, const map<size_t, vector<shingle_hash>> &last_state_stack,
+                        const map<size_t, vector<shingle_hash>> &original_state_stack);
+
     // functions for backtracking
     /**
      * peice shingle_hashes back to a vector of hashes in the string order
@@ -215,9 +215,9 @@ private:
      * @param str_order
      * @param final_str a hash train in string order
      */
-    bool shingle2hash_train(cycle &cyc_info, set <shingle_hash> shingle_set, vector<size_t> &final_str);
+    bool shingle2hash_train(cycle &cyc_info, set <shingle_hash> &shingle_set, vector<size_t> &final_str);
 
-    std::map<size_t, vector<shingle_hash>> tree2shingle_dict(std::set<shingle_hash> tree_lvl);
+    std::map<size_t, vector<shingle_hash>> tree2shingle_dict(std::set<shingle_hash> &tree_lvl);
 
     shingle_hash get_nxt_edge(size_t &current_edge, shingle_hash _shingle);
 
@@ -242,9 +242,11 @@ private:
      * @param groupIDs
      * @return hashes of unknown
      */
-    void prepare_querys(vector<shingle_hash> shingle_hash_theirs, vector<shingle_hash> shingle_hash_mine);
+    void prepare_querys(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
 
-    void prepare_concerns(vector<shingle_hash> shingle_hash_theirs, vector<shingle_hash> shingle_hash_mine);
+    void prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
+
+    void answer_queries(const map<size_t,bool>& queries, const vector<shingle_hash> &shingle_hash_mine);
 
     void go_through_tree();
 

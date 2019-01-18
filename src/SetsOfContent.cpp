@@ -4,9 +4,10 @@
 
 #include "SetsOfContent.h"
 SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto, size_t shingle_size)
-: TermStrSize(terminal_str_size), Levels(levels), Partition(partition), baseSyncProtocol(base_set_proto), HashShingleSize(shingle_size){
+: TermStrSize(terminal_str_size), Levels(levels), Partition(partition), baseSyncProtocol(base_set_proto), HashShingleSize(shingle_size) {
     SyncID = SYNC_TYPE::SetsOfContent;
-    if (levels > USHRT_MAX) throw invalid_argument("Num of Level specified is not feasible");
+    if (levels > USHRT_MAX or levels < 2)
+        throw invalid_argument("Num of Level specified should be between 2 and " + to_string(USHRT_MAX));
 }
 
 SetsOfContent::~SetsOfContent() {
@@ -51,6 +52,8 @@ vector<size_t> SetsOfContent::create_HashSet(string str,size_t win_size, size_t 
 
 vector<size_t> SetsOfContent::local_mins(vector<size_t> hash_val, size_t win_size) {
     // relying on hashMap sorting
+
+    // minimum partition distance
     if (win_size < 1) {
         cout
                 << "Content Partition window size is less than 1 and adjusted to 1. Consider adjusting number of partition levels"
@@ -67,7 +70,7 @@ vector<size_t> SetsOfContent::local_mins(vector<size_t> hash_val, size_t win_siz
     }
 
     for (size_t i = win_size+1; i < hash_val.size() - win_size+1; ++i) {
-        if (hash_val[i-1] <= hash_occurr.begin()->first)
+        if (hash_val[i-1] <= hash_occurr.begin()->first and i - ((!mins.empty())?mins.back():0) > win_size)
             mins.push_back(i-1);
         if (hash_occurr[hash_val[i - win_size - 1]])
             hash_occurr[hash_val[i - win_size - 1]]--;
@@ -81,7 +84,7 @@ vector<size_t> SetsOfContent::local_mins(vector<size_t> hash_val, size_t win_siz
     return mins;
 }
 
-size_t SetsOfContent::add_to_dictionary(string str) {
+size_t SetsOfContent::add_to_dictionary(const string& str) {
     (Dictionary.find(str_to_hash(str)) == Dictionary.end() or Dictionary[str_to_hash(str)] == str) ? Dictionary[str_to_hash(str)] = str : throw invalid_argument(
             "Dictionary duplicated suggest using new/multiple hash functions");
     return str_to_hash(str);
@@ -129,7 +132,7 @@ void SetsOfContent::go_through_tree() {
         for (const shingle_hash& shingle : myTree[l - 1]){
             auto it = Cyc_dict.find(shingle.second);
             if (it == Cyc_dict.end()) throw invalid_argument("Cycle not found, should have been inserted");
-            const_cast<cycle&> (shingle.compose) = cycle{.cyc = 0, .head = it->second.front(), .tail = it->second.back()};
+            const_cast<cycle&> (shingle.compose) = cycle{.cyc = 0, .head = it->second.front(), .len = it->second.size()};
         }
         space = floor((space / Partition) / 2);
         shingle_size = floor(shingle_size / 2);
@@ -142,7 +145,7 @@ void SetsOfContent::go_through_tree() {
 
 
 // what i am missing, and what they would be sending to me
-void SetsOfContent::prepare_querys(vector<shingle_hash> shingle_hash_theirs, vector<shingle_hash> shingle_hash_mine) {
+void SetsOfContent::prepare_querys(const vector<shingle_hash> & shingle_hash_theirs,const vector<shingle_hash>& shingle_hash_mine) {
 // get the tree ready
 // know what to expect by getting term_query and cyc_query ready
 //    map<size_t, vector<shingle_hash>> mine_rid;
@@ -159,6 +162,7 @@ void SetsOfContent::prepare_querys(vector<shingle_hash> shingle_hash_theirs, vec
 
     // fill up cyc_quey and term_query , concner and query should be identical. We assume map auto sorts the items (hash values)
     for (shingle_hash shingle:shingle_hash_theirs) { // put what i learnt from set recon in their tree
+
         theirTree[shingle.lvl].insert(shingle);
 
         if (Dictionary.find(shingle.second) == Dictionary.end()) {
@@ -183,7 +187,7 @@ void SetsOfContent::prepare_querys(vector<shingle_hash> shingle_hash_theirs, vec
 }
 
 // what they are missing, and i will prepare to send them
-void SetsOfContent::prepare_concerns(vector<shingle_hash> shingle_hash_theirs, vector<shingle_hash> shingle_hash_mine) {
+void SetsOfContent::prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine) {
     // figure out what they are missing, on cycles and dictionary
     // track trough to find cycle number
     // prepare
@@ -213,8 +217,24 @@ void SetsOfContent::prepare_concerns(vector<shingle_hash> shingle_hash_theirs, v
 
 
     for (shingle_hash shingle : shingle_hash_mine) {
-
         if(hashes_they_know[shingle.second]) continue;
+
+        if (myTree.size() - 1 == shingle.lvl) {
+            term_concern[shingle.second] = Dictionary[shingle.second];
+//        }else {
+//            cycle tmp = shingle.compose;
+//            if (!shingle2hash_train(tmp,myTree[shingle.lvl+1],Cyc_dict[shingle.second])) throw invalid_argument("We failed to get a cycle number to send to an other party at lvl: "+to_string(shingle.lvl));
+//            cyc_concern[shingle.second] = tmp.cyc;
+        }
+    }
+}
+
+void SetsOfContent::answer_queries(const map<size_t,bool> &queries, const vector<shingle_hash> &shingle_hash_mine) {
+    cyc_concern.clear();
+
+    for (shingle_hash shingle : shingle_hash_mine) {
+        auto it = queries.find(shingle.second);
+        if (it == queries.end() or !it->second) continue;
 
         if (myTree.size() - 1 == shingle.lvl) {
             term_concern[shingle.second] = Dictionary[shingle.second];
@@ -254,56 +274,185 @@ void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level)
     for (auto item = tmp.begin(); item != tmp.end(); ++item) {
         myTree[level].insert(
                 shingle_hash{.first = item->first.first, .second = item->first.second, .occurr = item->second,
-                        .compose = cycle{.cyc=0, .head = 0, .tail = 0},
+                        .compose = cycle{.cyc=0, .head = 0, .len = 0},
                         .lvl = level});
     }
 
 }
 
-
-//vector<string> SetsOfContent::getTerminalDiffStr(vector<shingle_hash> diff_shingle) {
-//    vector<string> terminal_str;
-//    vector<shingle_hash> tmpset;
-//    if (myTree.empty()) throw invalid_argument("getTerminalDiffStr needs myTree with content");
-//    size_t lvl = myTree.size() - 1;
-//    for(auto shingle : diff_shingle){
-//        if(shingle.lvl == lvl) tmpset.push_back(shingle);
-//    }
-//    for (size_t hash_item: unique_substr_hash(tmpset)) {
-//        terminal_str.push_back(Dictionary[hash_item]);
+// Backtracking using front ab dn back and cycle number
+//// functions for backtracking
+//bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash>& shingle_set, vector<size_t>& final_str) {
+//
+////    // edge case if there is only one shinlge in the set
+////    if (shingle_set.empty()) throw invalid_argument("Nothing is passed into shingle2hash_train");
+////
+////    if (shingle_set.size() == 1) {// edge case of just one shingle
+////        if (cyc_info.cyc == 0) {// we find cycle number
+////            cyc_info.cyc = 1;
+////            cout<<"shingle2hash_train, i should never happend"<<endl; // delete if proven tobe useless
+////            return true;
+////        } else { // we find string
+////            return true;
+////        }
+////    }
+//    auto changed_shingle_set = tree2shingle_dict(shingle_set); // get a shingle dict from a level of a tree for fast next edge lookup
+//
+//    if (changed_shingle_set.empty()) throw invalid_argument("the shingle_vec provided is empty for shingle2hash_train");
+//
+//    vector<map<size_t, vector<shingle_hash>>> stateStack;
+//    vector<vector<shingle_hash>> nxtEdgeStack;
+//    stateStack.push_back(changed_shingle_set);// Init Original state
+//    size_t strCollect_size = 0, curEdge =0;
+//    vector<size_t> str; // temprary string hash train to last be compared/placed in final_str
+//
+//
+//    for (auto head_shingles : changed_shingle_set[(size_t)0]) {
+//        if (cyc_info.head == head_shingles.second) {
+//            str.push_back(head_shingles.second);
+//            curEdge = head_shingles.second;
+//            break;
+//        }
 //    }
 //
-//    return terminal_str;
-//}
-
-
-// functions for backtracking
-bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash> shingle_set, vector<size_t>& final_str) {
-
-//    // edge case if there is only one shinlge in the set
-//    if (shingle_set.empty()) throw invalid_argument("Nothing is passed into shingle2hash_train");
 //
-//    if (shingle_set.size() == 1) {// edge case of just one shingle
-//        if (cyc_info.cyc == 0) {// we find cycle number
+//    if (cyc_info.cyc == 0) { // find head from "final_str" (we are finding cycle number)
+//        //if we only have one, then we are done with cycle number one and head ==tail
+//        if (final_str.size() == 1 && cyc_info.head == cyc_info.tail) {
 //            cyc_info.cyc = 1;
-//            cout<<"shingle2hash_train, i should never happend"<<endl; // delete if proven tobe useless
+//            final_str = str;
 //            return true;
-//        } else { // we find string
+//        }
+//    } else if (cyc_info.cyc > 0) {// find head from "final_str" (we are retrieving the string from cycle number)
+//        if (cyc_info.cyc == 1 && cyc_info.head == cyc_info.tail) {
+//            final_str = str;
 //            return true;
 //        }
 //    }
-    auto changed_shingle_set = tree2shingle_dict(shingle_set); // get a shingle dict from a level of a tree for fast next edge lookup
+//    //    Resources initRes;
+////    initResources(initRes); // initiate Recourses tracking
+//
+//
+//    shingle_hash last_edge;
+//
+//    while (!stateStack.empty() and stateStack.size() == nxtEdgeStack.size() + 1) { // while state stack is not empty
+//        vector<shingle_hash> nxtEdges = stateStack.back()[curEdge];
+//
+//        if (!nxtEdges.empty()) { // If we can go further with this route
+//            last_edge = get_nxt_edge(curEdge, nxtEdges.back());
+//            nxtEdges.pop_back();
+//            nxtEdgeStack.push_back(nxtEdges);
+//        } else if (!nxtEdgeStack.empty() and stateStack.size() == nxtEdgeStack.size() + 1 and
+//                   !nxtEdgeStack.back().empty()) { //if this route is dead, we should look for other options
+//            if (!str.empty()) str.pop_back();
+//
+//            //look for other edge options
+//            last_edge = get_nxt_edge(curEdge, nxtEdgeStack.back().back());
+//            nxtEdgeStack.back().pop_back();
+//
+//            stateStack.pop_back();
+//            //(!stateStack.empty()) ? stateStack.push_back(stateStack.back()) : stateStack.push_back(origiState);
+//        } else if (!stateStack.empty() and stateStack.size() == nxtEdgeStack.size() + 1 and !nxtEdgeStack.empty() and
+//                   nxtEdgeStack.back().empty()) {// if this state is dead and we should look back a state
+//            if (!str.empty()) str.pop_back();
+//            // look back a state or multiple if we have empty nxt choice (unique nxt edge)
+//            while (!nxtEdgeStack.empty() and nxtEdgeStack.back().empty()) {
+//                nxtEdgeStack.pop_back();
+//                stateStack.pop_back();
+//                if (!str.empty()) str.pop_back();
+//            }
+//            if (nxtEdgeStack.empty()) {
+//                return false;
+//            } else if (!nxtEdgeStack.back().empty()) {
+//                last_edge = get_nxt_edge(curEdge, nxtEdgeStack.back().back());
+//                nxtEdgeStack.back().pop_back();
+//                stateStack.pop_back();
+//            }
+//        } else if (stateStack.size() != nxtEdgeStack.size() + 1) {
+//            throw invalid_argument("state stack and nxtEdge Stack size miss match" + to_string(stateStack.size())
+//                                   + ":" + to_string(nxtEdgeStack.size()));
+//        }
+//
+//        str.push_back(curEdge);
+//
+//        // Change and register our state for shingle occurrence and nxt edges
+//        stateStack.push_back(stateStack.back());
+//        for (auto &tmp_shingle: stateStack.back()[last_edge.first]) {
+//            if (tmp_shingle == last_edge) {
+//                tmp_shingle.occurr--;
+//                break;
+//            }
+//        }
+//
+//
+////
+////        if (!resourceMonitor( initRes, MAX_TIME, MAX_VM_SIZE))
+////            return false;
+//
+//        // if we reached a stop point
+//        if (curEdge == cyc_info.tail) {
+//            strCollect_size++;
+//            if (str == final_str || (strCollect_size == cyc_info.cyc and cyc_info.cyc != 0)) {
+//                cyc_info.cyc = strCollect_size;
+//                final_str = str;
+//            }
+//        }
+//
+//        if (strCollect_size == cyc_info.cyc && cyc_info.cyc != 0) {
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
-    if (changed_shingle_set.empty()) throw invalid_argument("the shingle_vec provided is empty for shingle2hash_train");
+//bool SetsOfContent::empty_state(vector<shingle_hash> state) {
+//    for (shingle_hash item : state) {
+//        if (item.occurr > 0) return false;
+//    }
+//    return true;
+//}
+
+vector<shingle_hash> SetsOfContent::get_nxt_shingle_vec(const size_t cur_edge,
+                                                        const map<size_t, vector<shingle_hash>> &last_state_stack,
+                                                        const map<size_t, vector<shingle_hash>> &original_state_stack) {
+    vector<shingle_hash> res_vec;
+
+    auto from_stateStack = last_state_stack.find(cur_edge);
+
+    if (from_stateStack != last_state_stack.end()) {
+        for (auto tmp_shingle: from_stateStack->second) {
+            if (tmp_shingle.occurr > 0) res_vec.push_back(tmp_shingle);
+        }
+    } else {
+        auto cur_it = original_state_stack.find(cur_edge);
+        if (cur_it == original_state_stack.end())return res_vec; // there is no possible edge(no edge after this)
+        for (auto tmp_shingle: original_state_stack.find(cur_edge)->second) {
+            if (tmp_shingle.occurr > 0) res_vec.push_back(tmp_shingle);
+        }
+    }
+
+    return res_vec;
+}
+
+// functions for backtracking using front, length, and cycle number
+bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash>& shingle_set, vector<size_t>& final_str) {
+
+    map<size_t, vector<shingle_hash>> original_state_stack = tree2shingle_dict(
+            shingle_set); // get a shingle dict from a level of a tree for fast next edge lookup
+
+    if (shingle_set.empty())
+        throw invalid_argument(
+                "the shingle_set provided is empty for shingle2hash_train, we accessed a tree level with no shingle.");
 
     vector<map<size_t, vector<shingle_hash>>> stateStack;
     vector<vector<shingle_hash>> nxtEdgeStack;
-    stateStack.push_back(changed_shingle_set);// Init Original state
-    size_t strCollect_size = 0, curEdge =0;
+    stateStack.push_back(
+            map<size_t, vector<shingle_hash>>());// Init Original state - nothing changed, state stack only records what is changed
+    size_t strCollect_size = 0, curEdge = 0;
     vector<size_t> str; // temprary string hash train to last be compared/placed in final_str
 
 
-    for (auto head_shingles : changed_shingle_set[(size_t)0]) {
+    for (auto head_shingles : original_state_stack[(size_t) 0]) {
         if (cyc_info.head == head_shingles.second) {
             str.push_back(head_shingles.second);
             curEdge = head_shingles.second;
@@ -313,13 +462,15 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash> shingl
 
 
     if (cyc_info.cyc == 0) { // find head from "final_str" (we are finding cycle number)
-        //if we only have one, then we are done with cycle number one and head ==tail
-        if (final_str.size() == 1 && cyc_info.head == cyc_info.tail) {
+        //if we only have one, then we are done
+        if (final_str.size() == 1 && cyc_info.len == 1) {
             cyc_info.cyc = 1;
+            final_str = str;
             return true;
         }
     } else if (cyc_info.cyc > 0) {// find head from "final_str" (we are retrieving the string from cycle number)
-        if (cyc_info.cyc == 1 && cyc_info.head == cyc_info.tail) {
+        if (cyc_info.cyc == 1 && cyc_info.len == 1) {
+            final_str = str;
             return true;
         }
     }
@@ -330,9 +481,9 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash> shingl
     shingle_hash last_edge;
 
     while (!stateStack.empty() and stateStack.size() == nxtEdgeStack.size() + 1) { // while state stack is not empty
-        vector<shingle_hash> nxtEdges = stateStack.back()[curEdge];
+        vector<shingle_hash> nxtEdges = get_nxt_shingle_vec(curEdge,stateStack.back(),original_state_stack);
 
-        if (!nxtEdges.empty()) { // If we can go further with this route
+        if (!nxtEdges.empty() and str.size() < cyc_info.len) { // If we can go further with this route
             last_edge = get_nxt_edge(curEdge, nxtEdges.back());
             nxtEdges.pop_back();
             nxtEdgeStack.push_back(nxtEdges);
@@ -345,7 +496,6 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash> shingl
             nxtEdgeStack.back().pop_back();
 
             stateStack.pop_back();
-            //(!stateStack.empty()) ? stateStack.push_back(stateStack.back()) : stateStack.push_back(origiState);
         } else if (!stateStack.empty() and stateStack.size() == nxtEdgeStack.size() + 1 and !nxtEdgeStack.empty() and
                    nxtEdgeStack.back().empty()) {// if this state is dead and we should look back a state
             if (!str.empty()) str.pop_back();
@@ -370,21 +520,36 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash> shingl
         str.push_back(curEdge);
 
         // Change and register our state for shingle occurrence and nxt edges
-        stateStack.push_back(stateStack.back());
-        for (auto &tmp_shingle: stateStack.back()[last_edge.first]) {
-            if (tmp_shingle == last_edge) {
-                tmp_shingle.occurr--;
-                break;
+        map<size_t, vector<shingle_hash>> tmp_stack = stateStack.back();
+        bool found = false;
+        auto from_stateStack = tmp_stack.find(last_edge.first);
+        if (from_stateStack != tmp_stack.end()) {// it is in the state_stack(previously touched shingle)
+            for (auto &tmp_shingle: from_stateStack->second) {
+                if (tmp_shingle == last_edge) {
+                    tmp_shingle.occurr--;
+                    found = true;
+                    break;
+                }
             }
         }
 
+        if (!found) { // it is never touched,. fetch from original state
+            for (auto tmp_shingle: original_state_stack[last_edge.first]) {
+                if (tmp_shingle == last_edge) {
+                    tmp_shingle.occurr--;
+                    tmp_stack[tmp_shingle.first] = {tmp_shingle};
+                    break;
+                }
+            }
+        }
+        stateStack.push_back(tmp_stack);
 
 //
 //        if (!resourceMonitor( initRes, MAX_TIME, MAX_VM_SIZE))
 //            return false;
 
         // if we reached a stop point
-        if (curEdge == cyc_info.tail) {
+        if (str.size() == cyc_info.len) {
             strCollect_size++;
             if (str == final_str || (strCollect_size == cyc_info.cyc and cyc_info.cyc != 0)) {
                 cyc_info.cyc = strCollect_size;
@@ -399,14 +564,7 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash> shingl
     return false;
 }
 
-//bool SetsOfContent::empty_state(vector<shingle_hash> state) {
-//    for (shingle_hash item : state) {
-//        if (item.occurr > 0) return false;
-//    }
-//    return true;
-//}
-
-std::map<size_t, vector<shingle_hash>> SetsOfContent::tree2shingle_dict(std::set<shingle_hash> tree_lvl) {
+std::map<size_t, vector<shingle_hash>> SetsOfContent::tree2shingle_dict(std::set<shingle_hash> &tree_lvl) {
     // prepare shingle_set in a map, and microsorted(sorted for shingles with same head)
     std::map<size_t, vector<shingle_hash>> res;
         for (shingle_hash shingle : tree_lvl){
@@ -425,59 +583,21 @@ shingle_hash SetsOfContent::get_nxt_edge(size_t& current_edge, shingle_hash _shi
     return _shingle;
 }
 
-//string SetsOfContent::get_str_from(vector<shingle_hash> shingle_set) {
-//    vector<size_t> final_str;
-//    string recovered_str;
-//    for (shingle_hash& shingle : shingle_set){
-//        if (shingle.cycleVal>0) { // this means it is the head
-//
-//            shingle.occurr--;
-//            final_str.push_back(shingle.first);
-//            final_str.push_back(shingle.second);
-//            shingle2hash_train(shingle_set,shingle.cycleVal,final_str);
-//            final_str.insert(final_str.begin(),shingle.second);
-//            final_str.insert(final_str.begin(),shingle.first);
-//            break; // there should not be any other shingles that has it
-//        }
-//    }
-//    for (size_t substr_hash : final_str){
-//        if (substr_hash!=0 and dictionary[substr_hash].empty())cout<<"what is this on other tree: "<<substr_hash<<endl;
-//        recovered_str+=dictionary[substr_hash];
-//    }
-//    return recovered_str;
-//}
-//
-//vector<string> SetsOfContent::get_all_strs_from(vector<shingle_hash> level_shingle_set) {
-//    // assume strings are from the same level
-//    vector<string> res;
-//    map<size_t,vector<shingle_hash>> shingle_group;
-//    for(shingle_hash shingle:level_shingle_set){
-//        // report none-unique group ID, there should no be any, since only the unique strings get expanded, If none unique, it is the group ID
-//        shingle_group[shingle.groupID].push_back(shingle);
-//    }
-//    // update dictionary
-//    for(auto group:shingle_group){
-//        res.push_back(get_str_from(group.second));
-//        add_to_dictionary(res.back());
-//    }
-//    return res;
-//}
-
 string SetsOfContent::retriveString() {
     // retrace cycles bottom-up and delete from query after tracing
     string substring;
 //    for (auto lvl : theirTree) for (auto item:lvl) cout << item << endl; // TODO: detele this print tree function
-    for (int i = theirTree.size() - 1; i >= 0; --i) {
+    for (int i = theirTree.size() - 2; i >= 0; --i) {
         for (shingle_hash shingle : theirTree[i]) {
             auto it = cyc_query.find(shingle.second);
             if (it != cyc_query.end()) {
                 vector<size_t> tmp;
                 substring = "";
-                cycle tmp_cyc = cycle{.head = shingle.compose.head, .tail=shingle.compose.tail, .cyc = it->second};
+                cycle tmp_cyc = cycle{.head = shingle.compose.head, .len=shingle.compose.len, .cyc = it->second};
                 shingle2hash_train(tmp_cyc, theirTree[i + 1], tmp);
                 for (size_t hash:tmp) {
                     if (Dictionary.find(hash) == Dictionary.end())
-                        cout << "Recover may have failed - Dictionary lookup failed" << endl;
+                        cout << "Recover may have failed - Dictionary lookup failed for "<< hash << " at level " << endl;
                     substring += Dictionary[hash];
                 }
                 add_to_dictionary(substring);
@@ -485,9 +605,7 @@ string SetsOfContent::retriveString() {
         }
     }
 
-    return substring;
-
-
+    return (substring.empty())?myString:substring;
 }
 
 
@@ -515,9 +633,9 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
     //show the info of the tree
     for(auto lvl:myTree) {
         vector<size_t> lvl_vec;
-        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) :lvl_vec.push_back(Dictionary[item.second].size());
+        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
         sort(lvl_vec.begin(),lvl_vec.end());
-        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<endl;
+//        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
     }//TODO: delete this
 
     for (DataObject *dop : setPointers) delete dop;
@@ -597,29 +715,36 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
     vector<shingle_hash> theirs_hash, mine_hash;
 
     setHost->SyncServer(commSync, mine, others);
-    for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
+//    for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
-    prepare_concerns(theirs_hash,mine_hash);
+//    prepare_concerns(theirs_hash,mine_hash);
 
-    cout<< "Server - cyc concern size : "<< cyc_concern.size()<<endl;
-    cout<< "Server - Term concern size : "<< term_concern.size()<<endl;
+//    cout<< "Server - Term concern size : "<< term_concern.size()<<endl;
 
+    size_t query_size = commSync->commRecv_size_t();
+    map<size_t,bool> queries;
+    for(size_t i = 0; i<query_size;++i) {// get cycles queries
+        queries[commSync->commRecv_size_t()] = true;
+    }
+
+    answer_queries(queries,mine_hash);
 
     for (auto groupcyc : cyc_concern){
         commSync->commSend((long)groupcyc.second);
-//        cout<<groupcyc.first<<":"<<groupcyc.second<<endl;
     }
 
     for (auto dic : term_concern) {
-        if (!Dictionary[dic.first].empty())
-            commSync->commSend(Dictionary[dic.first]);
+        string tmp_str = Dictionary[dic.first];
+        if (!tmp_str.empty())
+            commSync->commSend(tmp_str);
         else
             commSync->commSend("$");
     }
 
+
 //    commSync->commSend(SYNC_SUCCESS);
-    cout<<"Server Close"<<endl;
+//    cout<<"Server Close"<<endl;
     Logger::gLog(Logger::METHOD, "SetOfCeontent Done");
     commSync->commClose();
     return success;
@@ -662,14 +787,21 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
-
-
     prepare_querys(theirs_hash,mine_hash);
 
-    cout<< "cyc query size : "<< cyc_query.size()<<endl;
-    cout<< "Term query size : "<< term_query.size()<<endl;
+//    cout<< "cyc query size : "<< cyc_query.size()<<endl;
+//    cout<< "Term query size : "<< term_query.size()<<endl;
 
+// ask questions
+    commSync->commSend(cyc_query.size() + term_query.size());
+    for(auto cyc:cyc_query){// ask about cycles
+        commSync->commSend(cyc.first);
+    }
 
+    for(auto term:term_query){// ask about cycles
+        commSync->commSend(term.first);
+    }
+// get answers from server
     for(auto& cyc:cyc_query){
         cyc.second = commSync->commRecv_long();
     }
@@ -680,8 +812,9 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
             add_to_dictionary(tmp);
     }
 
+
     success = true;
-    cout<<"Client Close"<<endl;
+//    cout<<"Client Close"<<endl;
     Logger::gLog(Logger::METHOD, "Set Of Content Done");
     commSync->commClose();
     return success;
