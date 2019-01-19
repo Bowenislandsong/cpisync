@@ -63,8 +63,9 @@ vector<size_t> SetsOfContent::local_mins(vector<size_t> hash_val, size_t win_siz
     vector<size_t> mins;
     map<size_t, size_t> hash_occurr;
     for (size_t j = 0; j < 2 * win_size; ++j) {
-        if (hash_occurr[hash_val[j]])
-            hash_occurr[hash_val[j]]++;
+        auto it = hash_occurr.find(hash_val[j]);
+        if (it != hash_occurr.end())
+            it->second++;
         else
             hash_occurr[hash_val[j]] = 1;
     }
@@ -72,12 +73,13 @@ vector<size_t> SetsOfContent::local_mins(vector<size_t> hash_val, size_t win_siz
     for (size_t i = win_size+1; i < hash_val.size() - win_size+1; ++i) {
         if (hash_val[i-1] <= hash_occurr.begin()->first and i - ((!mins.empty())?mins.back():0) > win_size)
             mins.push_back(i-1);
-        if (hash_occurr[hash_val[i - win_size - 1]])
-            hash_occurr[hash_val[i - win_size - 1]]--;
-        if (!hash_occurr[hash_val[i - win_size - 1]])
-            hash_occurr.erase(hash_val[i - win_size - 1]);
-        if (hash_occurr[hash_val[i+win_size]])
-            hash_occurr[hash_val[i+win_size]]++;
+        auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
+        if (it_prev != hash_occurr.end())
+            it_prev->second--;
+
+        auto it_pos = hash_occurr.find(hash_val[i+win_size]);
+        if (it_pos != hash_occurr.end())
+            it_pos->second++;
         else
             hash_occurr[hash_val[i+win_size]] = 1;
     }
@@ -635,7 +637,7 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
         vector<size_t> lvl_vec;
         for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
         sort(lvl_vec.begin(),lvl_vec.end());
-//        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
+        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
     }//TODO: delete this
 
     for (DataObject *dop : setPointers) delete dop;

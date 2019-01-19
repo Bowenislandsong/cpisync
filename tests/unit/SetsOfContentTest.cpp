@@ -41,7 +41,7 @@ void SetsOfContentTest::testAll() {
 
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
+            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
@@ -49,16 +49,22 @@ void SetsOfContentTest::testAll() {
             setPort(8003).
             build();
 
+
+    auto str_s = clock();
     Alice.addStr(atxt, false);
 
+    double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
+
+
+
 //    string bobtxt = randStringEdit(alicetxt, 10);
-    string bobtxt = randStringEditBurst(alicetxt, 100000);
+    string bobtxt = randStringEditBurst(alicetxt, 100);
 
     DataObject *btxt = new DataObject(bobtxt);
 
     GenSync Bob = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
+            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
@@ -77,6 +83,7 @@ void SetsOfContentTest::testAll() {
     cout << "bitsTot: " + to_string(report.bytesTot) << endl;
     cout << "bitsR: " + to_string(report.bytesRTot) << endl;
     cout << "Btyes: " << report.bytes << endl;
+    cout << "Add String Time: "<< str_time<<endl;
     delete btxt;
     delete atxt;
     CPPUNIT_ASSERT(finally == bobtxt);
