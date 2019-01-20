@@ -79,7 +79,7 @@ void KshingleSyncPerf::setsofcontent3D() {
 
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 3, 50, randSampleTxt, 8001);
 
-    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 4, 50, randSampleTxt, 8001);
+//    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 4, 50, randSampleTxt, 8001);
 
 
     test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, 2, 100, randSampleTxt, 8001);
