@@ -649,8 +649,8 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 }
 void SetsOfContent::SendSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay) {
     Logger::gLog(Logger::METHOD,"Entering SendSyncParam::SendSyncParam");
-    // take care of parent sync method
-    SyncMethod::SendSyncParam(commSync);
+    // take care of parent sync method for sync mode
+//    SyncMethod::SendSyncParam(commSync);
     commSync->commSend(enumToByte(SyncID));
     commSync->commSend((size_t)TermStrSize);
     commSync->commSend((size_t)Levels);
@@ -663,7 +663,7 @@ void SetsOfContent::SendSyncParam(const shared_ptr<Communicant> &commSync, bool 
 void SetsOfContent::RecvSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay) {
     Logger::gLog(Logger::METHOD,"Entering SetsOfContent::RecvSyncParam");
     // take care of parent sync method
-    SyncMethod::RecvSyncParam(commSync);
+//    SyncMethod::RecvSyncParam(commSync);
 
     byte theSyncID = commSync->commRecv_byte();
     size_t TermStrSize_C = (size_t)commSync->commRecv_size_t();
@@ -755,7 +755,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
     answer_queries(queries,mine_hash);
 
     for (auto groupcyc : cyc_concern){
-        commSync->commSend((long)groupcyc.second);
+        commSync->commSend(groupcyc.second);
     }
 
     for (auto dic : term_concern) {
@@ -846,7 +846,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     }
 // get answers from server
     for(auto& cyc:cyc_query){
-        cyc.second = commSync->commRecv_long();
+        cyc.second = commSync->commRecv_size_t();
     }
 
     for (int i = 0; i < term_query.size(); ++i) {
