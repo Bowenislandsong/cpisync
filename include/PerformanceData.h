@@ -12,6 +12,7 @@
 #include <fstream>
 #include <omp.h>
 #include <numeric>
+#include <thread>
 
 #ifdef DEBUG
 #define DEBUG_IF(cond) if(true)

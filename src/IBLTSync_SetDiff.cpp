@@ -48,6 +48,8 @@ if(!keepAlive) {
         msg << "other - self = " << printListOfPtrs(otherMinusSelf) << endl;
         Logger::gLog(Logger::METHOD, msg.str());
     }
+    success = ((SYNC_SUCCESS==commSync->commRecv_int()) and success);
+    (success)? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
     return success;
 }
 
@@ -108,7 +110,8 @@ bool IBLTSync_SetDiff::SyncServer(const shared_ptr<Communicant> &commSync, list<
 //    for (auto item : otherMinusSelf) delete item;
 //    for (auto item : selfMinusOther) delete item;
 
-    return success;
+    (success)? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
+    return (SYNC_SUCCESS==commSync->commRecv_int()) and success;
 }
 
 bool IBLTSync_SetDiff::addElem(DataObject *datum) {

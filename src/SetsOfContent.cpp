@@ -632,13 +632,13 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 
     go_through_tree();
 
-    //show the info of the tree
-    for(auto lvl:myTree) {
-        vector<size_t> lvl_vec;
-        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
-        sort(lvl_vec.begin(),lvl_vec.end());
-        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
-    }//TODO: delete this
+//    //show the info of the tree
+//    for(auto lvl:myTree) {
+//        vector<size_t> lvl_vec;
+//        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
+//        sort(lvl_vec.begin(),lvl_vec.end());
+//        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
+//    }//TODO: delete this
 
     for (DataObject *dop : setPointers) delete dop;
     for (ZZ item : getShingles_ZZ()) {
@@ -716,7 +716,29 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
     list<DataObject *> mine, others;
     vector<shingle_hash> theirs_hash, mine_hash;
 
-    setHost->SyncServer(commSync, mine, others);
+
+    size_t top_str_size = SIZE_T_MAX;
+    while (!setHost->SyncServer(commSync, mine, others) and
+           mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
+        // Both party should have concensus on failed recon
+        //TODO: check if CPI and InterCPI both consider sync fail concensus
+        top_str_size = myString.size();
+        commSync->commSend(myString.size());
+        Logger::gLog(Logger::METHOD,
+                     "SetsOfContent::SyncServer - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * mbar));
+        mbar = 2 * mbar;
+        configure(setHost, mbar);
+
+        for (DataObject *dop : setPointers) {
+            setHost->addElem(dop); // Add to GenSync
+        }
+        mine.clear();
+        others.clear();
+    }
+
+
+
+
 //    for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
@@ -760,7 +782,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     commSync->commConnect();
     long mbar;
 
-    if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol){
+    if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
         StrataEst est = StrataEst(sizeof(shingle_hash));
 
         for (auto item :setPointers) {
@@ -785,14 +807,33 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     list<DataObject *> mine, others;
     vector<shingle_hash> theirs_hash, mine_hash;
 
-    setHost->SyncClient(commSync, mine, others);
+    size_t top_str_size = SIZE_T_MAX;
+    while (!setHost->SyncClient(commSync, mine, others) and
+           mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
+        // Both party should have concensus on failed recon
+        //TODO: check if CPI and InterCPI both consider sync fail concensus
+        top_str_size = commSync->commRecv_size_t();
+        Logger::gLog(Logger::METHOD,
+                     "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * mbar));
+        cout<<"SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * mbar)<<endl;
+        mbar = 2 * mbar;
+        configure(setHost, mbar);
+
+        for (DataObject *dop : setPointers) {
+            setHost->addElem(dop); // Add to GenSync
+        }
+        mine.clear();
+        others.clear();
+    }
+
+
     for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
     prepare_querys(theirs_hash,mine_hash);
 
-//    cout<< "cyc query size : "<< cyc_query.size()<<endl;
-//    cout<< "Term query size : "<< term_query.size()<<endl;
+    cout<< "cyc query size : "<< cyc_query.size()<<endl;
+    cout<< "Term query size : "<< term_query.size()<<endl;
 
 // ask questions
     commSync->commSend(cyc_query.size() + term_query.size());

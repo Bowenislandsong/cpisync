@@ -21,7 +21,7 @@ public:
     SetsOfContentTest() = default;
     virtual ~SetsOfContentTest() = default;
     void setUp(){
-        const int SEED = 617;
+        const int SEED = 10;
         srand(SEED);
     };
 

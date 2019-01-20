@@ -152,13 +152,16 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                     Bob.addStr(Bobtxt, false);
 
+
                     clock_t strStart = clock();
+
                     Alice.addStr(Alicetxt, false);
                     forkHandleReport report = forkHandle(Alice, Bob, false);
                     auto str_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
 
                     bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
+cout<<"1: "<<str_time<<endl;
 
                     plot.add({to_string(str_size), to_string((double)1/edit_dist), to_string(report.bytesTot+report.bytesRTot),
                               to_string(report.CPUtime), to_string(str_time), to_string(success_StrRecon)});

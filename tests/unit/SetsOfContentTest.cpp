@@ -50,13 +50,6 @@ void SetsOfContentTest::testAll() {
             build();
 
 
-    auto str_s = clock();
-    Alice.addStr(atxt, false);
-
-    double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
-
-
-
 //    string bobtxt = randStringEdit(alicetxt, 10);
     string bobtxt = randStringEditBurst(alicetxt, 100);
 
@@ -74,7 +67,17 @@ void SetsOfContentTest::testAll() {
 
     Bob.addStr(btxt, false);
 
+
+    auto str_s = clock();
+
+    Alice.addStr(atxt, false);
+    double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
+
+
+    auto recon_t = clock();
     auto report = forkHandle(Alice, Bob, false);
+    double recon_time = (double) (clock() - recon_t) / CLOCKS_PER_SEC;
+
 
     string finally = Alice.dumpString()->to_string();
 
@@ -83,7 +86,8 @@ void SetsOfContentTest::testAll() {
     cout << "bitsTot: " + to_string(report.bytesTot) << endl;
     cout << "bitsR: " + to_string(report.bytesRTot) << endl;
     cout << "Btyes: " << report.bytes << endl;
-    cout << "Add String Time: "<< str_time<<endl;
+    cout << "String Add Time: "<< str_time<<endl;
+    cout << "Rest of the Recon time: " <<recon_time<<endl;
     delete btxt;
     delete atxt;
     CPPUNIT_ASSERT(finally == bobtxt);
