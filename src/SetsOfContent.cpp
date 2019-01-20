@@ -632,13 +632,13 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 
     go_through_tree();
 
-//    //show the info of the tree
-//    for(auto lvl:myTree) {
-//        vector<size_t> lvl_vec;
-//        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
-//        sort(lvl_vec.begin(),lvl_vec.end());
-//        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
-//    }//TODO: delete this
+    //show the info of the tree
+    for(auto lvl:myTree) {
+        vector<size_t> lvl_vec;
+        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
+        sort(lvl_vec.begin(),lvl_vec.end());
+        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
+    }//TODO: delete this
 
     for (DataObject *dop : setPointers) delete dop;
     for (ZZ item : getShingles_ZZ()) {
