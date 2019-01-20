@@ -124,6 +124,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
             for (int con = 0; con < confidence; ++con) {
                 try {
+                    cout<<"String Size: "<<str_size<<", Edit Dist: "<<(int)(str_size/edit_dist)<<", Confidence: "<<con<<endl;
                     GenSync Alice = GenSync::Builder().
                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                             setProtocol(setReconProto).

@@ -82,15 +82,19 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 4, 50, randSampleTxt, 8001);
 
 
-    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, 2, 100, randSampleTxt, 8001);
+//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, 2, 100, randSampleTxt, 8001);
 
-    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, 3, 100, randSampleTxt, 8001);
+//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, 3, 100, randSampleTxt, 8001);
 
     test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, 4, 100, randSampleTxt, 8001);
 
 
 
-    //    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, target_confidence, randSampleTxt, 8001);
+    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 2, 50, randSampleTxt, 8001);
+
+    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 3, 50, randSampleTxt, 8001);
+
+    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 4, 50, randSampleTxt, 8001);
 }
 
 void KshingleSyncPerf::testStrataEst3D() {

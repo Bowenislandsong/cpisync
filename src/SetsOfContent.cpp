@@ -869,6 +869,8 @@ void SetsOfContent::configure(shared_ptr<SyncMethod>& setHost, long mbar) {
         setHost = make_shared<IBLTSync_SetDiff>(mbar, sizeof(shingle_hash), true);
     else if (GenSync::SyncProtocol::InteractiveCPISync == baseSyncProtocol)
         setHost = make_shared<InterCPISync>(5, sizeof(shingle_hash) * 8, 64, 7, true);
+    else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol)
+        setHost = make_shared<ProbCPISync>(1e4,sizeof(shingle_hash) * 8,64,true);
 }
 
 bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *> &theirsMinusMine,

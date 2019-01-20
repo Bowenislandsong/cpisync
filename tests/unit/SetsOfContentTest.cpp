@@ -35,13 +35,13 @@ void SetsOfContentTest::SelfUnitTest() {
 
 
 void SetsOfContentTest::testAll() {
-    string alicetxt = randSampleTxt(20000); // 20MB is top on MAC
+    string alicetxt = randSampleTxt(2000000); // 20MB is top on MAC
 
     DataObject *atxt = new DataObject(alicetxt);
 
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
@@ -51,13 +51,13 @@ void SetsOfContentTest::testAll() {
 
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
-    string bobtxt = randStringEditBurst(alicetxt, 100);
+    string bobtxt = randStringEditBurst(alicetxt, 10000);
 
     DataObject *btxt = new DataObject(bobtxt);
 
     GenSync Bob = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
