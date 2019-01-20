@@ -725,8 +725,8 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         top_str_size = myString.size();
         commSync->commSend(myString.size());
         Logger::gLog(Logger::METHOD,
-                     "SetsOfContent::SyncServer - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * mbar));
-        mbar = 2 * mbar;
+                     "SetsOfContent::SyncServer - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1)));
+        mbar = 2 * (mbar + 1);
         configure(setHost, mbar);
 
         for (DataObject *dop : setPointers) {
@@ -814,9 +814,9 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
         //TODO: check if CPI and InterCPI both consider sync fail concensus
         top_str_size = commSync->commRecv_size_t();
         Logger::gLog(Logger::METHOD,
-                     "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * mbar));
-        cout<<"SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * mbar)<<endl;
-        mbar = 2 * mbar;
+                     "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1)));
+        cout<<"SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1))<<endl;
+        mbar = 2 * (mbar + 1);
         configure(setHost, mbar);
 
         for (DataObject *dop : setPointers) {
