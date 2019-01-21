@@ -9,9 +9,7 @@ IBLTSync_SetDiff::IBLTSync_SetDiff(size_t expected_diff, size_t eltSize, bool ke
     oneWay = false;
     keepAlive = keep_alive;
 }
-IBLTSync_SetDiff::~IBLTSync_SetDiff(){
-//    for (DataObject* dop : MemCare) delete dop;
-};
+IBLTSync_SetDiff::~IBLTSync_SetDiff(){};
 
 bool IBLTSync_SetDiff::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
                                   list<DataObject *> &otherMinusSelf) {
@@ -39,17 +37,14 @@ if(!keepAlive) {
         otherMinusSelf.insert(otherMinusSelf.end(), newOMS.begin(), newOMS.end());
         selfMinusOther.insert(selfMinusOther.end(), newSMO.begin(), newSMO.end());
 
-//        MemCare.insert(MemCare.end(), otherMinusSelf.begin(), otherMinusSelf.end());
-//        MemCare.insert(MemCare.end(), selfMinusOther.begin(), selfMinusOther.end());
-
         stringstream msg;
         msg << "IBLTSync_SetDiff succeeded." << endl;
         msg << "self - other = " << printListOfPtrs(selfMinusOther) << endl;
         msg << "other - self = " << printListOfPtrs(otherMinusSelf) << endl;
         Logger::gLog(Logger::METHOD, msg.str());
     }
-    success = ((SYNC_SUCCESS==commSync->commRecv_int()) and success);
-    (success)? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
+//    success = ((SYNC_SUCCESS==commSync->commRecv_int()) and success);
+//    (success)? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
     return success;
 }
 
@@ -93,8 +88,7 @@ bool IBLTSync_SetDiff::SyncServer(const shared_ptr<Communicant> &commSync, list<
     for(auto pair : negative) {
         selfMinusOther.push_back(new DataObject(pair.first));
     }
-//    MemCare.insert(MemCare.end(), otherMinusSelf.begin(), otherMinusSelf.end());
-//    MemCare.insert(MemCare.end(), selfMinusOther.begin(), selfMinusOther.end());
+
     // send the difference
     if(!oneWay) {
         commSync->commSend(selfMinusOther);
@@ -107,11 +101,10 @@ bool IBLTSync_SetDiff::SyncServer(const shared_ptr<Communicant> &commSync, list<
     msg << "other - self = " << printListOfPtrs(otherMinusSelf) << endl;
     Logger::gLog(Logger::METHOD, msg.str());
 
-//    for (auto item : otherMinusSelf) delete item;
-//    for (auto item : selfMinusOther) delete item;
 
-    (success)? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
-    return (SYNC_SUCCESS==commSync->commRecv_int()) and success;
+//    (success)? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
+//    return (SYNC_SUCCESS==commSync->commRecv_int()) and success;
+    return success;
 }
 
 bool IBLTSync_SetDiff::addElem(DataObject *datum) {

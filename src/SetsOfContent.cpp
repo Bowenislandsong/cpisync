@@ -240,16 +240,12 @@ void SetsOfContent::answer_queries(const map<size_t,bool> &queries, const vector
 
         if (myTree.size() - 1 == shingle.lvl) {
             term_concern[shingle.second] = Dictionary[shingle.second];
-        }else {
+        } else {
             cycle tmp = shingle.compose;
-            try {
-                if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) throw invalid_argument(
-                            "We failed to get a cycle number to send to an other party at lvl: " +
-                            to_string(shingle.lvl));
-            }catch (exception){
-                cout<<"we encountered problem to cycle trace and errored out with"<<endl;
-                cout<<"Cycle: "<<(tmp)<<", My tree size: "<<myTree[shingle.lvl + 1].size()<<", and cyc size: "<<Cyc_dict[shingle.second].size()<<endl;
-            }
+
+            if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second]))
+                cout << "We failed to get a cycle number to send to an other party at lvl: " << shingle.lvl << endl;
+
             cyc_concern[shingle.second] = tmp.cyc;
         }
     }
@@ -698,7 +694,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
 
     commSync->commListen();
     long mbar;
-    if(GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol){
+    if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
         StrataEst est = StrataEst(sizeof(shingle_hash));
 
         for (auto item : setPointers) {
@@ -709,33 +705,32 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         auto theirStarata = commSync->commRecv_Strata();
         mbar = (est -= theirStarata).estimate();
         commSync->commSend(mbar); // Dangerous cast
-    }else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol){
+    } else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol) {
         mbar = 1e4;// elaborate Mbar
 
     }
-    cout<<"We passed here - Server"<<endl;
 
     RecvSyncParam(commSync);
     SyncMethod::SyncServer(commSync, setHost);
-    cout<<"We passed here - Server"<<endl;
     configure(setHost, mbar);
-    cout<<"We passed here - Server"<<endl;
     for (DataObject *dop : setPointers) {
         setHost->addElem(dop); // Add to GenSync
     }
     list<DataObject *> mine, others;
     vector<shingle_hash> theirs_hash, mine_hash;
-    cout<<"We passed here - Server"<<endl;
 
     size_t top_str_size = SIZE_T_MAX;
-    while (!setHost->SyncServer(commSync, mine, others) and
-           mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
-        // Both party should have concensus on failed recon
-        //TODO: check if CPI and InterCPI both consider sync fail concensus
+    while (!success and mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
+        success = setHost->SyncServer(commSync, mine, others);
+        success = ((SYNC_SUCCESS == commSync->commRecv_int()) and success);
+        success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
+        if (success) break;
+
         top_str_size = myString.size();
         commSync->commSend(myString.size());
         Logger::gLog(Logger::METHOD,
-                     "SetsOfContent::SyncServer - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1)));
+                     "SetsOfContent::SyncServer - mbar doubled from " + to_string(mbar) + " to " +
+                     to_string(2 * (mbar + 1)));
         mbar = 2 * (mbar + 1);
         configure(setHost, mbar);
 
@@ -746,7 +741,6 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         others.clear();
     }
 
-    cout<<"We passed here - Server"<<endl;
 
 
 //    for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
@@ -757,17 +751,14 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
 //    cout<< "Server - Term concern size : "<< term_concern.size()<<endl;
 
     size_t query_size = commSync->commRecv_size_t();
-    map<size_t,bool> queries;
-    for(size_t i = 0; i<query_size;++i) {// get cycles queries
+    map<size_t, bool> queries;
+    for (size_t i = 0; i < query_size; ++i) {// get cycles queries
         queries[commSync->commRecv_size_t()] = true;
     }
-    cout<<"We passed here - Server "<<endl;
-    answer_queries(queries,mine_hash);
-    cout<<"We passed here - Server got the answers to queries"<<endl;
-    for (auto groupcyc : cyc_concern){
+    answer_queries(queries, mine_hash);
+    for (auto groupcyc : cyc_concern) {
         commSync->commSend(groupcyc.second);
     }
-    cout<<"We passed here - Server"<<endl;
     for (auto dic : term_concern) {
         string tmp_str = Dictionary[dic.first];
         if (!tmp_str.empty())
@@ -775,7 +766,6 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         else
             commSync->commSend("$");
     }
-    cout<<"We passed here - Server term send"<<endl;
 
 //    commSync->commSend(SYNC_SUCCESS);
 //    cout<<"Server Close"<<endl;
@@ -804,7 +794,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
 
         mbar = commSync->commRecv_long(); // cast long to long long
 
-    } else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol){
+    } else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol) {
         mbar = 1e4;// elaborate Mbar
 
     }
@@ -812,7 +802,6 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
 
     SendSyncParam(commSync);
     SyncMethod::SyncClient(commSync, setHost);
- cout<<"We passed here parameter check"<<endl;
     configure(setHost, mbar);
 
     for (DataObject *dop : setPointers) {
@@ -820,16 +809,19 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     }
     list<DataObject *> mine, others;
     vector<shingle_hash> theirs_hash, mine_hash;
-    cout<<"We passed here"<<endl;
     size_t top_str_size = SIZE_T_MAX;
-    while (!setHost->SyncClient(commSync, mine, others) and
-           mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
-        // Both party should have concensus on failed recon
-        //TODO: check if CPI and InterCPI both consider sync fail concensus
+    while (!success and mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
+        success = setHost->SyncClient(commSync, mine, others);
+        success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
+        success = (commSync->commRecv_int() == SYNC_SUCCESS) and success;
+        if (success) break;
+
         top_str_size = commSync->commRecv_size_t();
         Logger::gLog(Logger::METHOD,
-                     "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1)));
-        cout<<"SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1))<<endl;
+                     "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " +
+                     to_string(2 * (mbar + 1)));
+        cout << "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1))
+             << endl;
         mbar = 2 * (mbar + 1);
         configure(setHost, mbar);
 
@@ -840,37 +832,33 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
         others.clear();
     }
 
-    cout<<"We passed here configre"<<endl;
     for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
-    prepare_querys(theirs_hash,mine_hash);
-    cout<<"We passed here prepare query"<<endl;
+    prepare_querys(theirs_hash, mine_hash);
 //    cout<< "cyc query size : "<< cyc_query.size()<<endl;
 //    cout<< "Term query size : "<< term_query.size()<<endl;
 
 // ask questions
     commSync->commSend(cyc_query.size() + term_query.size());
-    for(auto cyc:cyc_query){// ask about cycles
+    for (auto cyc:cyc_query) {// ask about cycles
         commSync->commSend(cyc.first);
     }
-    cout<<"We passed here cyc query"<<endl;
-    for(auto term:term_query){// ask about cycles
+
+    for (auto term:term_query) {// ask about cycles
         commSync->commSend(term.first);
-    }cout<<"We passed here term query"<<endl;
+    }
 // get answers from server
-    for(auto& cyc:cyc_query){
+    for (auto &cyc:cyc_query) {
         cyc.second = commSync->commRecv_size_t();
-    }cout<<"We passed here cyc revice"<<endl;
+    }
 
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
         if (tmp != "$")
             add_to_dictionary(tmp);
-    }cout<<"We passed here term recive"<<endl;
+    }
 
-
-    success = true;
 //    cout<<"Client Close"<<endl;
     Logger::gLog(Logger::METHOD, "Set Of Content Done");
     commSync->commClose();

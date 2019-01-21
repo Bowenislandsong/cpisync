@@ -3,7 +3,6 @@
 ////
 
 #include "PerformanceData.h"
-#define TerminatePort "kill -9 $(lsof -t -i :8001)"
 
 PerformanceData::~PerformanceData() = default;
 
@@ -33,68 +32,65 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
             int shingle_len = ceil(log10(str_size));
 
             for (int con = 0; con < confidence; ++con) {
-                try {
-
-                    GenSync Alice = GenSync::Builder().
-                            setProtocol(setReconProto).
-                            setStringProto(GenSync::StringSyncProtocol::kshinglingSync).
-                            setComm(GenSync::SyncComm::socket).
-                            setPort(portnum).
-                            setShingleLen(shingle_len).
-                            build();
 
 
-                    DataObject *Alicetxt = new DataObject(stringInput(str_size));
+                GenSync Alice = GenSync::Builder().
+                        setProtocol(setReconProto).
+                        setStringProto(GenSync::StringSyncProtocol::kshinglingSync).
+                        setComm(GenSync::SyncComm::socket).
+                        setPort(portnum).
+                        setShingleLen(shingle_len).
+                        build();
 
-                    Alice.addStr(Alicetxt, false);
-                    GenSync Bob = GenSync::Builder().
-                            setProtocol(setReconProto).
-                            setStringProto(GenSync::StringSyncProtocol::kshinglingSync).
-                            setComm(GenSync::SyncComm::socket).
-                            setPort(portnum).
-                            setShingleLen(shingle_len).
-                            build();
 
-                    DataObject *Bobtxt = new DataObject(randStringEdit((*Alicetxt).to_string(), edit_dist));
+                DataObject *Alicetxt = new DataObject(stringInput(str_size));
+
+                Alice.addStr(Alicetxt, false);
+                GenSync Bob = GenSync::Builder().
+                        setProtocol(setReconProto).
+                        setStringProto(GenSync::StringSyncProtocol::kshinglingSync).
+                        setComm(GenSync::SyncComm::socket).
+                        setPort(portnum).
+                        setShingleLen(shingle_len).
+                        build();
+
+                DataObject *Bobtxt = new DataObject(randStringEdit((*Alicetxt).to_string(), edit_dist));
 
 // Flag true includes backtracking, return false if backtracking fails in the alloted amoun tog memory
-                    auto str_s = clock();
+                auto str_s = clock();
 //                    struct timespec start, finish;
 //                    double str_time;
 
 //                    clock_gettime(CLOCK_MONOTONIC, &start);
 
-                    bool success_StrRecon = Bob.addStr(Bobtxt, true);
+                bool success_StrRecon = Bob.addStr(Bobtxt, true);
 
 //                    clock_gettime(CLOCK_MONOTONIC, &finish);
 //
 //                    str_time = (finish.tv_sec - start.tv_sec);
 //                    str_time += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
-                    double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
+                double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
 
 
-                    multiset<string> alice_set;
-                    for (auto item : Alice.dumpElements()) alice_set.insert(item->to_string());
-                    multiset<string> bob_set;
-                    for (auto item : Bob.dumpElements()) bob_set.insert(item->to_string());
+                multiset<string> alice_set;
+                for (auto item : Alice.dumpElements()) alice_set.insert(item->to_string());
+                multiset<string> bob_set;
+                for (auto item : Bob.dumpElements()) bob_set.insert(item->to_string());
 
-                    int success_SetRecon = multisetDiff(alice_set,
-                                                         bob_set).size();// separate set recon success from string recon
+                int success_SetRecon = multisetDiff(alice_set,
+                                                    bob_set).size();// separate set recon success from string recon
 //                    auto bobtxtis = Alice.dumpString()->to_string();
 //                    bool success_SetRecon = ((*Bobtxt).to_string() ==
 //                                             Alice.dumpString()->to_string()); // str Recon is deterministic, if not success , set recon is the problem
-                    forkHandleReport report = forkHandle(Alice, Bob, false);
+                forkHandleReport report = forkHandle(Alice, Bob, false);
 
-                    plot.add({to_string(str_size), to_string(edit_dist), to_string(report.bytesTot),
-                              to_string(report.CPUtime), to_string(str_time),
-                              to_string(Bob.getVirMem(0)), to_string(success_SetRecon), to_string(success_StrRecon)});
+                plot.add({to_string(str_size), to_string(edit_dist), to_string(report.bytesTot),
+                          to_string(report.CPUtime), to_string(str_time),
+                          to_string(Bob.getVirMem(0)), to_string(success_SetRecon), to_string(success_StrRecon)});
 
-                    delete Alicetxt;
-                    delete Bobtxt;
-                } catch (std::exception) {
-                    cout << "we failed once" << endl;
-                    system(TerminatePort);
-                }
+                delete Alicetxt;
+                delete Bobtxt;
+
             }
         }
         plot.update();
@@ -118,7 +114,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     //TODO: Separate Comm, and Time, Separate Faile rate.
 
     for (int str_size : str_sizeRange) {
-        cout << to_string(str_size) << endl;
+        cout << to_string(str_size)<<" - Sets of Content " + protoName + " " + str_type + "("+to_string(lvl)+" lvl)" << endl;
 //        edit_distRange.clear();
 //        for (int i = 1; i <= tesPts; ++i) edit_distRange.push_back((int) ((str_size * i) / 4000));
         for (int edit_dist : edit_distRange) {

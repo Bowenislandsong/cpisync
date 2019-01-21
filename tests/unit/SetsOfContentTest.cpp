@@ -35,7 +35,7 @@ void SetsOfContentTest::SelfUnitTest() {
 
 
 void SetsOfContentTest::testAll() {
-    string alicetxt = randSampleTxt(200000); // 20MB is top on MAC
+    string alicetxt = randSampleTxt(20000); // 20MB is top on MAC
 
     DataObject *atxt = new DataObject(alicetxt);
 
@@ -45,13 +45,13 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
-            setlvl(3).
+            setlvl(4).
             setPort(8003).
             build();
 
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
-    string bobtxt = randStringEditBurst(alicetxt, 10000);
+    string bobtxt = randStringEditBurst(alicetxt, 1000);
 
     DataObject *btxt = new DataObject(bobtxt);
 
@@ -61,7 +61,7 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
-            setlvl(3).
+            setlvl(4).
             setPort(8003).
             build();
 
