@@ -242,7 +242,14 @@ void SetsOfContent::answer_queries(const map<size_t,bool> &queries, const vector
             term_concern[shingle.second] = Dictionary[shingle.second];
         }else {
             cycle tmp = shingle.compose;
-            if (!shingle2hash_train(tmp,myTree[shingle.lvl+1],Cyc_dict[shingle.second])) throw invalid_argument("We failed to get a cycle number to send to an other party at lvl: "+to_string(shingle.lvl));
+            try {
+                if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) throw invalid_argument(
+                            "We failed to get a cycle number to send to an other party at lvl: " +
+                            to_string(shingle.lvl));
+            }catch (exception){
+                cout<<"we encountered problem to cycle trace and errored out with"<<endl;
+                cout<<"Cycle: "<<(tmp)<<", My tree size: "<<myTree[shingle.lvl + 1].size()<<", and cyc size: "<<Cyc_dict[shingle.second].size()<<endl;
+            }
             cyc_concern[shingle.second] = tmp.cyc;
         }
     }
@@ -754,9 +761,9 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
     for(size_t i = 0; i<query_size;++i) {// get cycles queries
         queries[commSync->commRecv_size_t()] = true;
     }
-    cout<<"We passed here - Server"<<endl;
+    cout<<"We passed here - Server "<<endl;
     answer_queries(queries,mine_hash);
-    cout<<"We passed here - Server"<<endl;
+    cout<<"We passed here - Server got the answers to queries"<<endl;
     for (auto groupcyc : cyc_concern){
         commSync->commSend(groupcyc.second);
     }
@@ -768,7 +775,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         else
             commSync->commSend("$");
     }
-    cout<<"We passed here - Server"<<endl;
+    cout<<"We passed here - Server term send"<<endl;
 
 //    commSync->commSend(SYNC_SUCCESS);
 //    cout<<"Server Close"<<endl;
@@ -805,7 +812,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
 
     SendSyncParam(commSync);
     SyncMethod::SyncClient(commSync, setHost);
- cout<<"We passed here"<<endl;
+ cout<<"We passed here parameter check"<<endl;
     configure(setHost, mbar);
 
     for (DataObject *dop : setPointers) {
@@ -833,12 +840,12 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
         others.clear();
     }
 
-    cout<<"We passed here"<<endl;
+    cout<<"We passed here configre"<<endl;
     for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
     prepare_querys(theirs_hash,mine_hash);
-    cout<<"We passed here"<<endl;
+    cout<<"We passed here prepare query"<<endl;
 //    cout<< "cyc query size : "<< cyc_query.size()<<endl;
 //    cout<< "Term query size : "<< term_query.size()<<endl;
 
@@ -847,20 +854,20 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     for(auto cyc:cyc_query){// ask about cycles
         commSync->commSend(cyc.first);
     }
-    cout<<"We passed here"<<endl;
+    cout<<"We passed here cyc query"<<endl;
     for(auto term:term_query){// ask about cycles
         commSync->commSend(term.first);
-    }cout<<"We passed here"<<endl;
+    }cout<<"We passed here term query"<<endl;
 // get answers from server
     for(auto& cyc:cyc_query){
         cyc.second = commSync->commRecv_size_t();
-    }cout<<"We passed here"<<endl;
+    }cout<<"We passed here cyc revice"<<endl;
 
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
         if (tmp != "$")
             add_to_dictionary(tmp);
-    }cout<<"We passed here"<<endl;
+    }cout<<"We passed here term recive"<<endl;
 
 
     success = true;
