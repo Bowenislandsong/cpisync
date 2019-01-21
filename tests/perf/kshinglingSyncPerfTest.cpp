@@ -94,7 +94,7 @@ void KshingleSyncPerf::setsofcontent3D() {
 
 //    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 3, 50, randSampleTxt, 8001);
 
-//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 4, 50, randSampleTxt, 8001);
+    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 4, 50, randSampleTxt, 8001);
 }
 
 void KshingleSyncPerf::testStrataEst3D() {
