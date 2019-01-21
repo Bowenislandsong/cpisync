@@ -74,7 +74,9 @@ void KshingleSyncPerf::setsofcontent3D() {
 
 
     vector<int> strSizeRange = {100000, 400000, 800000, 1200000, 1600000, 2000000};
-    editDistRange = {10000, 2000, 1000, 200, 100, 20};
+//    editDistRange = {10000, 2000, 1000, 200, 100, 20};
+    editDistRange = {100, 20};
+
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 2, 50, randSampleTxt, 8001);
 
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 3, 50, randSampleTxt, 8001);

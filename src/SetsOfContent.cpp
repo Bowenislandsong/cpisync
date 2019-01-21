@@ -706,19 +706,19 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         mbar = 1e4;// elaborate Mbar
 
     }
-
+    cout<<"We passed here - Server"<<endl;
 
     RecvSyncParam(commSync);
     SyncMethod::SyncServer(commSync, setHost);
-
+    cout<<"We passed here - Server"<<endl;
     configure(setHost, mbar);
-
+    cout<<"We passed here - Server"<<endl;
     for (DataObject *dop : setPointers) {
         setHost->addElem(dop); // Add to GenSync
     }
     list<DataObject *> mine, others;
     vector<shingle_hash> theirs_hash, mine_hash;
-
+    cout<<"We passed here - Server"<<endl;
 
     size_t top_str_size = SIZE_T_MAX;
     while (!setHost->SyncServer(commSync, mine, others) and
@@ -739,7 +739,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         others.clear();
     }
 
-
+    cout<<"We passed here - Server"<<endl;
 
 
 //    for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
@@ -754,13 +754,13 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
     for(size_t i = 0; i<query_size;++i) {// get cycles queries
         queries[commSync->commRecv_size_t()] = true;
     }
-
+    cout<<"We passed here - Server"<<endl;
     answer_queries(queries,mine_hash);
-
+    cout<<"We passed here - Server"<<endl;
     for (auto groupcyc : cyc_concern){
         commSync->commSend(groupcyc.second);
     }
-
+    cout<<"We passed here - Server"<<endl;
     for (auto dic : term_concern) {
         string tmp_str = Dictionary[dic.first];
         if (!tmp_str.empty())
@@ -768,7 +768,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         else
             commSync->commSend("$");
     }
-
+    cout<<"We passed here - Server"<<endl;
 
 //    commSync->commSend(SYNC_SUCCESS);
 //    cout<<"Server Close"<<endl;
@@ -805,7 +805,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
 
     SendSyncParam(commSync);
     SyncMethod::SyncClient(commSync, setHost);
-
+ cout<<"We passed here"<<endl;
     configure(setHost, mbar);
 
     for (DataObject *dop : setPointers) {
@@ -813,7 +813,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     }
     list<DataObject *> mine, others;
     vector<shingle_hash> theirs_hash, mine_hash;
-
+    cout<<"We passed here"<<endl;
     size_t top_str_size = SIZE_T_MAX;
     while (!setHost->SyncClient(commSync, mine, others) and
            mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
@@ -833,12 +833,12 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
         others.clear();
     }
 
-
+    cout<<"We passed here"<<endl;
     for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
     prepare_querys(theirs_hash,mine_hash);
-
+    cout<<"We passed here"<<endl;
 //    cout<< "cyc query size : "<< cyc_query.size()<<endl;
 //    cout<< "Term query size : "<< term_query.size()<<endl;
 
@@ -847,20 +847,20 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
     for(auto cyc:cyc_query){// ask about cycles
         commSync->commSend(cyc.first);
     }
-
+    cout<<"We passed here"<<endl;
     for(auto term:term_query){// ask about cycles
         commSync->commSend(term.first);
-    }
+    }cout<<"We passed here"<<endl;
 // get answers from server
     for(auto& cyc:cyc_query){
         cyc.second = commSync->commRecv_size_t();
-    }
+    }cout<<"We passed here"<<endl;
 
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
         if (tmp != "$")
             add_to_dictionary(tmp);
-    }
+    }cout<<"We passed here"<<endl;
 
 
     success = true;
