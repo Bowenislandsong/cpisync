@@ -4,7 +4,7 @@
 
 #include "SetsOfContent.h"
 SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto, size_t shingle_size)
-: TermStrSize(terminal_str_size), Levels(levels), Partition(partition), baseSyncProtocol(base_set_proto), HashShingleSize(shingle_size) {
+        : TermStrSize(terminal_str_size), Levels(levels), Partition(partition), baseSyncProtocol(base_set_proto), HashShingleSize(shingle_size) {
     SyncID = SYNC_TYPE::SetsOfContent;
     if (levels > USHRT_MAX or levels < 2)
         throw invalid_argument("Num of Level specified should be between 2 and " + to_string(USHRT_MAX));
@@ -569,9 +569,9 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash>& shing
 std::map<size_t, vector<shingle_hash>> SetsOfContent::tree2shingle_dict(std::set<shingle_hash> &tree_lvl) {
     // prepare shingle_set in a map, and microsorted(sorted for shingles with same head)
     std::map<size_t, vector<shingle_hash>> res;
-        for (shingle_hash shingle : tree_lvl){
-            res[shingle.first].push_back(shingle);
-        }
+    for (shingle_hash shingle : tree_lvl){
+        res[shingle.first].push_back(shingle);
+    }
 
 
     for(auto& shingle : res){
@@ -671,9 +671,9 @@ void SetsOfContent::RecvSyncParam(const shared_ptr<Communicant> &commSync, bool 
     size_t Partition_C = (size_t)commSync->commRecv_size_t();
 
     if (theSyncID != enumToByte(SyncID) ||
-            TermStrSize_C != TermStrSize ||
-            Levels_C != Levels ||
-            Partition_C != Partition) {
+        TermStrSize_C != TermStrSize ||
+        Levels_C != Levels ||
+        Partition_C != Partition) {
         // report a failure to establish sync parameters
         commSync->commSend(SYNC_FAIL_FLAG);
         Logger::gLog(Logger::COMM, "Sync parameters differ from client to server: Client has (" +
@@ -702,6 +702,9 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
         auto theirStarata = commSync->commRecv_Strata();
         mbar = (est -= theirStarata).estimate();
         commSync->commSend(mbar); // Dangerous cast
+    }else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol){
+        mbar = 1e4;// elaborate Mbar
+
     }
 
 
@@ -794,7 +797,11 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
 
         mbar = commSync->commRecv_long(); // cast long to long long
 
+    } else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol){
+        mbar = 1e4;// elaborate Mbar
+
     }
+
 
     SendSyncParam(commSync);
     SyncMethod::SyncClient(commSync, setHost);
@@ -870,7 +877,7 @@ void SetsOfContent::configure(shared_ptr<SyncMethod>& setHost, long mbar) {
     else if (GenSync::SyncProtocol::InteractiveCPISync == baseSyncProtocol)
         setHost = make_shared<InterCPISync>(5, sizeof(shingle_hash) * 8, 64, 7, true);
     else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol)
-        setHost = make_shared<ProbCPISync>(1e4,sizeof(shingle_hash) * 8,64,true);
+        setHost = make_shared<ProbCPISync>(mbar,sizeof(shingle_hash) * 8,64,true);
 }
 
 bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *> &theirsMinusMine,
