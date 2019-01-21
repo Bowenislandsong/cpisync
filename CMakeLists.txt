@@ -77,42 +77,13 @@ if(NOT NTL_LIB)
     message(FATAL_ERROR "CAN NOT FIND ntl")
 endif()
 find_library(GMP_LIB gmp)
+if(NOT GMP_LIB)
+    message(FATAL_ERROR "CAN NOT FIND gmp")
+endif()
 find_library(CPP_LIB cppunit)
-#if (NOT GMP_LIB)
-#    include(ExternalProject)
-#    ExternalProject_Add(GMP_LIB
-#            PREFIX ${CMAKE_BINARY_DIR}/libs
-#            )
-#DEPENDS GMP_LIB
-#SOURCE_DIR libs/NTL
-#DOWNLOAD_DIR libs/tmp
-#CONFIGURE_COMMAND mkdir ${HOME}/ntllib && cd ${CMAKE_BINARY_DIR}/libs/NTL/src/ && ./configure --prefix=${HOME}/ntllib
-#BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/libs/NTL/src/ && make
-#INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/libs/NTL/src/ && make install
-#CONFIGURE_COMMAND cd ${PREFIX}/src/project_ntl/src && ./configure --prefix=${PREFIX}
-#BUILD_COMMAND make
-#INSTALL_COMMAND make install
-#endif()
-#if(UNIX AND NOT APPLE AND NOT NTL_LIB)
-#    message("This is a Linux machine without ntl library")
-#    include(ExternalProject)
-#    ExternalProject_Add(NTL
-#
-#            PREFIX ${CMAKE_BINARY_DIR}/libs
-#            URL https://www.shoup.net/ntl/ntl-11.3.1.tar.gz
-#
-#            SOURCE_DIR libs/NTL
-#            DOWNLOAD_DIR libs/tmp
-#
-#            CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/libs/NTL/src/ && ./configure
-#            BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/libs/NTL/src/ && make all -j4
-#            INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/libs/NTL/src/ && sudo make install
-#
-#            )
-#
-#    ExternalProject_Get_Property(NTL install_dir)
-#endif()
-
+if(NOT CPP_LIB)
+    message(FATAL_ERROR "CAN NOT FIND cppunit")
+endif()
 
 # Set file config
 set(SOURCE_FILES
@@ -141,7 +112,7 @@ set(SOURCE_FILES
         ${SRC_DIR}/StrataEst.cpp
         ${SRC_DIR}/StrataEst_CPI.cpp
         ${SRC_DIR}/CPI.cpp
-        ${SRC_DIR}/SetsOfStrings.cpp src/SetsOfContent.cpp include/SetsOfContent.h)
+        ${SRC_DIR}/SetsOfContent.cpp)
 
 #cppunit
 include_directories(include)

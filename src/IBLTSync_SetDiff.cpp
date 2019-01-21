@@ -4,7 +4,7 @@
 
 #include "IBLTSync_SetDiff.h"
 
-IBLTSync_SetDiff::IBLTSync_SetDiff(size_t expected_diff, size_t eltSize, bool keep_alive) : myIBLT((expected_diff>0)?expected_diff:0, eltSize) {
+IBLTSync_SetDiff::IBLTSync_SetDiff(size_t expected_diff, size_t eltSize, bool keep_alive) : myIBLT((expected_diff>0)?expected_diff:1, eltSize) {
     expNumDiff = expected_diff;
     oneWay = false;
     keepAlive = keep_alive;
@@ -48,6 +48,8 @@ if(!keepAlive) {
         msg << "other - self = " << printListOfPtrs(otherMinusSelf) << endl;
         Logger::gLog(Logger::METHOD, msg.str());
     }
+    success = ((SYNC_SUCCESS==commSync->commRecv_int()) and success);
+    (success)? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
     return success;
 }
 
@@ -108,7 +110,8 @@ bool IBLTSync_SetDiff::SyncServer(const shared_ptr<Communicant> &commSync, list<
 //    for (auto item : otherMinusSelf) delete item;
 //    for (auto item : selfMinusOther) delete item;
 
-    return success;
+    (success)? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
+    return (SYNC_SUCCESS==commSync->commRecv_int()) and success;
 }
 
 bool IBLTSync_SetDiff::addElem(DataObject *datum) {

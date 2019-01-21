@@ -626,5 +626,12 @@ inline string temporaryDir() {
     return "/tmp";
 }
 
+template <typename T>
+inline T getMedian(vector<T> vec){
+    std::sort(vec.begin(),vec.end());
+    if (vec.size() % 2 == 0) return vec[vec.size()/2];
+    else return (vec[floor(vec.size()/2)]+vec[ceil(vec.size()/2)])/2;
+};
+
 #endif	/* AUX_H */
 

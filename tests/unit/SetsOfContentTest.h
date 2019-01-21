@@ -13,7 +13,7 @@
 class SetsOfContentTest : public CPPUNIT_NS::TestFixture{
 
 CPPUNIT_TEST_SUITE(SetsOfContentTest);
-        CPPUNIT_TEST(setDiff);
+        CPPUNIT_TEST(SelfUnitTest);
         CPPUNIT_TEST(testAll);
     CPPUNIT_TEST_SUITE_END();
 public:
@@ -21,12 +21,12 @@ public:
     SetsOfContentTest() = default;
     virtual ~SetsOfContentTest() = default;
     void setUp(){
-        const int SEED = 617;
+        const int SEED = 10;
         srand(SEED);
     };
 
     void testAll();
-    void setDiff();
+    void SelfUnitTest();
 };
 
 

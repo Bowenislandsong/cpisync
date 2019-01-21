@@ -436,7 +436,7 @@ long Communicant::commRecv_long() {
 size_t Communicant::commRecv_size_t() {
     ustring received = commRecv_ustring(sizeof(size_t));
     ZZ num = ZZFromBytes(received.data(), sizeof(size_t));
-    Logger::gLog(Logger::COMM, "... received long " + toStr(num));
+    Logger::gLog(Logger::COMM, "... received size_t " + toStr(num));
 
     return to_ulong(num);
 }

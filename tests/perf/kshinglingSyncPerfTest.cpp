@@ -19,7 +19,7 @@ const int editDist = 20;
 const int strSize = 5;
 
 const int tesPts = 6;// Test Pts per graph
-const int target_confidence = 100;// Confidence interval
+const int target_confidence = 1;// Confidence interval
 const int confidenceCap = 40; // after edit distance exceed confidenceCap, confidence go to 1.
 
 
@@ -73,9 +73,28 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.kshingle3D(GenSync::SyncProtocol::IBLTSyncSetDiff,editDistRange,strSizeRange,target_confidence, randSampleTxt);
 
 
-    vector<int> strSizeRange = {2000000, 400000, 800000, 1200000, 1600000, 2000000};
-    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, target_confidence, randSampleTxt, 8001);
-//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, target_confidence, randSampleTxt, 8001);
+    vector<int> strSizeRange = {100000, 400000, 800000, 1200000, 1600000, 2000000};
+    editDistRange = {10000, 2000, 1000, 200, 100, 20};
+//    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 2, 50, randSampleTxt, 8001);
+
+//    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 3, 50, randSampleTxt, 8001);
+
+    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 4, 50, randSampleTxt, 8001);
+
+
+//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, 2, 100, randSampleTxt, 8001);
+
+//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, 3, 100, randSampleTxt, 8001);
+
+//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange, 4, 100, randSampleTxt, 8001);
+
+
+
+//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 2, 50, randSampleTxt, 8001);
+
+//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 3, 50, randSampleTxt, 8001);
+
+//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 4, 50, randSampleTxt, 8001);
 }
 
 void KshingleSyncPerf::testStrataEst3D() {
