@@ -3,7 +3,7 @@
 ////
 
 #include "PerformanceData.h"
-
+#define TerminatePort "kill -9 $(lsof -t -i :8001)"
 
 PerformanceData::~PerformanceData() = default;
 
@@ -93,6 +93,7 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
                     delete Bobtxt;
                 } catch (std::exception) {
                     cout << "we failed once" << endl;
+                    system(TerminatePort);
                 }
             }
         }
