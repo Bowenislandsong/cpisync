@@ -717,12 +717,12 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
     for (DataObject *dop : setPointers) {
         setHost->addElem(dop); // Add to GenSync
     }
-    list<DataObject *> mine, others;
+
     vector<shingle_hash> theirs_hash, mine_hash;
 
     size_t top_str_size = SIZE_T_MAX;
     while (!success and mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
-        success = setHost->SyncServer(commSync, mine, others);
+        success = setHost->SyncServer(commSync, selfMinusOther, otherMinusSelf);
         success = ((SYNC_SUCCESS == commSync->commRecv_int()) and success);
         success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
         if (success) break;
@@ -738,14 +738,14 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
         for (DataObject *dop : setPointers) {
             setHost->addElem(dop); // Add to GenSync
         }
-        mine.clear();
-        others.clear();
+        selfMinusOther.clear();
+        otherMinusSelf.clear();
     }
 
 
 
 //    for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
-    for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
+    for (auto shingle : selfMinusOther) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
 //    prepare_concerns(theirs_hash,mine_hash);
 
@@ -782,7 +782,6 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
 
     commSync->commConnect();
     long mbar;
-
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
         StrataEst est = StrataEst(sizeof(shingle_hash));
 
@@ -797,7 +796,6 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
 
     } else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol) {
         mbar = 1e4;// elaborate Mbar
-
     }
 
 
@@ -809,11 +807,11 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     for (DataObject *dop : setPointers) {
         setHost->addElem(dop); // Add to GenSync
     }
-    list<DataObject *> mine, others;
+
     vector<shingle_hash> theirs_hash, mine_hash;
     size_t top_str_size = SIZE_T_MAX;
     while (!success and mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
-        success = setHost->SyncClient(commSync, mine, others);
+        success = setHost->SyncClient(commSync, selfMinusOther, otherMinusSelf);
         success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
         success = (commSync->commRecv_int() == SYNC_SUCCESS) and success;
         if (success) break;
@@ -830,12 +828,12 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
         for (DataObject *dop : setPointers) {
             setHost->addElem(dop); // Add to GenSync
         }
-        mine.clear();
-        others.clear();
+        selfMinusOther.clear();
+        otherMinusSelf.clear();
     }
 
-    for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
-    for (auto shingle : mine) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
+    for (auto shingle : otherMinusSelf) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
+    for (auto shingle : selfMinusOther) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
     prepare_querys(theirs_hash, mine_hash);
 //    cout<< "cyc query size : "<< cyc_query.size()<<endl;

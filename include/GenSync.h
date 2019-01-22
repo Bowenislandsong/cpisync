@@ -122,6 +122,10 @@ public:
      */
     const DataObject* dumpString();
 
+    const size_t getTotalSetDiffSize();
+
+    const vector<pair<string,double>> getTime();
+
     // COMMUNICANT MANIPULATION
     /* Communicants are entities that can communicate [and thus sync] with this GenSync object.
      *  They must each be registered before synchronization.
@@ -320,7 +324,12 @@ private:
 
     // FIELDS
     /** A container for the data stored by this GenSync object. */
-    list<DataObject*> myData, myDiff;
+    list<DataObject*> myData;
+
+    /** records a actual set difference used to see string reconcilliation*/
+    size_t myDiffSize = 0, theirDiffSize = 0;
+
+    vector<pair<string,double>> timeFrame;
 
     /** A container for the string stored by this GenSync object. */
     DataObject* myString;

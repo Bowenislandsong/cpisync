@@ -1,1 +1,2 @@
-Level|Parition|Comm (bits)|Time Set(s)|Time Str(s)|Str Recon True
+Level|Partition|Comm (bytes)|Actual Sym Diff|Time Tree(s)|Time Recon(s)|Time Backtrack (included in Time Recon) (s)|Str Recon True
+6 10 282948 539 4.843861 38.572473 2.952182 1

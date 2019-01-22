@@ -114,6 +114,8 @@ bool GenSync::listenSync(int method_num,bool isRecon) {
             Logger::error_and_quit(s.what());
             return false;
         }
+        myDiffSize = selfMinusOther.size();
+        theirDiffSize = otherMinusSelf.size();
 
         // add any items that were found in the reconciliation
         list<DataObject *>::iterator itDO;
@@ -127,8 +129,10 @@ bool GenSync::listenSync(int method_num,bool isRecon) {
         }
 //TODO: if not one way, enable this and set up a flag for one way , mind sync client or sync server
 //        if ((*syncAgent)->isStringReconMethod()) { // If it is string reconciliation
-//            syncSuccess = (*syncAgent)->reconstructString(
-//                    myString,dumpElements()); // reconstruct the string based on the new information from set reconciliation
+//        clock_t time = clock();
+//        syncSuccess = (*syncAgent)->reconstructString(
+//                myString, myData); // reconstruct the string based on the new information from set reconciliation
+//        timeFrame.emplace_back("Str Reconstruction Time",(double) (clock() - time) / CLOCKS_PER_SEC);
 //        }
 
 
@@ -159,12 +163,13 @@ bool GenSync::startSync(int method_num,bool isRecon) {
             if (!(*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf)) {
                 Logger::gLog(Logger::METHOD, "Sync to " + (*itComm)->getName() + " failed!");
                 syncSuccess = false;
-
             }
         } catch (SyncFailureException s) {
             Logger::error_and_quit(s.what());
             return false;
         }
+        myDiffSize = selfMinusOther.size();
+        theirDiffSize = otherMinusSelf.size();
 
         // add any items that were found in the reconciliation
         list<DataObject *>::iterator itDO;
@@ -175,8 +180,10 @@ bool GenSync::startSync(int method_num,bool isRecon) {
             delElemGroup(selfMinusOther);
         }
         if ((*syncAgentIt)->isStringReconMethod()) { // If it is string reconciliation
+            clock_t time = clock();
             syncSuccess = (*syncAgentIt)->reconstructString(
                     myString, myData); // reconstruct the string based on the new information from set reconciliation
+            timeFrame.emplace_back("Str Reconstruction Time",(double) (clock() - time) / CLOCKS_PER_SEC);
         }
 
     }
@@ -337,6 +344,14 @@ const list<DataObject *> GenSync::dumpElements() {
 
 const DataObject* GenSync::dumpString() {
     return myString;
+}
+
+const size_t GenSync::getTotalSetDiffSize() {
+    return myDiffSize + theirDiffSize;
+}
+
+const vector<std::pair<string,double>> GenSync::getTime() {
+    return timeFrame;
 }
 
 const long GenSync::getXmitBytes(int commIndex) const {

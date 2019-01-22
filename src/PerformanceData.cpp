@@ -109,7 +109,8 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (*stringInput == randSampleCode) str_type = "RandCode";
 
     PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
-                                     {"Level", "Parition", "Comm (bits)", "Time Set(s)", "Time Str(s)",
+                                     {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+                                      "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
                                       "Str Recon True"});
     //TODO: Separate Comm, and Time, Separate Faile rate.
     for (int str_size : str_sizeRange) {
@@ -117,7 +118,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
         for (int edit_dist : edit_distRange) {
 
             for (int lvl:levelRange) {
-                cout          << " - Sets of Content " + protoName + " " + str_type + "(" + to_string(lvl) + " lvl)" << endl;
+                cout << " - Sets of Content " + protoName + " " + str_type + "(" + to_string(lvl) + " lvl)" << endl;
 
                 for (int par: partitionRange) {
 
@@ -138,6 +139,10 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                             DataObject *Alicetxt = new DataObject(stringInput(str_size));
 
+                            clock_t strStart = clock();
+                            Alice.addStr(Alicetxt, false);
+                            auto tree_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
+
                             GenSync Bob = GenSync::Builder().
                                     setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                                     setProtocol(setReconProto).
@@ -155,17 +160,14 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             Bob.addStr(Bobtxt, false);
 
 
-                            clock_t strStart = clock();
-
-                            Alice.addStr(Alicetxt, false);
                             forkHandleReport report = forkHandle(Alice, Bob, false);
-                            auto str_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
 
                             bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
-
                             plot.add({to_string(lvl), to_string(par),
                                       to_string(report.bytesTot + report.bytesRTot),
-                                      to_string(report.CPUtime), to_string(str_time), to_string(success_StrRecon)});
+                                      to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+                                      to_string(report.totalTime), to_string(Alice.getTime().front().second),
+                                      to_string(success_StrRecon)});
 //                            plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
 //                                      to_string(report.bytesTot + report.bytesRTot),
 //                                      to_string(report.CPUtime), to_string(str_time), to_string(success_StrRecon)});
