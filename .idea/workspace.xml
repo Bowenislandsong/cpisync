@@ -17,12 +17,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandAscii2mStr20kED.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandAscii2mStr20kED.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -60,9 +55,9 @@
           <entry key="__split_buffer" value="2" />
           <entry key="__tree" value="2" />
           <entry key="algorithm" value="5" />
-          <entry key="cpp" value="302" />
+          <entry key="cpp" value="305" />
           <entry key="functional" value="19" />
-          <entry key="h" value="347" />
+          <entry key="h" value="350" />
           <entry key="heap" value="11" />
           <entry key="iostream" value="1" />
           <entry key="iterator" value="8" />
@@ -84,14 +79,14 @@
         <counts>
           <entry key="CMakeCache.txt" value="2" />
           <entry key="CMakeLists.txt" value="9" />
-          <entry key="ObjectiveC" value="783" />
+          <entry key="ObjectiveC" value="789" />
           <entry key="PLAIN_TEXT" value="215" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="44972" />
+          <entry key="cpp" value="44973" />
           <entry key="h" value="16881" />
           <entry key="mm" value="18" />
           <entry key="txt" value="114" />
@@ -101,7 +96,7 @@
         <counts>
           <entry key="CMakeLists.txt" value="114" />
           <entry key="Doxygen file" value="26" />
-          <entry key="ObjectiveC" value="61845" />
+          <entry key="ObjectiveC" value="61846" />
         </counts>
       </usages-collector>
     </session>
@@ -155,46 +150,19 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="705">
-              <caret line="47" column="39" selection-start-line="47" selection-start-column="39" selection-end-line="47" selection-end-column="39" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/include/Auxiliary.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7005">
+            <state relative-caret-position="750">
               <caret line="467" column="14" selection-start-line="467" selection-start-column="14" selection-end-line="467" selection-end-column="14" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9105">
-              <caret line="607" column="19" selection-start-line="607" selection-start-column="16" selection-end-line="607" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandTextfix Str Size and ED.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="31" selection-start-line="4" selection-start-column="31" selection-end-line="4" selection-end-column="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="304">
-              <caret line="80" column="70" lean-forward="true" selection-start-line="80" selection-start-column="70" selection-end-line="80" selection-end-column="71" />
+              <caret line="80" column="100" lean-forward="true" selection-start-line="80" selection-start-column="100" selection-end-line="80" selection-end-column="100" />
             </state>
           </provider>
         </entry>
@@ -202,8 +170,62 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1770">
-              <caret line="118" column="38" selection-start-line="118" selection-start-column="38" selection-end-line="118" selection-end-column="38" />
+            <state relative-caret-position="299">
+              <caret line="166" column="78" lean-forward="true" selection-start-line="166" selection-start-column="78" selection-end-line="166" selection-end-column="78" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/ForkHandle.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="80" column="44" selection-start-line="80" selection-start-column="44" selection-end-line="80" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/GenSync.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="274">
+              <caret line="350" column="43" selection-start-line="350" selection-start-column="43" selection-end-line="350" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Communicant.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="217">
+              <caret line="39" column="21" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/Communicant.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="364">
+              <caret line="364" column="39" lean-forward="true" selection-start-line="364" selection-start-column="39" selection-end-line="364" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/InterCPISync.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="507">
+              <caret line="55" column="12" selection-start-line="55" selection-start-column="12" selection-end-line="55" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/InterCPISync.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="20" column="14" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -224,8 +246,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Not connected to a socke</find>
-      <find>d to a socket! - Re</find>
       <find>my_fd</find>
       <find>commRecv</find>
       <find>Error receiving data on the socket!</find>
@@ -254,6 +274,8 @@
       <find>Dictionary</find>
       <find>exp</find>
       <find>add</find>
+      <find>bytesRTot</find>
+      <find>xferBytesTot</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -294,7 +316,6 @@
         <option value="$PROJECT_DIR$/include/Auxiliary.h" />
         <option value="$PROJECT_DIR$/src/IBLT.cpp" />
         <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.h" />
-        <option value="$PROJECT_DIR$/src/Communicant.cpp" />
         <option value="$PROJECT_DIR$/src/CommSocket.cpp" />
         <option value="$PROJECT_DIR$/src/CPISync.cpp" />
         <option value="$PROJECT_DIR$/src/InterCPISync.cpp" />
@@ -314,6 +335,7 @@
         <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" />
         <option value="$PROJECT_DIR$/src/PerformanceData.cpp" />
         <option value="$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp" />
+        <option value="$PROJECT_DIR$/src/Communicant.cpp" />
       </list>
     </option>
   </component>
@@ -324,8 +346,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="false" derivedClasses="false" />
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="width" value="1440" />
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+    <option name="width" value="718" />
     <option name="height" value="900" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -527,12 +549,12 @@
       <workItem from="1548112520769" duration="5447000" />
       <workItem from="1548127336936" duration="3985000" />
       <workItem from="1548131942937" duration="6000" />
-      <workItem from="1548172292673" duration="459000" />
+      <workItem from="1548172292673" duration="1437000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="830010000" />
+    <option name="totallyTimeSpent" value="830988000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -544,15 +566,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.29613733" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19241774" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32871288" />
-      <window_info active="true" anchor="bottom" x="902" y="407" width="1375" height="861" id="Run" order="2" sideWeight="0.49945176" visible="true" weight="0.29759037" />
+      <window_info anchor="bottom" x="902" y="407" width="1375" height="861" id="Run" order="2" sideWeight="0.49945176" weight="0.29759037" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="5" weight="0.32970297" />
@@ -566,7 +588,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="Debug" order="4" sideWeight="0.49893504" weight="0.4392971" />
-      <window_info anchor="right" x="404" y="312" width="1440" height="829" id="Messages" order="5" sideWeight="0.49945176" visible="true" weight="0.20958512" />
+      <window_info anchor="right" x="404" y="312" width="1440" height="829" id="Messages" order="5" sideWeight="0.49945176" weight="0.20958512" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -624,13 +646,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/include/ConstantsAndTypes.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="472">
-          <caret line="53" column="17" selection-start-line="53" selection-start-column="17" selection-end-line="53" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/include/NTL/tools.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="537">
@@ -659,13 +674,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Communicant.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="79" column="18" selection-start-line="79" selection-start-column="18" selection-end-line="79" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CommSocket.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -687,13 +695,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/Communicant.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="798">
-          <caret line="395" column="30" selection-start-line="395" selection-start-column="30" selection-end-line="395" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/IBLTSync_SetDiff.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="438">
@@ -705,13 +706,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
           <caret line="28" selection-start-line="28" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/InterCPISync.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="207" selection-start-line="207" selection-end-line="207" />
         </state>
       </provider>
     </entry>
@@ -812,13 +806,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GenSync.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1650">
-          <caret line="110" column="30" selection-start-line="110" selection-start-column="30" selection-end-line="110" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CPISync.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6705">
@@ -854,13 +841,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="236">
           <caret line="41" column="17" selection-start-line="41" selection-start-column="17" selection-end-line="41" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/ForkHandle.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="64" column="23" selection-start-line="64" selection-start-column="23" selection-end-line="64" selection-end-column="23" />
         </state>
       </provider>
     </entry>
@@ -907,20 +887,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/Auxiliary.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7005">
-          <caret line="467" column="14" selection-start-line="467" selection-start-column="14" selection-end-line="467" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9105">
-          <caret line="607" column="19" selection-start-line="607" selection-start-column="16" selection-end-line="607" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandTextfix Str Size and ED.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -928,10 +894,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="750">
+          <caret line="607" column="19" selection-start-line="607" selection-start-column="16" selection-end-line="607" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Auxiliary.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="750">
+          <caret line="467" column="14" selection-start-line="467" selection-start-column="14" selection-end-line="467" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="80" column="100" lean-forward="true" selection-start-line="80" selection-start-column="100" selection-end-line="80" selection-end-column="100" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1770">
-          <caret line="118" column="38" selection-start-line="118" selection-start-column="38" selection-end-line="118" selection-end-column="38" />
+        <state relative-caret-position="299">
+          <caret line="166" column="78" lean-forward="true" selection-start-line="166" selection-start-column="78" selection-end-line="166" selection-end-column="78" />
         </state>
       </provider>
     </entry>
@@ -945,10 +932,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp">
+    <entry file="file://$PROJECT_DIR$/include/ForkHandle.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="80" column="70" lean-forward="true" selection-start-line="80" selection-start-column="70" selection-end-line="80" selection-end-column="71" />
+        <state relative-caret-position="289">
+          <caret line="80" column="44" selection-start-line="80" selection-start-column="44" selection-end-line="80" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GenSync.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="350" column="43" selection-start-line="350" selection-start-column="43" selection-end-line="350" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Communicant.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="39" column="21" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Communicant.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="364" column="39" lean-forward="true" selection-start-line="364" selection-start-column="39" selection-end-line="364" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/InterCPISync.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="507">
+          <caret line="55" column="12" selection-start-line="55" selection-start-column="12" selection-end-line="55" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/InterCPISync.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="20" column="14" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
         </state>
       </provider>
     </entry>
