@@ -85,6 +85,7 @@ void KshingleSyncPerf::setsofcontent3D() {
     strSizeRange = {2000000};
     editDistRange = {20000};
     vector<int> lvlRange = {2, 3, 4, 5};
+    lvlRange = {5};
     vector<int> parRange = {3,5,7,9};
     test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,lvlRange, parRange, 100, randAsciiStr, 8001);
 
