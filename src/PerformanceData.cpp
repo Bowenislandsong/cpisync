@@ -99,7 +99,7 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 
 
 void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
-                                 vector<int> str_sizeRange, int lvl, int confidence, string (*stringInput)(int), int portnum) {
+                                 vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, int confidence, string (*stringInput)(int), int portnum) {
     string protoName, str_type;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == setReconProto) protoName = "IBLTSyncSetDiff";
     if (GenSync::SyncProtocol::InteractiveCPISync == setReconProto) protoName = "InteractiveCPISync";
@@ -108,71 +108,81 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (*stringInput == randSampleTxt) str_type = "RandText";
     if (*stringInput == randSampleCode) str_type = "RandCode";
 
-    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "("+to_string(lvl)+" lvl)",
-                                     {"Str Size", "Edit Diff", "Comm (bits)", "Time Set(s)", "Time Str(s)",
+    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
+                                     {"Level", "Parition", "Comm (bits)", "Time Set(s)", "Time Str(s)",
                                       "Str Recon True"});
     //TODO: Separate Comm, and Time, Separate Faile rate.
-
     for (int str_size : str_sizeRange) {
-        cout << to_string(str_size)<<" - Sets of Content " + protoName + " " + str_type + "("+to_string(lvl)+" lvl)" << endl;
-//        edit_distRange.clear();
-//        for (int i = 1; i <= tesPts; ++i) edit_distRange.push_back((int) ((str_size * i) / 4000));
+
         for (int edit_dist : edit_distRange) {
 
-            for (int con = 0; con < confidence; ++con) {
-                try {
-                    cout<<"String Size: "<<str_size<<", Edit Dist: "<<(int)(str_size/edit_dist)<<", Confidence: "<<con<<endl;
-                    GenSync Alice = GenSync::Builder().
-                            setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-                            setProtocol(setReconProto).
-                            setComm(GenSync::SyncComm::socket).
-                            setTerminalStrSize(100).
-                            setNumPartitions(10).
-                            setlvl(lvl).
-                            setPort(portnum).
-                            build();
+            for (int lvl:levelRange) {
+                cout          << " - Sets of Content " + protoName + " " + str_type + "(" + to_string(lvl) + " lvl)" << endl;
+
+                for (int par: partitionRange) {
+
+                    for (int con = 0; con < confidence; ++con) {
+                        try {
+                            cout << "level: " << lvl << ", partitions: " << par
+                                 << ", Confidence: " << con << endl;
+                            GenSync Alice = GenSync::Builder().
+                                    setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
+                                    setProtocol(setReconProto).
+                                    setComm(GenSync::SyncComm::socket).
+                                    setTerminalStrSize(100).
+                                    setNumPartitions(par).
+                                    setlvl(lvl).
+                                    setPort(portnum).
+                                    build();
 
 
-                    DataObject *Alicetxt = new DataObject(stringInput(str_size));
+                            DataObject *Alicetxt = new DataObject(stringInput(str_size));
 
-                    GenSync Bob = GenSync::Builder().
-                            setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-                            setProtocol(setReconProto).
-                            setComm(GenSync::SyncComm::socket).
-                            setTerminalStrSize(100).
-                            setNumPartitions(10).
-                            setlvl(lvl).
-                            setPort(portnum).
-                            build();
-
-
-                    DataObject *Bobtxt = new DataObject(randStringEditBurst((*Alicetxt).to_string(), (int)(str_size/edit_dist)));
-
-                    Bob.addStr(Bobtxt, false);
+                            GenSync Bob = GenSync::Builder().
+                                    setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
+                                    setProtocol(setReconProto).
+                                    setComm(GenSync::SyncComm::socket).
+                                    setTerminalStrSize(100).
+                                    setNumPartitions(par).
+                                    setlvl(lvl).
+                                    setPort(portnum).
+                                    build();
 
 
-                    clock_t strStart = clock();
+                            DataObject *Bobtxt = new DataObject(
+                                    randStringEditBurst((*Alicetxt).to_string(), (int) (str_size / edit_dist)));
 
-                    Alice.addStr(Alicetxt, false);
-                    forkHandleReport report = forkHandle(Alice, Bob, false);
-                    auto str_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
-
-                    bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
+                            Bob.addStr(Bobtxt, false);
 
 
-                    plot.add({to_string(str_size), to_string((double)1/edit_dist), to_string(report.bytesTot+report.bytesRTot),
-                              to_string(report.CPUtime), to_string(str_time), to_string(success_StrRecon)});
+                            clock_t strStart = clock();
 
-                    delete Alicetxt;
-                    delete Bobtxt;
-                } catch (std::exception) {
-                    cout << "we failed once" << endl;
-                    plot.add({to_string(str_size), to_string((double)1/edit_dist), to_string(0),
-                              to_string(0), to_string(0), to_string(0)});
+                            Alice.addStr(Alicetxt, false);
+                            forkHandleReport report = forkHandle(Alice, Bob, false);
+                            auto str_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
+
+                            bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
+
+                            plot.add({to_string(lvl), to_string(par),
+                                      to_string(report.bytesTot + report.bytesRTot),
+                                      to_string(report.CPUtime), to_string(str_time), to_string(success_StrRecon)});
+//                            plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
+//                                      to_string(report.bytesTot + report.bytesRTot),
+//                                      to_string(report.CPUtime), to_string(str_time), to_string(success_StrRecon)});
+
+                            delete Alicetxt;
+                            delete Bobtxt;
+                        } catch (std::exception) {
+                            cout << "we failed once" << endl;
+                            plot.add({to_string(lvl), to_string(par), to_string(0),
+                                      to_string(0), to_string(0), to_string(0)});
+                        }
+                    }
+                    plot.update();
                 }
             }
         }
-        plot.update();
+
     }
 }
 

@@ -38,11 +38,11 @@ public:
      * @param Estimate whether estimate using existing estimation protocol, set mbar (maximum difference) if false
      * @return
      */
-    bool SyncClient(const shared_ptr<Communicant> &commSync, shared_ptr<SyncMethod> &setHost) override;
+    bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) override;
 
-    bool SyncServer(const shared_ptr<Communicant> &commSync, shared_ptr<SyncMethod> &setHost) override;
+    bool SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) override;
 
-    bool reconstructString(DataObject *&recovered_string, const list<DataObject *> & theirsMinusMine, const list<DataObject *> & mineMinusTheirs) override;
+    bool reconstructString(DataObject *&recovered_string, const list<DataObject *> & mySetData) override;
 
     bool addStr(DataObject* str, vector<DataObject*> &datum,  bool backtrack) override;
 

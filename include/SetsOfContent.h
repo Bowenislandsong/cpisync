@@ -114,9 +114,9 @@ public:
 // functions for SyncMethods
     bool addStr(DataObject *str, vector<DataObject *> &datum, bool sync) override;
 
-    bool SyncClient(const shared_ptr<Communicant> &commSync, shared_ptr<SyncMethod> &setHost) override;
+    bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) override;
 
-    bool SyncServer(const shared_ptr<Communicant> &commSync, shared_ptr<SyncMethod> &setHost) override;
+    bool SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) override;
 
     string getName() override { return "Sets of Content"; }
 
@@ -258,7 +258,6 @@ private:
 
     void configure(shared_ptr<SyncMethod> &setHost, long mbar);
 
-    bool reconstructString(DataObject *&recovered_string, const list<DataObject *> &theirsMinusMine,
-                           const list<DataObject *> &mineMinusTheirs) override;
+    bool reconstructString(DataObject *& recovered_string, const list<DataObject *>& mySetData) override;
 };
 #endif //CPISYNCLIB_SETSOFCONTENT_H

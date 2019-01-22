@@ -58,33 +58,6 @@ public:
         return true;
     }
 
-    // String Sync
-    /**
-     * Connect as a client to a specific communicant and computes differences between the two (without actually updating them).
-     * All results are *added* to the selfMinusOther and otherMinusSelf parameters (passed by reference).
-     * %R:  Sync_Server must have been called at that communicant.
-     *
-     * @param commSync The communicant to whom to connect.
-     * @param selfMinusOther A result of reconciliation.  Elements that I have that the other SyncMethod does not.
-     * @param otherMinusSlef A result of reconciliation.  Elements that the other SyncMethod has that I do not.
-     * @return true iff the connection and subsequent synchronization appear to be successful.
-     */
-    virtual bool SyncClient(const shared_ptr<Communicant>& commSync,shared_ptr<SyncMethod> & setHost) {
-        commSync->resetCommCounters();
-        return true;
-    }
-
-    /**
-     * Waits for a client to connect from a specific communicant and computes differences between the two (without actually updating them).
-     * All results are *added* to the selfMinusOther and otherMinusSelf parameters (passed by reference).
-     *      *
-     * @param commSync The communicant to whom to connect.
-     * @return true iff the connection and subsequent synchronization appear to be successful.
-     */
-    virtual bool SyncServer(const shared_ptr<Communicant>& commSync, shared_ptr<SyncMethod> & setHost) {
-        commSync->resetCommCounters();
-        return true;
-    }
 
     // MANIPULATE DATA
     /**
@@ -126,7 +99,7 @@ public:
 
     virtual long getVirMem(){return 0;};
 
-    virtual bool reconstructString(DataObject* & recovered_string, const list<DataObject *> & theirsMinusMine, const list<DataObject *> & mineMinusTheirs){
+    virtual bool reconstructString(DataObject* & recovered_string, const list<DataObject *> & mySetData){
         return true;
     }
 

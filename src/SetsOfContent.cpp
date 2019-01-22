@@ -688,7 +688,7 @@ void SetsOfContent::RecvSyncParam(const shared_ptr<Communicant> &commSync, bool 
     Logger::gLog(Logger::COMM, "Sync parameters match");
 }
 
-bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_ptr<SyncMethod> &setHost) {
+bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) {
     bool success = false;
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncServer");
 
@@ -711,7 +711,8 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
     }
 
     RecvSyncParam(commSync);
-    SyncMethod::SyncServer(commSync, setHost);
+    shared_ptr<SyncMethod> setHost;
+    SyncMethod::SyncServer(commSync,selfMinusOther,otherMinusSelf);
     configure(setHost, mbar);
     for (DataObject *dop : setPointers) {
         setHost->addElem(dop); // Add to GenSync
@@ -774,7 +775,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, shared_p
     return success;
 }
 
-bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_ptr<SyncMethod> &setHost) {
+bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) {
     //TODO: needs a flag, but  this will do for now
     bool success = false;
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncClient");
@@ -801,7 +802,8 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, shared_p
 
 
     SendSyncParam(commSync);
-    SyncMethod::SyncClient(commSync, setHost);
+    shared_ptr<SyncMethod> setHost;
+    SyncMethod::SyncClient(commSync,selfMinusOther,otherMinusSelf);
     configure(setHost, mbar);
 
     for (DataObject *dop : setPointers) {
@@ -875,8 +877,7 @@ void SetsOfContent::configure(shared_ptr<SyncMethod>& setHost, long mbar) {
         setHost = make_shared<ProbCPISync>(mbar,sizeof(shingle_hash) * 8,64,true);
 }
 
-bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *> &theirsMinusMine,
-                                      const list<DataObject *> &mineMinusTheirs) {
+bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *>& mySetData) {
     myString = retriveString();
     recovered_string = new DataObject(myString);
     return true;

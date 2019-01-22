@@ -102,21 +102,13 @@ bool GenSync::listenSync(int method_num,bool isRecon) {
     // ask each communicant to listen, one by one
     vector<shared_ptr<Communicant>>::iterator itComm;
     list<DataObject *> selfMinusOther, otherMinusSelf;
-    DataObject selfStr, otherStr;
 
     for (itComm = myCommVec.begin(); itComm != myCommVec.end(); ++itComm) {
         // initialize variables
         selfMinusOther.clear();
         otherMinusSelf.clear();
-        shared_ptr<SyncMethod> setSync;
-
         try {
-            if ((*syncAgent)->isStringReconMethod()) {
-                syncSuccess &= (*syncAgent)->SyncServer(*itComm, setSync);
-                syncSuccess &= setSync->SyncServer(*itComm, selfMinusOther, otherMinusSelf);
-            }else{
                 syncSuccess &= (*syncAgent)->SyncServer(*itComm, selfMinusOther, otherMinusSelf);
-            }
 
         } catch (SyncFailureException s) {
             Logger::error_and_quit(s.what());
@@ -155,7 +147,6 @@ bool GenSync::startSync(int method_num,bool isRecon) {
     bool syncSuccess = true; // true if all syncs so far were successful
     vector<shared_ptr<Communicant>>::iterator itComm;
     list<DataObject *> selfMinusOther, otherMinusSelf;
-    DataObject selfStr, otherStr;
 
     for (itComm = myCommVec.begin(); itComm != myCommVec.end(); ++itComm) {
         // initialize variables
@@ -164,15 +155,11 @@ bool GenSync::startSync(int method_num,bool isRecon) {
 
         // do the sync
         try {
-            // if String Recon,
-            if ((*syncAgentIt)->isStringReconMethod()) {
-                shared_ptr<SyncMethod> setSync;
-                syncSuccess &= (*syncAgentIt)->SyncClient(*itComm, setSync);
-            } else {
-                if (!(*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf)) {
-                    Logger::gLog(Logger::METHOD, "Sync to " + (*itComm)->getName() + " failed!");
-                    syncSuccess = false;
-                }
+
+            if (!(*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf)) {
+                Logger::gLog(Logger::METHOD, "Sync to " + (*itComm)->getName() + " failed!");
+                syncSuccess = false;
+
             }
         } catch (SyncFailureException s) {
             Logger::error_and_quit(s.what());
@@ -185,13 +172,11 @@ bool GenSync::startSync(int method_num,bool isRecon) {
             addElem(*itDO);
 
         if (!isRecon) {
-            // newly added --- worked for general test
             delElemGroup(selfMinusOther);
         }
-// Disabled for performace testing
         if ((*syncAgentIt)->isStringReconMethod()) { // If it is string reconciliation
             syncSuccess = (*syncAgentIt)->reconstructString(
-                    myString, otherMinusSelf,selfMinusOther); // reconstruct the string based on the new information from set reconciliation
+                    myString, myData); // reconstruct the string based on the new information from set reconciliation
         }
 
     }
@@ -250,15 +235,14 @@ void GenSync::delElemGroup(list<DataObject *> newDatumList) {
     // There are only 2 types, numbes of strings (check fact) handle both
     Logger::gLog(Logger::METHOD, "Entering GenSync::delElem");
 
-    vector<ZZ> delList;
+    std::map<ZZ,bool> delmap;
     for (auto it : newDatumList) {
-        delList.push_back(it->to_ZZ());
+        delmap[it->to_ZZ()] = true;
     }
-    sort(delList.begin(), delList.end());
 
     list<DataObject *> lst;
     for (auto item : myData) {
-        if (binary_search(delList.begin(), delList.end(), item->to_ZZ())) {
+        if (delmap.find(item->to_ZZ()) != delmap.end()) {
             lst.push_back(item);
             for (auto itAgt = mySyncVec.begin(); itAgt != mySyncVec.end(); ++itAgt) {
                 if (!(*itAgt)->delElem(item)) {

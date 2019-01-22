@@ -1,0 +1,3 @@
+Level|Parition|Comm (bits)|Time Set(s)|Time Str(s)|Str Recon True
+2 3 1381327 0.047851 1.524810 1
+2 5 690451 0.038006 1.656739 1

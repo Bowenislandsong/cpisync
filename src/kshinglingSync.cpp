@@ -19,12 +19,12 @@ kshinglingSync::~kshinglingSync() {
 }
 
 //Alice
-bool kshinglingSync::SyncClient(const shared_ptr<Communicant> &commSync, shared_ptr<SyncMethod> & setHost) {
+bool kshinglingSync::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) {
     Logger::gLog(Logger::METHOD, "Entering kshinglingSync::SyncClient");
     bool syncSuccess = true;
-
-    // call parent method for bookkeeping
-    SyncMethod::SyncClient(commSync, setHost);
+    shared_ptr<SyncMethod> setHost;
+    // call parent method for book keeping
+    SyncMethod::SyncClient(commSync, selfMinusOther,otherMinusSelf);
     // create kshingle
 
     // connect to server
@@ -66,18 +66,23 @@ bool kshinglingSync::SyncClient(const shared_ptr<Communicant> &commSync, shared_
     for (DataObject* dop : setPointers){
         setHost->addElem(dop); // Add to GenSync
     }
-    // choose to send if not oneway (default is one way)
-//
+    list<DataObject *> mine, others;
+    if(!setHost->SyncClient(commSync, mine, others))
+        syncSuccess = false;
+
+    selfMinusOther = mine;
+    otherMinusSelf = others;
+
 
     return syncSuccess;
 }
 
 //Bob
-bool kshinglingSync::SyncServer(const shared_ptr<Communicant> &commSync,  shared_ptr<SyncMethod> & setHost) {
+bool kshinglingSync::SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) {
     Logger::gLog(Logger::METHOD, "Entering kshinglingSync::SyncServer");
     bool syncSuccess = true;
-
-    SyncMethod::SyncServer(commSync, setHost);
+    shared_ptr<SyncMethod> setHost;
+    SyncMethod::SyncServer(commSync,selfMinusOther,otherMinusSelf);
 
     commSync->commListen();
     if (!commSync->establishKshingleRecv(myKshingle.getElemSize(), myKshingle.getStopWord(), oneway)) {
@@ -114,6 +119,14 @@ bool kshinglingSync::SyncServer(const shared_ptr<Communicant> &commSync,  shared
     for (DataObject* dop : setPointers){
         setHost->addElem(dop); // Add to GenSync
     }
+
+    list<DataObject *> mine, others;
+    if(setHost->SyncServer(commSync, mine, others))
+        syncSuccess = false;
+
+    selfMinusOther = mine;
+    otherMinusSelf = others;
+
     return syncSuccess;
 }
 
@@ -135,13 +148,12 @@ void kshinglingSync::configurate(shared_ptr<SyncMethod>& setHost, idx_t set_size
     }
 }
 
-bool kshinglingSync::reconstructString(DataObject* & recovered_string, const list<DataObject *> & theirsMinusMine, const list<DataObject *> & mineMinusTheirs) {
-    list<DataObject *> Elems = theirsMinusMine; // TODO: Change this
+bool kshinglingSync::reconstructString(DataObject* & recovered_string, const list<DataObject *>& mySetData) {
 
     if (cycleNum != 0)
         myKshingle.clear_shingleSet();
 
-        for (auto elem: Elems) {
+        for (auto elem: mySetData) {
             //change here - send pair
             myKshingle.updateShingleSet_str(ZZtoStr(elem->to_ZZ()));
         }
@@ -157,9 +169,7 @@ bool kshinglingSync::addStr(DataObject* str, vector<DataObject*> &datum,  bool b
     myKshingle.inject(str->to_string());
     (backtrack)? cycleNum = myKshingle.reconstructStringBacktracking().second : cycleNum = 0;
 
-    for (DataObject* dop : setPointers)
-        delete dop; //Clear SetPointers if any
-//    setPointers.clear();
+    for (DataObject* dop : setPointers) delete dop; //Clear SetPointers if any
     for (auto item : myKshingle.getShingleSet_str()){
         setPointers.push_back(new DataObject(StrtoZZ(item)));
     }
