@@ -18,35 +18,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content  RandText(2 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content  RandText(3 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content  RandText(4 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content  RandTextfix Str Size and ED.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPI RandText(2 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPI RandText(3 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPI RandText(4 lvl).txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandAscii2mStr20kED.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandAscii2mStr20kED.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandAsciifix Str Size and ED.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandText(2 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandText(3 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandText(4 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandTextfix Str Size and ED.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandAsciifix Str Size and ED.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandText(2 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandText(3 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandText(3 lvl)5try.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandText(4 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandText(4 lvl)5try.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandText(5 tril)(2 lvl).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandTextfix Str Size and ED.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpisynclib.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cpisynclib.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/GenSync.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/GenSync.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GenSync.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/GenSync.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PerformanceData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/PerformanceData.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SetsOfContent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/SetsOfContent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
@@ -133,7 +105,7 @@
     <session id="642130883">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="9" />
+          <entry key="project.closed" value="10" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.12" value="1" />
@@ -183,7 +155,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="664">
+            <state relative-caret-position="828">
               <caret line="86" column="41" selection-start-line="86" selection-start-column="41" selection-end-line="86" selection-end-column="41" />
             </state>
           </provider>
@@ -560,12 +532,12 @@
       <workItem from="1548127336936" duration="3985000" />
       <workItem from="1548131942937" duration="6000" />
       <workItem from="1548172292673" duration="1735000" />
-      <workItem from="1548188288668" duration="7350000" />
+      <workItem from="1548188288668" duration="7415000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="838636000" />
+    <option name="totallyTimeSpent" value="838701000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -585,7 +557,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32871288" />
-      <window_info anchor="bottom" x="902" y="407" width="1375" height="861" id="Run" order="2" sideWeight="0.49945176" visible="true" weight="0.29635036" />
+      <window_info anchor="bottom" x="902" y="407" width="1375" height="861" id="Run" order="2" sideWeight="0.49945176" weight="0.29635036" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="5" weight="0.32970297" />
@@ -920,7 +892,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="664">
+        <state relative-caret-position="828">
           <caret line="86" column="41" selection-start-line="86" selection-start-column="41" selection-end-line="86" selection-end-column="41" />
         </state>
       </provider>
