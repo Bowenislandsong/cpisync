@@ -108,24 +108,24 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (*stringInput == randSampleTxt) str_type = "RandText";
     if (*stringInput == randSampleCode) str_type = "RandCode";
 
-    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
+    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
                                      {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
                                       "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
                                       "Str Recon True"});
     //TODO: Separate Comm, and Time, Separate Faile rate.
     for (int str_size : str_sizeRange) {
-
+        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;
         for (int edit_dist : edit_distRange) {
 
             for (int lvl:levelRange) {
-                cout << " - Sets of Content " + protoName + " " + str_type + "(" + to_string(lvl) + " lvl)" << endl;
+//                cout << " - Sets of Content " + protoName + " " + str_type + "(" + to_string(lvl) + " lvl)" << endl;
 
                 for (int par: partitionRange) {
 
                     for (int con = 0; con < confidence; ++con) {
                         try {
-                            cout << "level: " << lvl << ", partitions: " << par
-                                 << ", Confidence: " << con << endl;
+//                            cout << "level: " << lvl << ", partitions: " << par
+//                                 << ", Confidence: " << con << endl;
                             GenSync Alice = GenSync::Builder().
                                     setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                                     setProtocol(setReconProto).
@@ -163,14 +163,17 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             forkHandleReport report = forkHandle(Alice, Bob, false);
 
                             bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
-                            plot.add({to_string(lvl), to_string(par),
+//                            plot.add({to_string(lvl), to_string(par),
+//                                      to_string(report.bytesTot + report.bytesRTot),
+//                                      to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+//                                      to_string(report.totalTime), to_string(Alice.getTime().front().second),
+//                                      to_string(success_StrRecon)});
+
+                            plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
                                       to_string(report.bytesTot + report.bytesRTot),
                                       to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
                                       to_string(report.totalTime), to_string(Alice.getTime().front().second),
                                       to_string(success_StrRecon)});
-//                            plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
-//                                      to_string(report.bytesTot + report.bytesRTot),
-//                                      to_string(report.CPUtime), to_string(str_time), to_string(success_StrRecon)});
 
                             delete Alicetxt;
                             delete Bobtxt;
