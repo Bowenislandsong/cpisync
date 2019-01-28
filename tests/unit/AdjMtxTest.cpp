@@ -15,7 +15,7 @@ void AdjMtxTest::creatGraph(){
         Vertices.push_back(randZZ());
     }
     mtx.create(Vertices);
-    CPPUNIT_ASSERT(mtx.getGraphSize()==5);
+    CPPUNIT_ASSERT(mtx.getNumVex()==5);
 
 }
 
@@ -29,13 +29,13 @@ void AdjMtxTest::editGraph(){
     auto V = mtx.getGraphVex();
 
     auto addi = V[0];
-    auto addj = V[mtx.getGraphSize()-1]; //last one
+    auto addj = V[mtx.getNumVex()-1]; //last one
     mtx.addWeigth(addi,addj,2);
     mtx.delWeigth(addi,addj,1);
-    auto deli = V[mtx.getGraphSize()-1];
-    auto delj = V[mtx.getGraphSize()-1]; //last one
+    auto deli = V[mtx.getNumVex()-1];
+    auto delj = V[mtx.getNumVex()-1]; //last one
     mtx.delWeigth(deli,deli,1);
-    mtx.setWeight(V[mtx.getGraphSize()-1],V[0],5);
+    mtx.setWeight(V[mtx.getNumVex()-1],V[0],5);
     mtx.setWeight(V[0],V[0],5);
 }
 
@@ -48,13 +48,13 @@ void AdjMtxTest::allTest() {
     auto V = mtx.getGraphVex();
 
     auto addi = V[0];
-    auto addj = V[mtx.getGraphSize()-1]; //last one
+    auto addj = V[mtx.getNumVex()-1]; //last one
     mtx.addWeigth(addi,addj,2);
     mtx.delWeigth(addi,addj,1);
-    auto deli = V[mtx.getGraphSize()-1];
-    auto delj = V[mtx.getGraphSize()-1]; //last one
+    auto deli = V[mtx.getNumVex()-1];
+    auto delj = V[mtx.getNumVex()-1]; //last one
     mtx.delWeigth(deli,deli,1);
-    mtx.setWeight(V[mtx.getGraphSize()-1],V[0],5);
+    mtx.setWeight(V[mtx.getNumVex()-1],V[0],5);
     mtx.setWeight(V[0],V[0],5);
     //mtx.printGraph();
 

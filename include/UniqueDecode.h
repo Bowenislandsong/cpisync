@@ -32,9 +32,11 @@ public:
     // Default deconstructor
     ~UniqueDecode();
 
+    void injectStr(string& str);
+
     bool isUD(const string str);
 
-    string reconstructDFS(vector<ZZ> shingle_set_ZZ);
+    string reconstructDFS(vector<string>& shingle_set, std::map<string,vector<size_t>>& merg_idx);
 
     /**
      * Get shingle set with size k
@@ -46,6 +48,11 @@ public:
     vector<ZZ> getMergeInd(const string str);
 
 protected:
+    void UDonline(const string& str, vector<size_t>& merg_idx);
+
+    // tmp solution, This would result in n^2 time
+    bool isUD(const string& str, AdjMtx& shingle_set);
+
     int longgestNxtShingle(int str_i, vector<ZZ> shingle_set, string str);
 
     int longgestPrevShingle(int str_i, vector<ZZ> shingle_set, string str);
@@ -60,6 +67,7 @@ private:
     char stopWord;
     size_t shingleLen;
     string origStr;
+    std::map<string,vector<size_t>> MergIndex; //str is the second shingle to be merged with index of a shingle (first shingle) which has index value as the order of shingle set
 };
 
 #endif //CPISYNCLIB_UNIQUEDECODE_H

@@ -7,26 +7,24 @@
 AdjMtx::AdjMtx() = default;
 AdjMtx::~AdjMtx() = default;
 
-void AdjMtx::create(vector<ZZ> _ver) {
+void AdjMtx::create(const vector<ZZ>& _ver) {
     for (auto vex : _ver) {
         addNewVex(vex);
     }
-    vertex = _ver;
 }
 
-void AdjMtx::create(vector<string> _ver) {
+void AdjMtx::create(const vector<string>& _ver) {
     for (auto vex : _ver) {
         addNewVex(StrtoZZ(vex));
     }
 }
 
 bool AdjMtx::addNewVex(ZZ shingle) {
-    for (auto item :vertex) {
-        if (shingle == item) {
-            return false;
-        }
-    }
+    if(vertex_map.find(shingle) != vertex_map.end())
+        return false;
+
     vertex.push_back(shingle);
+    vertex_map[shingle] = true;
     return true;
 }
 
@@ -38,7 +36,7 @@ bool AdjMtx::addNewVex(string shingle) {
 
 bool AdjMtx::addWeigth(ZZ vfrom, ZZ vto, int add_weight){
     if (contains(vto) and contains(vfrom)) {
-        pair<ZZ, ZZ> vexpair = make_pair(vfrom, vto);
+        pair<ZZ, ZZ> vexpair{vfrom, vto};
         auto temp = graph.find(vexpair);
         if (temp != graph.end()) {
             temp->second += add_weight;
@@ -56,7 +54,7 @@ void AdjMtx::sortVex(){
 
 bool AdjMtx::setWeight(ZZ vfrom, ZZ vto, int set_weight){
     if (contains(vto) and contains(vfrom)) {
-        pair<ZZ, ZZ> vexpair = make_pair(vfrom, vto);
+        pair<ZZ, ZZ> vexpair{vfrom, vto};
         auto temp = graph.find(vexpair);
         if (temp != graph.end()) {
             temp->second = set_weight;
@@ -70,7 +68,7 @@ bool AdjMtx::setWeight(ZZ vfrom, ZZ vto, int set_weight){
 
 bool AdjMtx::delWeigth(ZZ vfrom, ZZ vto, int del_weight){
     if (contains(vto) and contains(vfrom)) {
-        pair<ZZ, ZZ> vexpair = make_pair(vfrom, vto);
+        pair<ZZ, ZZ> vexpair{vfrom, vto};
         auto temp = graph.find(vexpair);
         if (temp != graph.end()) {
             temp->second -= del_weight;
@@ -103,7 +101,7 @@ void AdjMtx::printGraph(){
 }
 
 int AdjMtx::getWeight(ZZ vfrom, ZZ vto) {
-    pair<ZZ,ZZ> vexpair = make_pair(vfrom,vto);
+    pair<ZZ,ZZ> vexpair{vfrom,vto};
     auto temp = graph.find(vexpair);
     if (temp != graph.end()){
         return temp->second;

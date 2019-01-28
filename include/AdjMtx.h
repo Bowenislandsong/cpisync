@@ -27,6 +27,7 @@ class AdjMtx {
 public:
     // CONTRUCTOR AND DISTRUCTOR
     AdjMtx();
+
     ~AdjMtx();
 
     /**
@@ -34,29 +35,29 @@ public:
      * @param shingle <ZZ>
      * @return
      */
-    bool addNewVex(ZZ shingle);
-
     bool addNewVex(string shingle);
+
     /**
      * Add a list of vertex at once
      * @param _ver list of shingles
      */
-    void create(vector<ZZ> _ver);
-    void create(vector<string> _ver);
+    void create(const vector<string> &_ver);
 
     /**
      * list of shingles
      * @return list of vertices
      */
-    vector<ZZ> getGraphVex(){
-        return vertex;
+    vector<string> getGraphVex() {
+        vector<string> res;
+        for (auto vex : vertex) res.push_back(ZZtoStr(vex));
+        return res;
     }
 
     /**
      * number pf verticies in the graph
      * @return
      */
-    int getGraphSize(){
+    size_t getNumVex() {
         return vertex.size();
     }
 
@@ -67,22 +68,45 @@ public:
      * @param vex
      * @return
      */
-    bool contains(ZZ vex){
-        return (find(vertex.begin(), vertex.end(), vex) != vertex.end());
+    bool contains(string vex) {
+        return vertex_map.find(StrtoZZ(vex)) != vertex_map.end();
     }
-
-
-    int getWeight(ZZ vfrom, ZZ vto);
-
-    ZZ StrtotheZZ(const string& str);
-    string ZZtotheStr(const ZZ& zz);
 
     /**
      * print the graph of concerned vertex
      * @param print_vertex ONLY applicable to string input
      */
-    void printGraph(vector<ZZ> print_vertex);
+
     void printGraph();
+
+    // wrapper functions
+    bool addWeigth(string vfrom, string vto, int add_weight = 1) {
+        return addWeigth(StrtoZZ(vfrom), StrtoZZ(vto), add_weight);
+    };
+
+    bool setWeight(string vfrom, string vto, int set_weight){
+        return setWeight(vfrom, vto,set_weight);
+    };
+
+    bool delWeigth(string vfrom, string vto, int del_weight = 1){
+        return delWeigth(vfrom, vto, del_weight);
+    };
+
+    int getWeight(string vfrom, string vto){
+        return getWeight(vfrom, vto);
+    };
+
+protected:
+    bool addNewVex(ZZ shingle);
+
+    void create(const vector<ZZ> &_ver);
+
+    void printGraph(vector<ZZ> print_vertex);
+
+    bool contains(ZZ vex) {
+        return vertex_map.find(vex) != vertex_map.end();
+    }
+
     /**
      * change the weight of graph, allow negative
      * @param vfrom
@@ -90,15 +114,18 @@ public:
      * @param del_weight
      * @return
      */
-    bool addWeigth(ZZ vfrom, ZZ vto, int add_weight=1);
+    bool addWeigth(ZZ vfrom, ZZ vto, int add_weight = 1);
+
     bool setWeight(ZZ vfrom, ZZ vto, int set_weight);
-    bool delWeigth(ZZ vfrom, ZZ vto, int del_weight=1);
+
+    bool delWeigth(ZZ vfrom, ZZ vto, int del_weight = 1);
+
+    int getWeight(ZZ vfrom, ZZ vto);
 
 private:
-    map<pair<ZZ, ZZ >, int > graph;  // if two vex tex is not connected, it would not be in the graph.
+    map<pair<ZZ, ZZ>, int> graph;  // if two vex tex is not connected, it would not be in the graph.
     vector<ZZ> vertex;
-
-
+    map<ZZ, bool> vertex_map;
 };
 
 
