@@ -6,6 +6,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 
 void SetsOfContentTest::SelfUnitTest() {
 //
+
     shingle_hash Shingle_A{.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3,
             .compose = cycle{.cyc = 1, .head = 123, .len = 333}};
 //    shingle_hash Shingle_B{.first = {298273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
@@ -20,6 +21,16 @@ void SetsOfContentTest::SelfUnitTest() {
 //    auto t = recursion(tmp);
     CPPUNIT_ASSERT(Shingle_A == ZZtoShingleHash(ShingleHashtoZZ(Shingle_A)));
 
+
+
+    Resources initRes;
+    initResources(initRes);
+    auto a=randSampleTxt(2e6);
+    resourceMonitor(initRes,500,5e9);
+    HeapProfilerDump("asd");
+    //    resourceReport(initRes);
+    resourceReport(initRes);
+    cout<<initRes.VmemUsed<<endl;
 //    CPPUNIT_ASSERT(Shingle_A != Shingle_B);
 //    CPPUNIT_ASSERT(Shingle_C < Shingle_A);
 
@@ -39,7 +50,8 @@ void SetsOfContentTest::testAll() {
 //        string alicetxt = randAsciiStr(2e7); // 20MB is top on MAC
 //
 //    cout<< (double) (clock() - ssss) / CLOCKS_PER_SEC<<endl;
-
+    Resources initRes;
+    initResources(initRes);
 
     string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
 
@@ -51,13 +63,13 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
-            setlvl(3).
+            setlvl(2).
             setPort(8003).
             build();
 
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
-    string bobtxt = randStringEditBurst(alicetxt, 2e4);
+    string bobtxt = randStringEditBurst(alicetxt, 2e2);
 
     DataObject *btxt = new DataObject(bobtxt);
 
@@ -67,7 +79,7 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
-            setlvl(3).
+            setlvl(2).
             setPort(8003).
             build();
 
@@ -83,8 +95,9 @@ void SetsOfContentTest::testAll() {
     auto recon_t = clock();
     auto report = forkHandle(Alice, Bob, false);
     double recon_time = (double) (clock() - recon_t) / CLOCKS_PER_SEC;
-
-
+//    HeapProfilerDump("BO");
+    resourceReport(initRes);
+cout<<initRes.VmemUsed<<endl;
     string finally = Alice.dumpString()->to_string();
 
     cout << "CPU Time: " + to_string(report.CPUtime) << endl;

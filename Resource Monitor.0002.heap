@@ -1,0 +1,154 @@
+heap profile:     34:  1056464 [  6221: 1074250336] @ heapprofile
+     1:  1048576 [  1006: 1054867456] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10df05ee4 0x10db3e12b 0x10db39a5e 0x10dbd50d5 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+    18:     3672 [   999:   203796] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbecbf9 0x10dbee3e1 0x10dbd67fd 0x10dbd5559 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     1:     1536 [     7:     3048] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbedfaf 0x10dbed2ad 0x10dbed17f 0x10dbd297a 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     1:     1536 [     6:     3024] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbedfaf 0x10dbed2ad 0x10dbed17f 0x10dbd5597 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     3:      612 [     6:     1224] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbecbf9 0x10dbee3e1 0x10dbd67fd 0x10dbed205 0x10dbd5597 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     1:      204 [     1:      204] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbecbf9 0x10dbeca0c 0x10dbd67cd 0x10dbd1e88 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     1:      204 [     1:      204] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbecbf9 0x10dbee3e1 0x10dbd67fd 0x10dbed205 0x10dbd22b7 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     1:       96 [     2:      144] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10e25c05b 0x10e25bd43 0x10dbd5385 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     6:       24 [    84:      336] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbecbf9 0x10dbee3e1 0x10dbd67fd 0x10dbd293c 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     1:        4 [  1011:     4384] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbdbf72 0x10dbdb61d 0x10dbdb4fa 0x10dbd0cd6 0x10dbd246b 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     0:        0 [     1:       24] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbedfaf 0x10dbed2ad 0x10dbed17f 0x10dbd22b7 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     0:        0 [  1006:   205224] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbecbf9 0x10dbee3e1 0x10dbd67fd 0x10dbd2445 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     0:        0 [    80:    16320] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbecbf9 0x10dbee3e1 0x10dbd67fd 0x10dbd5924 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     0:        0 [     1:        4] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10dbecbf9 0x10dbee3e1 0x10dbd67fd 0x10dbed205 0x10dbd297a 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     0:        0 [  1005: 18912784] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10e25a9c7 0x10db3e225 0x10db39a5e 0x10dbd50d5 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+     0:        0 [  1005:    32160] @ 0x7fff73a1f1bd 0x7fff73a1e4c7 0x10e259809 0x10e25af98 0x10db3e737 0x10db39a5e 0x10dbd50d5 0x10dbd1709 0x10db4a2b0 0x10db4ea61 0x10db4e8b9 0x10dab0b56 0x10daaf6f9 0x10e0ec0d0 0x10e0e1283 0x10e0e8846 0x10e0f2178 0x10e0ebe51 0x10e0ec402 0x10e0ec325 0x10e0ec402 0x10e0ec325 0x10e0f1f54 0x10e0f431d 0x10daaa51b 0x7fff73876015 0x00000001
+
+MAPPED_LIBRARIES:
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/libobjc.A.dylib
+7fffabff6000-7fffac182610 r-xp 3809c000 00:00 0           /usr/lib/libobjc.A.dylib
+7fff72c48000-7fff73037000 r-xp 2eea4000 00:00 0           /usr/lib/libobjc.A.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/closure/libclosured.dylib
+7fffabb2e000-7fffabb2f130 r-xp 37bd4000 00:00 0           /usr/lib/closure/libclosured.dylib
+7fff71055000-7fff71089000 r-xp 2d2b1000 00:00 0           /usr/lib/closure/libclosured.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libxpc.dylib
+7fffac2c6000-7fffac2cc6a8 r-xp 3836c000 00:00 0           /usr/lib/system/libxpc.dylib
+7fff73bc0000-7fff73bee000 r-xp 2fe1c000 00:00 0           /usr/lib/system/libxpc.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libunwind.dylib
+7fffac2c5000-7fffac2c5a9a r-xp 3836b000 00:00 0           /usr/lib/system/libunwind.dylib
+7fff73bba000-7fff73bc0000 r-xp 2fe16000 00:00 0           /usr/lib/system/libunwind.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_trace.dylib
+7fffac2c3000-7fffac2c4d68 r-xp 38369000 00:00 0           /usr/lib/system/libsystem_trace.dylib
+7fff73ba5000-7fff73bb9000 r-xp 2fe01000 00:00 0           /usr/lib/system/libsystem_trace.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_symptoms.dylib
+7fffac2c2000-7fffac2c24e8 r-xp 38368000 00:00 0           /usr/lib/system/libsystem_symptoms.dylib
+7fff73b9d000-7fff73ba5000 r-xp 2fdf9000 00:00 0           /usr/lib/system/libsystem_symptoms.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_pthread.dylib
+7fffac2bc000-7fffac2bf510 r-xp 38362000 00:00 0           /usr/lib/system/libsystem_pthread.dylib
+7fff73b8b000-7fff73b97000 r-xp 2fde7000 00:00 0           /usr/lib/system/libsystem_pthread.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_platform.dylib
+7fffac2bb000-7fffac2bb30c r-xp 38361000 00:00 0           /usr/lib/system/libsystem_platform.dylib
+7fff73b83000-7fff73b8b000 r-xp 2fddf000 00:00 0           /usr/lib/system/libsystem_platform.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_kernel.dylib
+7fffac2a7000-7fffac2a9990 r-xp 3834d000 00:00 0           /usr/lib/system/libsystem_kernel.dylib
+7fff739aa000-7fff739d1000 r-xp 2fc06000 00:00 0           /usr/lib/system/libsystem_kernel.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_secinit.dylib
+7fffac2c1000-7fffac2c1230 r-xp 38367000 00:00 0           /usr/lib/system/libsystem_secinit.dylib
+7fff73b9b000-7fff73b9d000 r-xp 2fdf7000 00:00 0           /usr/lib/system/libsystem_secinit.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_sandbox.dylib
+7fffac2c0000-7fffac2c0274 r-xp 38366000 00:00 0           /usr/lib/system/libsystem_sandbox.dylib
+7fff73b97000-7fff73b9b000 r-xp 2fdf3000 00:00 0           /usr/lib/system/libsystem_sandbox.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_notify.dylib
+7fffac2ba000-7fffac2ba430 r-xp 38360000 00:00 0           /usr/lib/system/libsystem_notify.dylib
+7fff73b79000-7fff73b83000 r-xp 2fdd5000 00:00 0           /usr/lib/system/libsystem_notify.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_networkextension.dylib
+7fffac2b8000-7fffac2b9058 r-xp 3835e000 00:00 0           /usr/lib/system/libsystem_networkextension.dylib
+7fff73b6e000-7fff73b79000 r-xp 2fdca000 00:00 0           /usr/lib/system/libsystem_networkextension.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_network.dylib
+7fffac2ae000-7fffac2b7170 r-xp 38354000 00:00 0           /usr/lib/system/libsystem_network.dylib
+7fff73a3d000-7fff73b6e000 r-xp 2fc99000 00:00 0           /usr/lib/system/libsystem_network.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_malloc.dylib
+7fffac2ab000-7fffac2ad1c5 r-xp 38351000 00:00 0           /usr/lib/system/libsystem_malloc.dylib
+7fff73a1d000-7fff73a3d000 r-xp 2fc79000 00:00 0           /usr/lib/system/libsystem_malloc.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_m.dylib
+7fffac2aa000-7fffac2aa24c r-xp 38350000 00:00 0           /usr/lib/system/libsystem_m.dylib
+7fff739d1000-7fff73a1d000 r-xp 2fc2d000 00:00 0           /usr/lib/system/libsystem_m.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_info.dylib
+7fffac2a4000-7fffac2a6538 r-xp 3834a000 00:00 0           /usr/lib/system/libsystem_info.dylib
+7fff73960000-7fff739aa000 r-xp 2fbbc000 00:00 0           /usr/lib/system/libsystem_info.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_dnssd.dylib
+7fffac2a3000-7fffac2a31b8 r-xp 38349000 00:00 0           /usr/lib/system/libsystem_dnssd.dylib
+7fff73959000-7fff73960000 r-xp 2fbb5000 00:00 0           /usr/lib/system/libsystem_dnssd.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_darwin.dylib
+7fffac2a2000-7fffac2a2110 r-xp 38348000 00:00 0           /usr/lib/system/libsystem_darwin.dylib
+7fff73957000-7fff73959000 r-xp 2fbb3000 00:00 0           /usr/lib/system/libsystem_darwin.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_coreservices.dylib
+7fffac2a1000-7fffac2a1788 r-xp 38347000 00:00 0           /usr/lib/system/libsystem_coreservices.dylib
+7fff73953000-7fff73957000 r-xp 2fbaf000 00:00 0           /usr/lib/system/libsystem_coreservices.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_configuration.dylib
+7fffac2a0000-7fffac2a0589 r-xp 38346000 00:00 0           /usr/lib/system/libsystem_configuration.dylib
+7fff7394f000-7fff73953000 r-xp 2fbab000 00:00 0           /usr/lib/system/libsystem_configuration.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_c.dylib
+7fffac297000-7fffac29fc10 r-xp 3833d000 00:00 0           /usr/lib/system/libsystem_c.dylib
+7fff738c5000-7fff7394f000 r-xp 2fb21000 00:00 0           /usr/lib/system/libsystem_c.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_blocks.dylib
+7fffac296000-7fffac296660 r-xp 3833c000 00:00 0           /usr/lib/system/libsystem_blocks.dylib
+7fff738c4000-7fff738c5000 r-xp 2fb20000 00:00 0           /usr/lib/system/libsystem_blocks.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libsystem_asl.dylib
+7fffac294000-7fffac295294 r-xp 3833a000 00:00 0           /usr/lib/system/libsystem_asl.dylib
+7fff738ac000-7fff738c4000 r-xp 2fb08000 00:00 0           /usr/lib/system/libsystem_asl.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libremovefile.dylib
+7fffac293000-7fffac293160 r-xp 38339000 00:00 0           /usr/lib/system/libremovefile.dylib
+7fff738aa000-7fff738ac000 r-xp 2fb06000 00:00 0           /usr/lib/system/libremovefile.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libquarantine.dylib
+7fffac292000-7fffac2922b0 r-xp 38338000 00:00 0           /usr/lib/system/libquarantine.dylib
+7fff738a7000-7fff738aa000 r-xp 2fb03000 00:00 0           /usr/lib/system/libquarantine.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libmacho.dylib
+7fffac291000-7fffac291790 r-xp 38337000 00:00 0           /usr/lib/system/libmacho.dylib
+7fff738a2000-7fff738a7000 r-xp 2fafe000 00:00 0           /usr/lib/system/libmacho.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/liblaunch.dylib
+7fff738a1000-7fff738a2000 r-xp 2fafd000 00:00 0           /usr/lib/system/liblaunch.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libkeymgr.dylib
+7fffac28f000-7fffac28f098 r-xp 38335000 00:00 0           /usr/lib/system/libkeymgr.dylib
+7fff73893000-7fff73894000 r-xp 2faef000 00:00 0           /usr/lib/system/libkeymgr.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libdyld.dylib
+7fffac28c000-7fffac28e9a0 r-xp 38332000 00:00 0           /usr/lib/system/libdyld.dylib
+7fff73875000-7fff73893000 r-xp 2fad1000 00:00 0           /usr/lib/system/libdyld.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libdispatch.dylib
+7fffac269000-7fffac28beb0 r-xp 3830f000 00:00 0           /usr/lib/system/libdispatch.dylib
+7fff7383b000-7fff73875000 r-xp 2fa97000 00:00 0           /usr/lib/system/libdispatch.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libcorecrypto.dylib
+7fffac256000-7fffac25e988 r-xp 382fc000 00:00 0           /usr/lib/system/libcorecrypto.dylib
+7fff7372e000-7fff737b4000 r-xp 2f98a000 00:00 0           /usr/lib/system/libcorecrypto.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libcopyfile.dylib
+7fffac255000-7fffac2556c8 r-xp 382fb000 00:00 0           /usr/lib/system/libcopyfile.dylib
+7fff73724000-7fff7372e000 r-xp 2f980000 00:00 0           /usr/lib/system/libcopyfile.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libcompiler_rt.dylib
+7fffac253000-7fffac2540b0 r-xp 382f9000 00:00 0           /usr/lib/system/libcompiler_rt.dylib
+7fff7371c000-7fff73724000 r-xp 2f978000 00:00 0           /usr/lib/system/libcompiler_rt.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libcommonCrypto.dylib
+7fffac251000-7fffac252470 r-xp 382f7000 00:00 0           /usr/lib/system/libcommonCrypto.dylib
+7fff73711000-7fff7371c000 r-xp 2f96d000 00:00 0           /usr/lib/system/libcommonCrypto.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/system/libcache.dylib
+7fffac250000-7fffac250138 r-xp 382f6000 00:00 0           /usr/lib/system/libcache.dylib
+7fff7370c000-7fff73711000 r-xp 2f968000 00:00 0           /usr/lib/system/libcache.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/libc++abi.dylib
+7fffabbb0000-7fffabbb1540 r-xp 37c56000 00:00 0           /usr/lib/libc++abi.dylib
+7fff7181b000-7fff71840000 r-xp 2da77000 00:00 0           /usr/lib/libc++abi.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/libc++.1.dylib
+7fffabba8000-7fffabbafbe8 r-xp 37c4e000 00:00 0           /usr/lib/libc++.1.dylib
+7fff717c4000-7fff7181b000 r-xp 2da20000 00:00 0           /usr/lib/libc++.1.dylib
+10e27d000-10e2cf000 r-xp 0005d000 00:00 0           /usr/local/opt/llvm/lib/libc++.1.dylib
+10e275000-10e27d000 r-xp 00058000 00:00 0           /usr/local/opt/llvm/lib/libc++.1.dylib
+10e21d000-10e275000 r-xp 00000000 00:00 0           /usr/local/opt/llvm/lib/libc++.1.dylib
+10e1f5000-10e217000 r-xp 0005b000 00:00 0           /usr/local/opt/llvm/lib/libomp.dylib
+10e1e9000-10e1f5000 r-xp 00056000 00:00 0           /usr/local/opt/llvm/lib/libomp.dylib
+10e193000-10e1e9000 r-xp 00000000 00:00 0           /usr/local/opt/llvm/lib/libomp.dylib
+7fffe40da000-7ffff01bd000 r-xp 386a9000 00:00 0           /usr/lib/libSystem.B.dylib
+7fffabb7f000-7fffabb7f2d8 r-xp 37c25000 00:00 0           /usr/lib/libSystem.B.dylib
+7fff7158f000-7fff71591000 r-xp 2d7eb000 00:00 0           /usr/lib/libSystem.B.dylib
+10e185000-10e18f000 r-xp 0005e000 00:00 0           /usr/local/opt/gmp/lib/libgmp.10.dylib
+10e184000-10e185000 r-xp 0005d000 00:00 0           /usr/local/opt/gmp/lib/libgmp.10.dylib
+10e127000-10e184000 r-xp 00000000 00:00 0           /usr/local/opt/gmp/lib/libgmp.10.dylib
+10e102000-10e120000 r-xp 00024000 00:00 0           /usr/local/opt/cppunit/lib/libcppunit-1.14.0.dylib
+10e100000-10e102000 r-xp 00022000 00:00 0           /usr/local/opt/cppunit/lib/libcppunit-1.14.0.dylib
+10e0de000-10e100000 r-xp 00000000 00:00 0           /usr/local/opt/cppunit/lib/libcppunit-1.14.0.dylib
+10e0c3000-10e0d7000 r-xp 00022000 00:00 0           /usr/local/opt/gperftools/lib/libtcmalloc.4.dylib
+10df15000-10e0c3000 r-xp 00021000 00:00 0           /usr/local/opt/gperftools/lib/libtcmalloc.4.dylib
+10def4000-10df15000 r-xp 00000000 00:00 0           /usr/local/opt/gperftools/lib/libtcmalloc.4.dylib
+10dd99000-10def0000 r-xp 002f0000 00:00 0           /Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/UnitTest
+10dd90000-10dd99000 r-xp 002e8000 00:00 0           /Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/UnitTest
+10daa8000-10dd90000 r-xp 00000000 00:00 0           /Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/UnitTest
+0daa8000-10daa8000 r-xp 00000000 00:00 0           /Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/UnitTest

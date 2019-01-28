@@ -108,13 +108,17 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (*stringInput == randSampleTxt) str_type = "RandText";
     if (*stringInput == randSampleCode) str_type = "RandCode";
 
-    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
+//    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
+//                                     {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+//                                      "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
+//                                      "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
                                      {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
                                       "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-                                      "Str Recon True"});
+                                      "Str Recon True", "Tree Heap SIze", "High Water Heap"});
     //TODO: Separate Comm, and Time, Separate Faile rate.
     for (int str_size : str_sizeRange) {
-        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;
+//        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;
         for (int edit_dist : edit_distRange) {
 
             for (int lvl:levelRange) {
@@ -126,6 +130,10 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                         try {
 //                            cout << "level: " << lvl << ", partitions: " << par
 //                                 << ", Confidence: " << con << endl;
+
+                            Resources initRes;
+                            initResources(initRes);
+
                             GenSync Alice = GenSync::Builder().
                                     setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                                     setProtocol(setReconProto).
@@ -142,6 +150,8 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             clock_t strStart = clock();
                             Alice.addStr(Alicetxt, false);
                             auto tree_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
+                            resourceReport(initRes);
+
 
                             GenSync Bob = GenSync::Builder().
                                     setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -163,17 +173,17 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             forkHandleReport report = forkHandle(Alice, Bob, false);
 
                             bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
-//                            plot.add({to_string(lvl), to_string(par),
+                            plot.add({to_string(lvl), to_string(par),
+                                      to_string(report.bytesTot + report.bytesRTot),
+                                      to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+                                      to_string(report.totalTime), to_string(Alice.getTime().front().second),
+                                      to_string(success_StrRecon), to_string(initRes.VmemUsed), to_string(Alice.getVirMem(0))});
+
+//                            plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
 //                                      to_string(report.bytesTot + report.bytesRTot),
 //                                      to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
 //                                      to_string(report.totalTime), to_string(Alice.getTime().front().second),
 //                                      to_string(success_StrRecon)});
-
-                            plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
-                                      to_string(report.bytesTot + report.bytesRTot),
-                                      to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
-                                      to_string(report.totalTime), to_string(Alice.getTime().front().second),
-                                      to_string(success_StrRecon)});
 
                             delete Alicetxt;
                             delete Bobtxt;

@@ -26,6 +26,8 @@
     #include "stdio.h"
 
 #endif
+
+#include <cstring>
 #include <string>
 #include <gperftools/heap-profiler.h> // heap profiler
 static size_t NOT_SET = 0; // not set parameters are not used
@@ -49,19 +51,15 @@ inline size_t getHeapSize() {
     if (IsHeapProfilerRunning() and tmp) {
         string str(tmp);
         if (!str.empty()) {
-            string second_str = str.substr(str.find("]") + 1);
-            second_str = second_str.substr(0, second_str.find("["));
-            second_str = second_str.substr(second_str.find(":") + 1);
-            size_t mem_last = stoul(second_str);
             str = str.substr(0, str.find("["));
             str = str.substr(str.find(":") + 1);
             str = str.substr(str.find(":") + 1);
-            mem_size = stoul(str) - mem_last;
+            mem_size = stoul(str) - 1048576; // a hard thershold from google
         }
 //        FLAGS_verbose=-1;
 
-        HeapProfilerStop(); // clear cache
-        HeapProfilerStart("Resource Monitor"); // restart counting
+//        HeapProfilerStop(); // clear cache
+//        HeapProfilerStart("Resource Monitor"); // restart counting
     }
     delete tmp;
     return mem_size;
@@ -77,7 +75,9 @@ inline double getFinishTime(Resources& res){
 
 inline void initResources(Resources& res){
     clock_gettime(CLOCK_MONOTONIC, &res.start_time);
-//    HeapProfilerStart("Resource Monitor"); // comment out to disable heap profiling
+    if(!IsHeapProfilerRunning())
+        HeapProfilerStop();
+    HeapProfilerStart("Resource Monitor"); // comment out to disable heap profiling
     res.VmemUsed = 0;
 }
 
@@ -85,7 +85,7 @@ inline bool resourceMonitor(Resources& res, double cap_secs, size_t cap_bytes){
     if(!IsHeapProfilerRunning()){
         return (cap_secs > getFinishTime(res));
     }else {
-        return (cap_secs > getFinishTime(res));// and (cap_bytes > (res.VmemUsed+=getHeapSize()));
+        return (cap_secs > getFinishTime(res)) and (cap_bytes > (res.VmemUsed=getHeapSize()));
     }
 }
 
@@ -93,7 +93,6 @@ inline void resourceReport(Resources& res){
     res.TimeElapsed = getFinishTime(res);
     if(!IsHeapProfilerRunning()) return;
     res.VmemUsed+=getHeapSize();
-
     HeapProfilerStop();
 }
 #endif

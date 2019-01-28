@@ -8,6 +8,8 @@ SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t par
     SyncID = SYNC_TYPE::SetsOfContent;
     if (levels > USHRT_MAX or levels < 2)
         throw invalid_argument("Num of Level specified should be between 2 and " + to_string(USHRT_MAX));
+
+    initResources(initRes);
 }
 
 SetsOfContent::~SetsOfContent() {
@@ -151,24 +153,24 @@ void SetsOfContent::prepare_querys(const vector<shingle_hash> & shingle_hash_the
 // get the tree ready
 // know what to expect by getting term_query and cyc_query ready
 //    map<size_t, vector<shingle_hash>> mine_rid;
-    theirTree.resize(myTree.size());// resize their tree
-    map<shingle_hash,bool> rid_shingles;
+//    theirTree.resize(myTree.size());// resize their tree
+//    map<shingle_hash,bool> rid_shingles;
 
     term_query.clear();// should be empty anyway
     cyc_query.clear();
 
     // string recon needs to get rid of what is not on their tree. its sync not recon
-    for(shingle_hash shingle : shingle_hash_mine){
-        rid_shingles[shingle] = true;
-    }
+//    for(shingle_hash shingle : shingle_hash_mine){
+//        rid_shingles[shingle] = true;
+//    }
 
     // fill up cyc_quey and term_query , concner and query should be identical. We assume map auto sorts the items (hash values)
     for (shingle_hash shingle:shingle_hash_theirs) { // put what i learnt from set recon in their tree
 
-        theirTree[shingle.lvl].insert(shingle);
+//        theirTree[shingle.lvl].insert(shingle);
 
         if (Dictionary.find(shingle.second) == Dictionary.end()) {
-            if (shingle.lvl < theirTree.size() - 1)
+            if (shingle.lvl < Levels - 1)
                 cyc_query[shingle.second] = 0;
             else
                 term_query[shingle.second] = "";
@@ -178,58 +180,58 @@ void SetsOfContent::prepare_querys(const vector<shingle_hash> & shingle_hash_the
 
 
     // move the rest of the tree.
-    for (auto tree_lvl : myTree) { // if it is the same ID, put the shingle in their tree
-        for (shingle_hash shingle: tree_lvl) {
-            if (!rid_shingles[shingle]) {
-                theirTree[shingle.lvl].insert(shingle);
-            }
-        }
-    }
+//    for (auto tree_lvl : myTree) { // if it is the same ID, put the shingle in their tree
+//        for (shingle_hash shingle: tree_lvl) {
+//            if (!rid_shingles[shingle]) {
+//                theirTree[shingle.lvl].insert(shingle);
+//            }
+//        }
+//    }
 
 }
 
 // what they are missing, and i will prepare to send them
-void SetsOfContent::prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine) {
-    // figure out what they are missing, on cycles and dictionary
-    // track trough to find cycle number
-    // prepare
-    // later send the information over
-
-    // get all unique hashes that is konw to their host
-
-    term_concern.clear();
-    cyc_concern.clear();
-
-    map<size_t,bool> hashes_they_know; // seconds of (myTree - my unique + their hashes)
-
-    map<size_t,bool> my_unique;
-
-    for(auto shingle:shingle_hash_mine){
-        my_unique[shingle.second] = true;
-    }
-
-    for (auto lvl : myTree) {
-        for(auto shingle : lvl){
-            if(!my_unique[shingle.second]) hashes_they_know[shingle.second] = true;
-        }
-    }
-
-    for (auto shingle : shingle_hash_theirs) hashes_they_know[shingle.second] = true;
-
-
-
-    for (shingle_hash shingle : shingle_hash_mine) {
-        if(hashes_they_know[shingle.second]) continue;
-
-        if (myTree.size() - 1 == shingle.lvl) {
-            term_concern[shingle.second] = Dictionary[shingle.second];
-//        }else {
-//            cycle tmp = shingle.compose;
-//            if (!shingle2hash_train(tmp,myTree[shingle.lvl+1],Cyc_dict[shingle.second])) throw invalid_argument("We failed to get a cycle number to send to an other party at lvl: "+to_string(shingle.lvl));
-//            cyc_concern[shingle.second] = tmp.cyc;
-        }
-    }
-}
+//void SetsOfContent::prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine) {
+//    // figure out what they are missing, on cycles and dictionary
+//    // track trough to find cycle number
+//    // prepare
+//    // later send the information over
+//
+//    // get all unique hashes that is konw to their host
+//
+//    term_concern.clear();
+//    cyc_concern.clear();
+//
+//    map<size_t,bool> hashes_they_know; // seconds of (myTree - my unique + their hashes)
+//
+//    map<size_t,bool> my_unique;
+//
+//    for(auto shingle:shingle_hash_mine){
+//        my_unique[shingle.second] = true;
+//    }
+//
+//    for (auto lvl : myTree) {
+//        for(auto shingle : lvl){
+//            if(!my_unique[shingle.second]) hashes_they_know[shingle.second] = true;
+//        }
+//    }
+//
+//    for (auto shingle : shingle_hash_theirs) hashes_they_know[shingle.second] = true;
+//
+//
+//
+//    for (shingle_hash shingle : shingle_hash_mine) {
+//        if(hashes_they_know[shingle.second]) continue;
+//
+//        if (myTree.size() - 1 == shingle.lvl) {
+//            term_concern[shingle.second] = Dictionary[shingle.second];
+////        }else {
+////            cycle tmp = shingle.compose;
+////            if (!shingle2hash_train(tmp,myTree[shingle.lvl+1],Cyc_dict[shingle.second])) throw invalid_argument("We failed to get a cycle number to send to an other party at lvl: "+to_string(shingle.lvl));
+////            cyc_concern[shingle.second] = tmp.cyc;
+//        }
+//    }
+//}
 
 void SetsOfContent::answer_queries(const map<size_t,bool> &queries, const vector<shingle_hash> &shingle_hash_mine) {
     cyc_concern.clear();
@@ -559,10 +561,14 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash>& shing
             if (str == final_str || (strCollect_size == cyc_info.cyc and cyc_info.cyc != 0)) {
                 cyc_info.cyc = strCollect_size;
                 final_str = str;
+                auto old_mem = initRes.VmemUsed;
+                resourceMonitor(initRes, 300, SIZE_T_MAX);
+                (old_mem < initRes.VmemUsed)? highwater = initRes.VmemUsed : highwater = old_mem;
             }
         }
 
         if (strCollect_size == cyc_info.cyc && cyc_info.cyc != 0) {
+            HeapProfilerStop();
             return true;
         }
     }
@@ -592,14 +598,14 @@ string SetsOfContent::retriveString() {
     // retrace cycles bottom-up and delete from query after tracing
     string substring;
 //    for (auto lvl : theirTree) for (auto item:lvl) cout << item << endl; // TODO: detele this print tree function
-    for (int i = theirTree.size() - 2; i >= 0; --i) {
-        for (shingle_hash shingle : theirTree[i]) {
+    for (int i = myTree.size() - 2; i >= 0; --i) {
+        for (shingle_hash shingle : myTree[i]) {
             auto it = cyc_query.find(shingle.second);
             if (it != cyc_query.end()) {
                 vector<size_t> tmp;
                 substring = "";
                 cycle tmp_cyc = cycle{.head = shingle.compose.head, .len=shingle.compose.len, .cyc = it->second};
-                shingle2hash_train(tmp_cyc, theirTree[i + 1], tmp);
+                shingle2hash_train(tmp_cyc, myTree[i + 1], tmp);
                 for (size_t hash:tmp) {
                     if (Dictionary.find(hash) == Dictionary.end())
                         cout << "Recover may have failed - Dictionary lookup failed for "<< hash << " at level " << endl;
@@ -876,6 +882,13 @@ void SetsOfContent::configure(shared_ptr<SyncMethod>& setHost, long mbar) {
 }
 
 bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *>& mySetData) {
+    myTree.clear();
+    myTree.resize(Levels);
+    for(auto s_zz : mySetData){
+        auto shingle = ZZtoShingleHash(s_zz->to_ZZ());
+        myTree[shingle.lvl].insert(shingle);
+    }
+
     myString = retriveString();
     recovered_string = new DataObject(myString);
     return true;

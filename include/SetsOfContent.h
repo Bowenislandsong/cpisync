@@ -21,6 +21,7 @@
 #include "IBLTSync_SetDiff.h"
 #include "ProbCPISync.h"
 #include "FullSync.h"
+#include "ProcessData.h"
 
 #include "ForkHandle.h" // tobe removed
 
@@ -120,6 +121,7 @@ public:
 
     string getName() override { return "Sets of Content"; }
 
+    long getVirMem() override { return (long)highwater;};
 
     //getShinglesAt
     vector<ZZ> getShingles_ZZ() {
@@ -137,6 +139,8 @@ protected:
     bool useExisting; /** Use Exiting connection for Communication */
 
 private:
+    Resources initRes;
+    size_t highwater;
 
     string myString; // original input string
     size_t TermStrSize, Levels, Partition, HashShingleSize;
@@ -145,7 +149,7 @@ private:
 
     vector<DataObject *> setPointers; // garbage collector
 
-    vector<std::set<shingle_hash>> myTree, theirTree; // the hash shingle tree   // RECONCILLING TARGET
+    vector<std::set<shingle_hash>> myTree; // the hash shingle tree   // RECONCILLING TARGET
 
     map<size_t, string> Dictionary;  // terminla strings
 
@@ -244,7 +248,7 @@ private:
      */
     void prepare_querys(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
 
-    void prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
+//    void prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
 
     void answer_queries(const map<size_t,bool>& queries, const vector<shingle_hash> &shingle_hash_mine);
 
