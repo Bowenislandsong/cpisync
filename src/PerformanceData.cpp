@@ -108,14 +108,14 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (*stringInput == randSampleTxt) str_type = "RandText";
     if (*stringInput == randSampleCode) str_type = "RandCode";
 
-//    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
-//                                     {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
-//                                      "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-//                                      "Str Recon True", "Tree Heap SIze", "High Water Heap"});
-    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
+    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
                                      {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
                                       "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
                                       "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+//    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
+//                                     {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+//                                      "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
+//                                      "Str Recon True", "Tree Heap SIze", "High Water Heap"});
     //TODO: Separate Comm, and Time, Separate Faile rate.
     for (int str_size : str_sizeRange) {
 //        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;

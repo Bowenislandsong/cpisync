@@ -48,7 +48,7 @@ public:
     vector<ZZ> getMergeInd(const string str);
 
 protected:
-    void UDonline(const string& str, vector<size_t>& merg_idx);
+    void UDonline(const string& str, std::map<string,vector<size_t>>& merg_idx);
 
     // tmp solution, This would result in n^2 time
     bool isUD(const string& str, AdjMtx& shingle_set);
