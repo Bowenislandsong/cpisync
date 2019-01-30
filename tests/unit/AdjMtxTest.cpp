@@ -10,9 +10,9 @@ AdjMtxTest::~AdjMtxTest(){}
 void AdjMtxTest::creatGraph(){
     int GraphSize = 5;
     AdjMtx mtx = AdjMtx();
-    vector<ZZ> Vertices;
+    vector<string> Vertices;
     for (int i = 0; i < GraphSize; ++i) {
-        Vertices.push_back(randZZ());
+        Vertices.push_back(randAsciiStr(7));
     }
     mtx.create(Vertices);
     CPPUNIT_ASSERT(mtx.getNumVex()==5);
@@ -23,7 +23,7 @@ void AdjMtxTest::editGraph(){
     int GraphSize = 5;
     AdjMtx mtx = AdjMtx();
     for (int i = 0; i < GraphSize; ++i) {
-        mtx.addNewVex(randZZ());
+        mtx.addNewVex(randAsciiStr(2));
     }
 
     auto V = mtx.getGraphVex();

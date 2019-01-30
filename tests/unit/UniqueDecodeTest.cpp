@@ -10,11 +10,9 @@ UniqueDecodeTest::UniqueDecodeTest() {}
 UniqueDecodeTest::~UniqueDecodeTest() {}
 
 void UniqueDecodeTest::UDTest() {
-    string txt = "Bowen is very";
+    string txt = "katana";
     UniqueDecode host = UniqueDecode(2,'$');
-    if(host.isUD(txt))
-        cout<< "This is UD"<<endl;
-    else
-        cout<< "THis is not UD" <<endl;
+    host.injectStr(txt);
+
     //host.reconstructDFS(host.getShingleSet(txt));
 }

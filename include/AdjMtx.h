@@ -85,15 +85,15 @@ public:
     };
 
     bool setWeight(string vfrom, string vto, int set_weight){
-        return setWeight(vfrom, vto,set_weight);
+        return setWeight(StrtoZZ(vfrom), StrtoZZ(vto),set_weight);
     };
 
     bool delWeigth(string vfrom, string vto, int del_weight = 1){
-        return delWeigth(vfrom, vto, del_weight);
+        return delWeigth(StrtoZZ(vfrom), StrtoZZ(vto), del_weight);
     };
 
     int getWeight(string vfrom, string vto){
-        return getWeight(vfrom, vto);
+        return getWeight(StrtoZZ(vfrom), StrtoZZ(vto));
     };
 
 protected:

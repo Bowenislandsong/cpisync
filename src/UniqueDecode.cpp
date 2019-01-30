@@ -15,11 +15,12 @@ UniqueDecode::~UniqueDecode(){
 };
 
 void UniqueDecode::injectStr(string &str) {
-    str.insert(0,stopWord,1); // mark the head
+    str = string(1, stopWord) + str; // stop word is char, always size 1
     origStr = str; // TODO: Delete this if not necessary
     MergIndex.clear(); // make sure nothing is in it
     UDonline(str,MergIndex);
 
+    cout<< MergIndex.size()<<endl;
     // we can test if it works here
     vector<string> shingle_set;
     std::map<string,bool> unique;
@@ -52,109 +53,79 @@ void UniqueDecode::UDonline(const string &str, std::map<string,vector<size_t>>& 
     std::map<string, size_t> order_reference; // reference for location
     AdjMtx adjMatrix;
     vector<string> shingle_history;
-    for (size_t i = 0; i < str.size(); ++i) { // go throw the string
-        string tmpstr = str.substr(i, shingleLen);
-        if (adjMatrix.addNewVex(tmpstr)) {
-            order_reference[tmpstr] = i;// create a vertex
-            isCycVis[tmpstr] = {false, false};
+    for (size_t i = 0; i < str.size() - shingleLen+1; ++i) { // go throw the string
+        string tmpstr = str.substr(i, shingleLen-1);
+        if (adjMatrix.addNewVex(tmpstr)) { // create vertices
+            order_reference[tmpstr] = 0; // put all possible shingle and arrange them later
+            isCycVis[tmpstr] = {false, false}; // initi isCycle and isVisited
         }
     }
-    string head = str.substr(0, shingleLen - 1);
-    isCycVis[head].second = true;
-    //isVisited[0] = true; // TODO: find head
-    // don't sort the edges
-    shingle_history.push_back(head);
 
-    for (int j = 1; j < str.size(); ++j) {
-        string cur = str.substr(j, shingleLen);
+    size_t tmp_idx = 0; // shingles lexicographic order
+    for (auto it = order_reference.begin(); it != order_reference.end(); ++it) it->second = tmp_idx++;
+
+    string head = str.substr(0, shingleLen-1);
+    isCycVis[head].second = true;
+    shingle_history.push_back(head); // visit the head
+
+    for (size_t j = 1; j < str.size()- shingleLen+1; ++j) {
+        string cur = str.substr(j, shingleLen-1);
         auto cur_it = isCycVis.find(cur);
 
-        if (!cur_it->second.second) cur_it->second.second = true;
+        if (!cur_it->second.second)
+            cur_it->second.second = true;
         else {
             if (adjMatrix.getWeight(shingle_history.back(), cur) == 0) {  // does edge w[i-1] -> w[i] not already exist in G?
                 if (cur_it->second.first) {  //does w[i] already belongs to a cycle
+                    // It is no longer a Uniquely decodable string, we koping the last two shingles and assess this again
                     // merge with previous shingle
                     // revisit previous shingle
-                    MergIndex[cur].push_back(order_reference[shingle_history.back()]);
-                    shingle_history.back() += cur.back();
+                    mergeNredo(cur, order_reference, shingle_history, j, adjMatrix);
+                    continue;
                 } else { // creating a new cycle
-                    for (auto hist_it = shingle_history.rbegin(); hist_it != shingle_history.rend(); hist_it--) {
-                        isCycVis[*hist_it].first = true; // We assume
+                    isCycVis[cur].first = true;
+                    for (auto hist_it = shingle_history.rbegin(); hist_it != shingle_history.rend(); ++hist_it) {
+                        string a = *hist_it;
+                        if (*hist_it == cur)
+                            break;
+                        isCycVis[*hist_it].first = true; // label w[i] and all the nodes visited since the previous tp a cycle
                     }
                 }
+            } else {
+                // stepping along an existing cycle
+                if (isCycVis[shingle_history[j]].first) j++;
             }
-//            else{
-//                // stepping along
-//            }
+        }
+
+        // this is a N^2 time or high communicaiton cost
+        // unless the number of vertices is small, aka a lot more eularian cycles, then bad communicaiton cost
+        // on the other hand, N as big as string size then we have N^2
+        bool distinct = true; // init distinct
+        for (auto tmp_shingle : order_reference) {
+            if (adjMatrix.getWeight(tmp_shingle.first, cur) == 1 and distinct) {
+                distinct = false;
+            } else if (adjMatrix.getWeight(tmp_shingle.first, cur) == 1 and not distinct) {
+                mergeNredo(cur, order_reference, shingle_history, j, adjMatrix);
+                continue;
+            }
         }
 
 
+        if (!adjMatrix.setWeight(shingle_history.back(), cur, 1)) {
+            throw invalid_argument("setWeight error, a vex does not exist");
+        }
+        shingle_history.push_back(cur);
     }
 }
 
+void UniqueDecode::mergeNredo(const string cur,std::map<string, size_t>& order_reference,vector<string>& shingle_history, size_t& j, AdjMtx& adjMatrix){
+    MergIndex[cur].push_back(order_reference[shingle_history.back()]);
+    shingle_history.back() += cur.substr(shingleLen-1);
+    adjMatrix.addNewVex(shingle_history.back());
+    j -= shingle_history.back().size() - shingleLen + 1;
+}
 
-//bool UniqueDecode::isUD(const string str) {
-//    //Get shingles based on string input
-//    //InitGraph
-//    AdjMtx adjMatrix;
-//    for (int i = 0; i < str.size(); ++i) {
-//        auto tmpvex = str.substr(i, shingleLen-1);
-//        if (!adjMatrix.contains(StrtoZZ(tmpvex))) {
-//            adjMatrix.addNewVex(StrtoZZ(tmpvex));
-//        }
-//    }
-//
-//    //Init visited and cycle
-//    vector<bool> isCycle;
-//    isCycle.assign(adjMatrix.getNumVex(), false);
-//    vector<bool> isVisited;
-//    isVisited.assign(adjMatrix.getNumVex(), false);
-//
-//    isVisited[0] = true;  // don't sort the edges
-//    auto shingle_set = adjMatrix.getGraphVex();
-//    auto prev = shingle_set[0];
-//    //map<ZZ,int> cycle_pool; // a pool to store all cycles
-//    for (int j = 1; j < str.size(); ++j) {
-//        int vex_i = longgestNxtShingle(j, shingle_set, str);  // find the right shingle Vex
-//        auto cur = shingle_set[vex_i];  // update current
-//        if (not isVisited[vex_i]) {  // if not visited
-//            isVisited[vex_i] = true;  // marked it visited
-//        } else {
-//            if (adjMatrix.getWeight(prev, cur) == 0) {  // does edge w[i-1] -> w[i] not already exist in G?
-//                if (isCycle[vex_i]) {  //does w[i] already belongs  to a cycle
-//                    return false;
-//                } else {
-//                    // find the last place of vex occurrence and label all cycles
-//                    isCycle[vex_i]=true;
-//                    for (int j = 0; j > 0; --j) {
-//                        if (str.substr(j,shingle_set[vex_i].size()) == ZZtoStr(shingle_set[vex_i])){
-//                            break;
-//                        }
-//                        isCycle[longgestPrevShingle(j,shingle_set,str)] = true;
-//                    }
-//                }
-//            }
-//        }
-        bool distinct = true; // init distinct
-        for (auto tmp_shingle : shingle_set) {
-            if (adjMatrix.getWeight(tmp_shingle, cur) == 1 and distinct) {
-                distinct = false;
-            } else if (adjMatrix.getWeight(tmp_shingle, cur) == 1 and not distinct) {
-                return false;
-            }
-        }
-        // connect the graph
-        if (!adjMatrix.setWeight(prev,cur,1)){
-            throw invalid_argument("don't have an vex");
-        }
-//        cout<<ZZtoStr(prev) + "->" + ZZtoStr(cur)<<endl;
 
-//
-//        j += cur.size() - 1;  // update string read progress
-//        prev = cur;  // update prev edge
-//    }
-//    return true;
-//}
 
 string UniqueDecode::reconstructDFS(vector<string> &shingle_set, std::map<string,vector<size_t>>& merg_idx) {
     // Sanity Checks
@@ -169,88 +140,8 @@ string UniqueDecode::reconstructDFS(vector<string> &shingle_set, std::map<string
     return str;
 }
 
-int UniqueDecode::longgestNxtShingle(int str_i, vector<ZZ> shingle_set, string& str){
-    auto nxt = str.substr(str_i,shingleLen-1);
-    string tmp = "";
-    int resi = -1;
-    for (int i = 0; i < shingle_set.size(); ++i){
-        string s = ZZtoStr(shingle_set[i]);
-        if (str.size()<str_i+s.length()){
-            invalid_argument("longgestNxtShingle is going out of range");
-        }
-        if (s.substr(0,shingleLen-1) == nxt and s == str.substr(str_i,s.length()) and s.size()>tmp.size()){
-            tmp = s;
-            resi = i;
-        }
-    }
 
-    return (resi>=0)? resi : throw invalid_argument("longgestNxtShingle can not find any shingle");
-}
 
-int UniqueDecode::longgestPrevShingle(int str_i, vector<ZZ> shingle_set, string str){
-    auto nxt = str.substr(str_i-shingleLen+1,shingleLen-1);
-    string tmp = "";
-    int resi = -1;
-    for (int i = 0; i < shingle_set.size(); ++i){
-        string s = ZZtoStr(shingle_set[i]);
-        if (0>str_i-s.length()){
-            invalid_argument("longgestPrevShingle is going out of range");
-        }
-        if (s.substr(s.size()-shingleLen+1) == nxt and s == str.substr(str_i-s.size()+1,s.size()) and s.size()>tmp.size()){
-            tmp = s;
-            resi = i;
-        }
-    }
-    return (resi>=0)? resi : throw invalid_argument("longgestPrevShingle can not find any shingle");
-}
-
-//string UniqueDecode::reconstructDFS(vector<ZZ> shingle_set_ZZ){
-//    // init visited vector
-//    vector<pair<string,bool>> isVisited_pair;
-//    if (shingle_set_ZZ.size()>0){
-//        // convert ZZ back to string
-//        for (auto shingle : shingle_set_ZZ){
-//            isVisited_pair.push_back(make_pair(ZZtoStr(shingle),false));
-//        }
-//    }else{
-//        throw invalid_argument("reconstructDFS - Input shingle_set is empty");
-//    }
-//
-//    //find the head
-//    string str;
-//    for (auto shingle : isVisited_pair) {
-//        if (shingle.first.at(0) == stopWord) {
-//            str = shingle.first;
-//        }
-//    }
-//    shingle2str(str,isVisited_pair);
-//    return str;
-//}
-
-vector<vector<pair<string,bool>>::iterator> UniqueDecode::potNxtLst(const string nxt,vector<pair<string,bool>> &isVisited_pair){
-    vector<vector<pair<string,bool>>::iterator>  res;
-    for (vector<pair<string,bool>>::iterator shingle =isVisited_pair.begin();shingle!=isVisited_pair.end();++shingle){
-        if(not shingle->second and shingle->first.substr(0,nxt.size()) == nxt){ // if not visited
-            res.push_back(shingle);
-        }
-    }
-    return res;
-}
-
-void UniqueDecode::shingle2str(string& str, vector<pair<string,bool>> &isVisited_pair){
-    for (auto shingle : potNxtLst(str.substr(str.size()-shingleLen),isVisited_pair)) {
-        shingle->second = true; // set an vex/shingle read
-        str += shingle->first.substr(shingle->first.size() - 1);
-        shingle2str(str, isVisited_pair);
-
-        // if not all vex is visited
-        if (!isAllVisited(isVisited_pair)) {
-            str = str.substr(0,str.size()-shingle->first.size());
-        }
-        //else
-        return;
-    }
-}
 
 bool UniqueDecode::isAllVisited(vector<pair<string,bool>> isVisited_pair){
     for (auto it = isVisited_pair.begin(); it!=isVisited_pair.end();++it){
@@ -270,11 +161,5 @@ vector<ZZ> UniqueDecode::getShingleSet(const string str){
             res.push_back(shingle);
         }
     }
-    return res;
-}
-
-vector<ZZ> UniqueDecode::getMergeInd(const string str){
-    vector<ZZ> res;
-
     return res;
 }

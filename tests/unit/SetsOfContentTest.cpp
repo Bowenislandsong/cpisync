@@ -27,7 +27,6 @@ void SetsOfContentTest::SelfUnitTest() {
     initResources(initRes);
     auto a=randSampleTxt(2e6);
     resourceMonitor(initRes,500,5e9);
-    HeapProfilerDump("asd");
     //    resourceReport(initRes);
     resourceReport(initRes);
     cout<<initRes.VmemUsed<<endl;
@@ -53,7 +52,7 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
     initResources(initRes);
 
-    string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
+    string alicetxt = randSampleTxt(2e3); // 20MB is top on MAC
 
     DataObject *atxt = new DataObject(alicetxt);
 

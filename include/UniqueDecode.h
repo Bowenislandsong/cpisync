@@ -34,8 +34,6 @@ public:
 
     void injectStr(string& str);
 
-    bool isUD(const string str);
-
     string reconstructDFS(vector<string>& shingle_set, std::map<string,vector<size_t>>& merg_idx);
 
     /**
@@ -50,8 +48,7 @@ public:
 protected:
     void UDonline(const string& str, std::map<string,vector<size_t>>& merg_idx);
 
-    // tmp solution, This would result in n^2 time
-    bool isUD(const string& str, AdjMtx& shingle_set);
+    void mergeNredo(const string cur,std::map<string, size_t>& order_reference,vector<string>& shingle_history, size_t& j, AdjMtx& adjMatrix);
 
     int longgestNxtShingle(int str_i, vector<ZZ> shingle_set, string str);
 
