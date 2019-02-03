@@ -108,8 +108,10 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (*stringInput == randSampleTxt) str_type = "RandText";
     if (*stringInput == randSampleCode) str_type = "RandCode";
 
+    string last_passed_before_exception;
+
     PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
-                                     {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+                                     {"Sting Size", "Edit Dist %", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
                                       "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
                                       "Str Recon True", "Tree Heap SIze", "High Water Heap"});
 //    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
@@ -132,7 +134,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 //                                 << ", Confidence: " << con << endl;
 
                             Resources initRes;
-                            initResources(initRes);
+                            //initResources(initRes);
 
                             GenSync Alice = GenSync::Builder().
                                     setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -144,14 +146,19 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     setPort(portnum).
                                     build();
 
+                            last_passed_before_exception = "Alice GenSync"; // success Tag
+
 
                             DataObject *Alicetxt = new DataObject(stringInput(str_size));
+
+                            last_passed_before_exception = "Alice Create String"; // success Tag
 
                             clock_t strStart = clock();
                             Alice.addStr(Alicetxt, false);
                             auto tree_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
                             resourceReport(initRes);
 
+                            last_passed_before_exception = "Alice Add String"; // success Tag
 
                             GenSync Bob = GenSync::Builder().
                                     setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -163,32 +170,43 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     setPort(portnum).
                                     build();
 
+                            last_passed_before_exception = "Bob GenSync"; // success Tag
 
                             DataObject *Bobtxt = new DataObject(
                                     randStringEditBurst((*Alicetxt).to_string(), (int) (str_size / edit_dist)));
 
+                            last_passed_before_exception = "Bob Create String"; // success Tag
+
                             Bob.addStr(Bobtxt, false);
 
+                            last_passed_before_exception = "Bob Add String"; // success Tag
 
                             forkHandleReport report = forkHandle(Alice, Bob, false);
 
+                            last_passed_before_exception = "String Recon"; // success Tag
+
                             bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
-                            plot.add({to_string(lvl), to_string(par),
+
+                            if(!success_StrRecon) // success Tag
+                                last_passed_before_exception += ", Alice str size: "+ to_string(Alice.dumpString()->to_string().size())
+                                        + "Bob Str size: "+to_string(Bobtxt->to_string().size());
+
+//                            plot.add({to_string(lvl), to_string(par),
+//                                      to_string(report.bytesTot + report.bytesRTot),
+//                                      to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+//                                      to_string(report.totalTime), to_string(Alice.getTime().front().second),
+//                                      to_string(success_StrRecon), to_string(initRes.VmemUsed), to_string(Alice.getVirMem(0))});
+
+                            plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
                                       to_string(report.bytesTot + report.bytesRTot),
                                       to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
                                       to_string(report.totalTime), to_string(Alice.getTime().front().second),
                                       to_string(success_StrRecon), to_string(initRes.VmemUsed), to_string(Alice.getVirMem(0))});
 
-//                            plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
-//                                      to_string(report.bytesTot + report.bytesRTot),
-//                                      to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
-//                                      to_string(report.totalTime), to_string(Alice.getTime().front().second),
-//                                      to_string(success_StrRecon)});
-
                             delete Alicetxt;
                             delete Bobtxt;
                         } catch (std::exception) {
-                            cout << "we failed once" << endl;
+                            cout << "We failed after " <<last_passed_before_exception<< endl;
                             plot.add({to_string(lvl), to_string(par), to_string(0),
                                       to_string(0), to_string(0), to_string(0)});
                         }

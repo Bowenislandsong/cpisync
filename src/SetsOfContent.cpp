@@ -9,7 +9,7 @@ SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t par
     if (levels > USHRT_MAX or levels < 2)
         throw invalid_argument("Num of Level specified should be between 2 and " + to_string(USHRT_MAX));
 
-    initResources(initRes);
+//    initResources(initRes);
 }
 
 SetsOfContent::~SetsOfContent() {

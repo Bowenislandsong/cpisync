@@ -86,9 +86,10 @@ void UniqueDecode::UDonline(const string &str, std::map<string,vector<size_t>>& 
                     isCycVis[cur].first = true;
                     for (auto hist_it = shingle_history.rbegin(); hist_it != shingle_history.rend(); ++hist_it) {
                         string a = *hist_it;
+
+                        isCycVis[*hist_it].first = true; // label w[i] and all the nodes visited since the previous tp a cycle
                         if (*hist_it == cur)
                             break;
-                        isCycVis[*hist_it].first = true; // label w[i] and all the nodes visited since the previous tp a cycle
                     }
                 }
             } else {
