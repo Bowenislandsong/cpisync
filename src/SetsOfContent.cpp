@@ -190,48 +190,6 @@ void SetsOfContent::prepare_querys(const vector<shingle_hash> & shingle_hash_the
 
 }
 
-// what they are missing, and i will prepare to send them
-//void SetsOfContent::prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine) {
-//    // figure out what they are missing, on cycles and dictionary
-//    // track trough to find cycle number
-//    // prepare
-//    // later send the information over
-//
-//    // get all unique hashes that is konw to their host
-//
-//    term_concern.clear();
-//    cyc_concern.clear();
-//
-//    map<size_t,bool> hashes_they_know; // seconds of (myTree - my unique + their hashes)
-//
-//    map<size_t,bool> my_unique;
-//
-//    for(auto shingle:shingle_hash_mine){
-//        my_unique[shingle.second] = true;
-//    }
-//
-//    for (auto lvl : myTree) {
-//        for(auto shingle : lvl){
-//            if(!my_unique[shingle.second]) hashes_they_know[shingle.second] = true;
-//        }
-//    }
-//
-//    for (auto shingle : shingle_hash_theirs) hashes_they_know[shingle.second] = true;
-//
-//
-//
-//    for (shingle_hash shingle : shingle_hash_mine) {
-//        if(hashes_they_know[shingle.second]) continue;
-//
-//        if (myTree.size() - 1 == shingle.lvl) {
-//            term_concern[shingle.second] = Dictionary[shingle.second];
-////        }else {
-////            cycle tmp = shingle.compose;
-////            if (!shingle2hash_train(tmp,myTree[shingle.lvl+1],Cyc_dict[shingle.second])) throw invalid_argument("We failed to get a cycle number to send to an other party at lvl: "+to_string(shingle.lvl));
-////            cyc_concern[shingle.second] = tmp.cyc;
-//        }
-//    }
-//}
 
 void SetsOfContent::answer_queries(const map<size_t,bool> &queries, const vector<shingle_hash> &shingle_hash_mine) {
     cyc_concern.clear();
@@ -245,8 +203,13 @@ void SetsOfContent::answer_queries(const map<size_t,bool> &queries, const vector
         } else {
             cycle tmp = shingle.compose;
 
-            if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second]))
+            if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) {
                 cout << "We failed to get a cycle number to send to an other party at lvl: " << shingle.lvl << endl;
+//                for(auto item : Cyc_dict[shingle.second]) {
+////                    cout << item << " ";
+//                    cout<<Dictionary[item]<<"|"<<Dictionary[item].size()<<endl;
+//                }
+            }
 
             cyc_concern[shingle.second] = tmp.cyc;
         }
@@ -442,7 +405,7 @@ vector<shingle_hash> SetsOfContent::get_nxt_shingle_vec(const size_t cur_edge,
 }
 
 // functions for backtracking using front, length, and cycle number
-bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash>& shingle_set, vector<size_t>& final_str) {
+bool SetsOfContent::shingle2hash_train(cycle& cyc_info, const set<shingle_hash>& shingle_set, vector<size_t>& final_str) {
 
     map<size_t, vector<shingle_hash>> original_state_stack = tree2shingle_dict(
             shingle_set); // get a shingle dict from a level of a tree for fast next edge lookup
@@ -567,6 +530,7 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash>& shing
             }
         }
 
+
         if (strCollect_size == cyc_info.cyc && cyc_info.cyc != 0) {
             HeapProfilerStop();
             return true;
@@ -575,7 +539,7 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, set<shingle_hash>& shing
     return false;
 }
 
-std::map<size_t, vector<shingle_hash>> SetsOfContent::tree2shingle_dict(std::set<shingle_hash> &tree_lvl) {
+std::map<size_t, vector<shingle_hash>> SetsOfContent::tree2shingle_dict(const std::set<shingle_hash> &tree_lvl) {
     // prepare shingle_set in a map, and microsorted(sorted for shingles with same head)
     std::map<size_t, vector<shingle_hash>> res;
     for (shingle_hash shingle : tree_lvl){
@@ -841,6 +805,19 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     for (auto shingle : otherMinusSelf) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : selfMinusOther) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
 
+
+
+//    // TODO: Delete this after debug
+//    for (auto shingle : myTree[3]) {
+//        cycle tmp = shingle.compose;
+//        if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) {
+//            shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second]);
+//            for (auto shingle:Cyc_dict[shingle.second]) cout << shingle << " ";
+//            cout << endl;
+//        }
+//    }
+
+
     prepare_querys(theirs_hash, mine_hash);
 //    cout<< "cyc query size : "<< cyc_query.size()<<endl;
 //    cout<< "Term query size : "<< term_query.size()<<endl;
@@ -878,7 +855,7 @@ void SetsOfContent::configure(shared_ptr<SyncMethod>& setHost, long mbar) {
     else if (GenSync::SyncProtocol::InteractiveCPISync == baseSyncProtocol)
         setHost = make_shared<InterCPISync>(5, sizeof(shingle_hash) * 8, 64, 7, true);
     else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol)
-        setHost = make_shared<ProbCPISync>(mbar,sizeof(shingle_hash) * 8,64,true);
+        setHost = make_shared<ProbCPISync>(mbar, sizeof(shingle_hash) * 8, 64, true);
 }
 
 bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *>& mySetData) {

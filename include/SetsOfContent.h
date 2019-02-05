@@ -219,9 +219,9 @@ private:
      * @param str_order
      * @param final_str a hash train in string order
      */
-    bool shingle2hash_train(cycle &cyc_info, set <shingle_hash> &shingle_set, vector<size_t> &final_str);
+    bool shingle2hash_train(cycle &cyc_info, const set <shingle_hash> &shingle_set, vector<size_t> &final_str);
 
-    std::map<size_t, vector<shingle_hash>> tree2shingle_dict(std::set<shingle_hash> &tree_lvl);
+    std::map<size_t, vector<shingle_hash>> tree2shingle_dict(const std::set<shingle_hash> &tree_lvl);
 
     shingle_hash get_nxt_edge(size_t &current_edge, shingle_hash _shingle);
 

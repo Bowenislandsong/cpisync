@@ -50,9 +50,9 @@ void SetsOfContentTest::testAll() {
 //
 //    cout<< (double) (clock() - ssss) / CLOCKS_PER_SEC<<endl;
     Resources initRes;
-    initResources(initRes);
+//    initResources(initRes);
 
-    string alicetxt = randSampleTxt(2e3); // 20MB is top on MAC
+    string alicetxt = randSampleTxt(1e5); // 20MB is top on MAC
 
     DataObject *atxt = new DataObject(alicetxt);
 
@@ -62,13 +62,13 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
-            setlvl(2).
+            setlvl(5).
             setPort(8003).
             build();
 
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
-    string bobtxt = randStringEditBurst(alicetxt, 2e2);
+    string bobtxt = randStringEditBurst(alicetxt, 1e4);
 
     DataObject *btxt = new DataObject(bobtxt);
 
@@ -78,7 +78,7 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(10).
-            setlvl(2).
+            setlvl(5).
             setPort(8003).
             build();
 
