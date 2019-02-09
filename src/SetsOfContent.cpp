@@ -27,6 +27,7 @@ vector<size_t> SetsOfContent::create_HashSet(string str,size_t win_size, size_t 
     } else { // else we partitions it
 
         if (space==0) throw invalid_argument("Space for windowing is 0 at create_HashSet");
+        if (shingle_size<2)throw invalid_argument("shingle size should not go under 2");
         for (size_t i = 0; i < str.size() - shingle_size + 1; ++i) {
             std::hash<std::string> shash;
             hash_val.push_back(shash(str.substr(i, shingle_size)) % space);

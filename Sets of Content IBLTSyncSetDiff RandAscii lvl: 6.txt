@@ -1,1 +1,2 @@
 Sting Size|Edit Dist %|Comm (bytes)|Actual Sym Diff|Time Tree(s)|Time Recon(s)|Time Backtrack (included in Time Recon) (s)|Str Recon True|Tree Heap SIze|High Water Heap
+6 6 0 0 0 0 0 0 0 0
