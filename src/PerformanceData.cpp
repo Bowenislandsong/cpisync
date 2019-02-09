@@ -208,7 +208,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                         } catch (std::exception) {
                             cout << "We failed after " <<last_passed_before_exception<< endl;
                             plot.add({to_string(lvl), to_string(par), to_string(0),
-                                      to_string(0), to_string(0), to_string(0)});
+                                      to_string(0), to_string(0), to_string(0),to_string(0), to_string(0), to_string(0),to_string(0)});
                         }
                     }
                     plot.update();

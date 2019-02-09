@@ -7,8 +7,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 void SetsOfContentTest::SelfUnitTest() {
 //
 
-    shingle_hash Shingle_A{.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3,
-            .compose = cycle{.cyc = 1, .head = 123, .len = 333}};
+    shingle_hash Shingle_A{.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3};
 //    shingle_hash Shingle_B{.first = {298273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
 //
 //    shingle_hash Shingle_C{.first = {198273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
@@ -61,14 +60,14 @@ void SetsOfContentTest::testAll() {
             setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
-            setNumPartitions(10).
-            setlvl(5).
+            setNumPartitions(3).
+            setlvl(7).
             setPort(8003).
             build();
 
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
-    string bobtxt = randStringEditBurst(alicetxt, 2e6);
+    string bobtxt = randStringEditBurst(alicetxt, 2e3);
 
     DataObject *btxt = new DataObject(bobtxt);
 
@@ -77,8 +76,8 @@ void SetsOfContentTest::testAll() {
             setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
-            setNumPartitions(10).
-            setlvl(5).
+            setNumPartitions(3).
+            setlvl(7).
             setPort(8003).
             build();
 

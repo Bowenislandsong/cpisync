@@ -73,17 +73,17 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.kshingle3D(GenSync::SyncProtocol::IBLTSyncSetDiff,editDistRange,strSizeRange,target_confidence, randSampleTxt);
 
 
-    vector<int> strSizeRange = {100000, 400000, 800000, 1200000};
-    editDistRange = {10,1};
+    vector<int> strSizeRange = {100000, 400000, 800000, 1200000, 1600000, 2000000};
+    editDistRange = {100000, 10000,1000,100,10,1};
     vector<int> lvlRange = {2, 3, 4, 5};
     vector<int> parRange = {2, 4, 6, 8};
 
-    parRange = {10};
-//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{4}, parRange, 1, randSampleTxt, 8001);
+    parRange = {8};
+    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{2}, parRange, 1, randSampleTxt, 8001);
 
-    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{5}, parRange, 100, randSampleTxt, 8001);
+    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{3}, parRange, 1, randSampleTxt, 8001);
 
-    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{6}, parRange, 100, randSampleTxt, 8001);
+    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{4}, parRange, 1, randSampleTxt, 8001);
 
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 2, 1, randSampleTxt, 8001);
 //
@@ -92,9 +92,9 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 4, 1, randSampleTxt, 8001);
 
 //    strSizeRange = {2000000};
-//    editDistRange = {20000};
+//    editDistRange = {1000};
 
-//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,lvlRange, parRange, 100, randAsciiStr, 8001);
+//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,lvlRange, parRange, 1, randAsciiStr, 8001);
 
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange, 1, randAsciiStr, 8001);
 

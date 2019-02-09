@@ -50,6 +50,18 @@ static ostream& operator<<(ostream &os, const cycle cyc) {
     return os;
 };
 
+static cycle ZZtoCycle(const ZZ& zz){
+    cycle cyc;
+    BytesFromZZ((uint8_t *) &cyc, zz, sizeof(cycle));
+    return cyc;
+}
+
+
+static ZZ CycletoZZ(cycle cyc) {
+    char *my_s_bytes = reinterpret_cast<char *>(&cyc);
+    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(cycle));
+}
+
 
 /**
  * first is the first part of a shingle
@@ -59,7 +71,6 @@ static ostream& operator<<(ostream &os, const cycle cyc) {
  */
 struct shingle_hash{
     size_t first, second, occurr;
-    cycle compose;
     sm_i lvl;
 };
 
@@ -73,9 +84,9 @@ static bool operator<(const shingle_hash& a, const shingle_hash& b) {
 };
 
 
-//Compare and help differetiate struct shingle_hash
+//Compare and help differentiate struct shingle_hash
 static bool operator==(const shingle_hash& a, const shingle_hash& b) {
-    return a.first == b.first and a.second == b.second and a.occurr == b.occurr and a.compose == b.compose and a.lvl == b.lvl;
+    return a.first == b.first and a.second == b.second and a.occurr == b.occurr and a.lvl == b.lvl;
 };
 
 static bool operator!=(const shingle_hash& a, const shingle_hash& b) {
@@ -99,7 +110,7 @@ static string to_string(const vector<size_t> a) {string res; for (size_t t : a) 
 
 static ostream& operator<<(ostream &os, const shingle_hash shingle) {
     os << "fst: " + to_string(shingle.first) + ", sec: " + to_string(shingle.second) + ", occ: " +
-          to_string(shingle.occurr) + ", lvl: "+to_string(shingle.lvl) +" "<<shingle.compose;
+          to_string(shingle.occurr) + ", lvl: "+to_string(shingle.lvl);
     return os;
 };
 
@@ -158,7 +169,7 @@ private:
 
     //requests
     map<size_t, string> term_concern, term_query;
-    map<size_t, size_t> cyc_concern, cyc_query;
+    map<size_t, cycle> cyc_concern, cyc_query;
 
     size_t str_to_hash(const string &str) {
         return std::hash<std::string>{}(str);

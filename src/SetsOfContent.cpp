@@ -26,7 +26,7 @@ vector<size_t> SetsOfContent::create_HashSet(string str,size_t win_size, size_t 
         hash_set = {str_to_hash(str)};
     } else { // else we partitions it
 
-
+        if (space==0) throw invalid_argument("Space for windowing is 0 at create_HashSet");
         for (size_t i = 0; i < str.size() - shingle_size + 1; ++i) {
             std::hash<std::string> shash;
             hash_val.push_back(shash(str.substr(i, shingle_size)) % space);
@@ -125,6 +125,7 @@ void SetsOfContent::go_through_tree() {
     for (int l = 1; l < Levels; ++l) {
 
 
+        // Fill up Cycle Dictionary for non terminal strings
         for (auto substr_hash:unique_substr_hash(myTree[l - 1])) {
             string substring = Dictionary[substr_hash];
             if (substring.empty()) continue; // this ditches the empty strings
@@ -132,12 +133,12 @@ void SetsOfContent::go_through_tree() {
             update_tree_shingles(cur_level, l);
         }
 
-        // update lost level's cycle since it is done with cyc dict
-        for (const shingle_hash& shingle : myTree[l - 1]){
-            auto it = Cyc_dict.find(shingle.second);
-            if (it == Cyc_dict.end()) throw invalid_argument("Cycle not found, should have been inserted");
-            const_cast<cycle&> (shingle.compose) = cycle{.cyc = 0, .head = it->second.front(), .len = it->second.size()};
-        }
+//        // update lost level's cycle since it is done with cyc dict
+//        for (const shingle_hash& shingle : myTree[l - 1]){
+//            auto it = Cyc_dict.find(shingle.second);
+//            if (it == Cyc_dict.end()) throw invalid_argument("Cycle not found, should have been inserted");
+//            const_cast<cycle&> (shingle.compose) = cycle{.cyc = 0, .head = it->second.front(), .len = it->second.size()};
+//        }
         space = floor((space / Partition) / 2);
         shingle_size = floor(shingle_size / 2);
     }
@@ -171,7 +172,7 @@ void SetsOfContent::prepare_querys(const vector<shingle_hash> & shingle_hash_the
 
         if (Dictionary.find(shingle.second) == Dictionary.end()) {
             if (shingle.lvl < Levels - 1)
-                cyc_query[shingle.second] = 0;
+                cyc_query[shingle.second] = cycle {.head=0, .len=0, .cyc=0};//TODO: see if it is cycle of zeros
             else
                 term_query[shingle.second] = "";
         }
@@ -201,17 +202,14 @@ void SetsOfContent::answer_queries(const map<size_t,bool> &queries, const vector
         if (myTree.size() - 1 == shingle.lvl) {
             term_concern[shingle.second] = Dictionary[shingle.second];
         } else {
-            cycle tmp = shingle.compose;
+            vector<size_t> tmp_vec = Cyc_dict[shingle.second];
+            cycle tmp = cycle{.head = tmp_vec.front(), .len = tmp_vec.size(), .cyc=0};
 
             if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) {
                 cout << "We failed to get a cycle number to send to an other party at lvl: " << shingle.lvl << endl;
-//                for(auto item : Cyc_dict[shingle.second]) {
-////                    cout << item << " ";
-//                    cout<<Dictionary[item]<<"|"<<Dictionary[item].size()<<endl;
-//                }
             }
 
-            cyc_concern[shingle.second] = tmp.cyc;
+            cyc_concern[shingle.second] = tmp;
         }
     }
 }
@@ -239,12 +237,11 @@ void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level)
     }
     if (tmp.empty())
         throw invalid_argument(
-                "update_tree shingle is empty");// TODO: Delete it after making sure thi is never triggered.
+                "update_tree shingle is empty");
 
     for (auto item = tmp.begin(); item != tmp.end(); ++item) {
         myTree[level].insert(
                 shingle_hash{.first = item->first.first, .second = item->first.second, .occurr = item->second,
-                        .compose = cycle{.cyc=0, .head = 0, .len = 0},
                         .lvl = level});
     }
 
@@ -568,7 +565,7 @@ string SetsOfContent::retriveString() {
             if (it != cyc_query.end()) {
                 vector<size_t> tmp;
                 substring = "";
-                cycle tmp_cyc = cycle{.head = shingle.compose.head, .len=shingle.compose.len, .cyc = it->second};
+                cycle tmp_cyc = it->second;
                 shingle2hash_train(tmp_cyc, myTree[i + 1], tmp);
                 for (size_t hash:tmp) {
                     if (Dictionary.find(hash) == Dictionary.end())
@@ -728,7 +725,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
     }
     answer_queries(queries, mine_hash);
     for (auto groupcyc : cyc_concern) {
-        commSync->commSend(groupcyc.second);
+        commSync->commSend(CycletoZZ(groupcyc.second), sizeof(cycle));
     }
     for (auto dic : term_concern) {
         string tmp_str = Dictionary[dic.first];
@@ -820,7 +817,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     }
 // get answers from server
     for (auto &cyc:cyc_query) {
-        cyc.second = commSync->commRecv_size_t();
+        cyc.second = ZZtoCycle(commSync->commRecv_ZZ(sizeof(cycle)));
     }
 
     for (int i = 0; i < term_query.size(); ++i) {
@@ -840,9 +837,9 @@ void SetsOfContent::configure(shared_ptr<SyncMethod>& setHost, long mbar) {
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol)
         setHost = make_shared<IBLTSync_SetDiff>(mbar, sizeof(shingle_hash), true);
     else if (GenSync::SyncProtocol::InteractiveCPISync == baseSyncProtocol)
-        setHost = make_shared<InterCPISync>(5, sizeof(shingle_hash) * 8, 64, 7, true);
+        setHost = make_shared<InterCPISync>(5, sizeof(shingle_hash) * 4, 64, 7, true);
     else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol)
-        setHost = make_shared<ProbCPISync>(mbar, sizeof(shingle_hash) * 8, 64, true);
+        setHost = make_shared<ProbCPISync>(mbar, sizeof(shingle_hash) * 4, 64, true);
 }
 
 bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *>& mySetData) {

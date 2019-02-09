@@ -449,6 +449,17 @@ inline string randAsciiStr(int len = 10) {
     return str;
 }
 
+inline string randCharacters(int len = 10) {
+    string str;
+
+    for (int jj = 0; jj < len; ++jj) {
+        int intchar;
+        (rand() % 2)?intchar = randLenBetween(65,90) : intchar = randLenBetween(97,122);
+        str += toascii(intchar);
+
+    }
+    return str;
+}
 
 inline string scanTxtFromFile(string dir, int len) {
     std::string line;
@@ -498,7 +509,7 @@ inline string randStringInsert(string str, int upperI) {
         if (str == "")pos = 0;
         else pos = randLenBetween(0, str.size() - 1);
 
-        str = str.substr(0, pos) + randAsciiStr(1) + str.substr(pos);
+        str = str.substr(0, pos) + randCharacters(1) + str.substr(pos);
     }
     return str;
 }
@@ -542,10 +553,13 @@ inline string randStringEdit(string str, int upperE) {
  */
 inline string randStringEditBurst(string str, int burstE, int numLoc) {
     for (int ii = 0; ii < numLoc; ++ii) {
-        int tmpBurst = (burstE>str.size()) ? str.size() : burstE;
+        int tmpBurst = (burstE > str.size()) ? str.size() : burstE;
         int pos = randLenBetween(0, str.size() - tmpBurst);
-
-        str = str.substr(0,pos)+randStringEdit(str.substr(pos,tmpBurst),burstE)+str.substr(pos+tmpBurst);
+//        str = str.substr(0,pos)+randStringEdit(str.substr(pos,tmpBurst),burstE)+str.substr(pos+tmpBurst);
+        if (rand() % 2 == 0) //delete
+            str = str.substr(0, pos) + str.substr(pos + tmpBurst);
+        else  // insert
+            str = str.substr(0, pos) + str.substr(randLenBetween(0, str.size() - tmpBurst), tmpBurst) + str.substr(pos);
     }
     return str;
 }
