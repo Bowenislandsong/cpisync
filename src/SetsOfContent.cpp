@@ -507,11 +507,11 @@ bool SetsOfContent::shingle2hash_train(cycle& cyc_info, const set<shingle_hash>&
             for (auto tmp_shingle: original_state_stack[last_edge.first]) {
                 if (tmp_shingle == last_edge) {
                     tmp_shingle.occurr--;
-                    tmp_stack[tmp_shingle.first] = {tmp_shingle};
-                    break;
                 }
+                tmp_stack[tmp_shingle.first].push_back(tmp_shingle);
             }
         }
+
         stateStack.push_back(tmp_stack);
 
 //
@@ -804,19 +804,6 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
 
     for (auto shingle : otherMinusSelf) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
     for (auto shingle : selfMinusOther) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
-
-
-
-//    // TODO: Delete this after debug
-//    for (auto shingle : myTree[3]) {
-//        cycle tmp = shingle.compose;
-//        if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) {
-//            shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second]);
-//            for (auto shingle:Cyc_dict[shingle.second]) cout << shingle << " ";
-//            cout << endl;
-//        }
-//    }
-
 
     prepare_querys(theirs_hash, mine_hash);
 //    cout<< "cyc query size : "<< cyc_query.size()<<endl;

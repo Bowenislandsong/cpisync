@@ -52,7 +52,7 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randSampleTxt(1e5); // 20MB is top on MAC
+    string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
 
     DataObject *atxt = new DataObject(alicetxt);
 
@@ -68,7 +68,7 @@ void SetsOfContentTest::testAll() {
 
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
-    string bobtxt = randStringEditBurst(alicetxt, 1e4);
+    string bobtxt = randStringEditBurst(alicetxt, 2e6);
 
     DataObject *btxt = new DataObject(bobtxt);
 
