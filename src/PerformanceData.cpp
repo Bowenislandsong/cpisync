@@ -17,7 +17,8 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
     if (*stringInput == randSampleTxt) str_type = "RandText";
     if (*stringInput == randSampleCode) str_type = "RandCode";
 
-    PlotRegister plot = PlotRegister("kshingle " + protoName + " " + str_type,
+    PlotRegister plot;
+    plot.create("kshingle " + protoName + " " + str_type,
                                      {"Str Size", "Edit Diff", "Comm (bits)", "Time Set(s)", "Time Str(s)",
                                       "Space (bits)", "Set Recon True", "Str Recon True"});
     //TODO: Separate Comm, and Time, Separate Faile rate.
@@ -99,7 +100,7 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 
 
 void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
-                                 vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, int confidence, string (*stringInput)(int), int portnum) {
+                                 vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, int confidence, string (*stringInput)(int), int portnum, bool changing_tree_par) {
     string protoName, str_type;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == setReconProto) protoName = "IBLTSyncSetDiff";
     if (GenSync::SyncProtocol::InteractiveCPISync == setReconProto) protoName = "InteractiveCPISync";
@@ -109,15 +110,19 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (*stringInput == randSampleCode) str_type = "RandCode";
 
     string last_passed_before_exception;
-
-    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
-                                     {"Sting Size", "Edit Dist %", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
-                                      "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-                                      "Str Recon True", "Tree Heap SIze", "High Water Heap"});
-//    PlotRegister plot = PlotRegister("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
-//                                     {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
-//                                      "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-//                                      "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+    PlotRegister plot;
+if(!changing_tree_par) {
+    plot.create(
+            "Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
+            {"Sting Size", "Edit Dist %", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+             "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
+             "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+} else {
+    plot.create("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
+                        {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+                         "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
+                         "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+}
     //TODO: Separate Comm, and Time, Separate Faile rate.
     for (int str_size : str_sizeRange) {
 //        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;
@@ -134,7 +139,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 //                                 << ", Confidence: " << con << endl;
 
                             Resources initRes;
-                            //initResources(initRes);
+//                            initResources(initRes);
 
                             GenSync Alice = GenSync::Builder().
                                     setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -152,6 +157,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             DataObject *Alicetxt = new DataObject(stringInput(str_size));
 
                             last_passed_before_exception = "Alice Create String"; // success Tag
+//                            cout<<"Alice String Size"<<Alicetxt->to_string().size()<<endl;
 
                             clock_t strStart = clock();
                             Alice.addStr(Alicetxt, false);
@@ -172,11 +178,14 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                             last_passed_before_exception = "Bob GenSync"; // success Tag
 
-                            DataObject *Bobtxt = new DataObject(
-                                    randStringEditBurst((*Alicetxt).to_string(), (int) (str_size / edit_dist)));
+                            string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(), (int) (str_size / edit_dist));
+                            if(bobtmpstring.size()<pow(par,lvl))
+                                bobtmpstring += randCharacters(pow(par,lvl)-bobtmpstring.size());
+
+                            DataObject *Bobtxt = new DataObject(bobtmpstring);
 
                             last_passed_before_exception = "Bob Create String"; // success Tag
-
+//                            cout<<"BOB String Size"<<Bobtxt->to_string().size()<<endl;
                             Bob.addStr(Bobtxt, false);
 
                             last_passed_before_exception = "Bob Add String"; // success Tag
@@ -190,25 +199,35 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             if(!success_StrRecon) // success Tag
                                 last_passed_before_exception += ", Alice str size: "+ to_string(Alice.dumpString()->to_string().size())
                                         + "Bob Str size: "+to_string(Bobtxt->to_string().size());
-
-//                            plot.add({to_string(lvl), to_string(par),
-//                                      to_string(report.bytesTot + report.bytesRTot),
-//                                      to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
-//                                      to_string(report.totalTime), to_string(Alice.getTime().front().second),
-//                                      to_string(success_StrRecon), to_string(initRes.VmemUsed), to_string(Alice.getVirMem(0))});
-
-                            plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
-                                      to_string(report.bytesTot + report.bytesRTot),
-                                      to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
-                                      to_string(report.totalTime), to_string(Alice.getTime().front().second),
-                                      to_string(success_StrRecon), to_string(initRes.VmemUsed), to_string(Alice.getVirMem(0))});
+                            if(changing_tree_par) {
+                                plot.add({to_string(lvl), to_string(par),
+                                          to_string(report.bytesTot + report.bytesRTot),
+                                          to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+                                          to_string(report.totalTime), to_string(Alice.getTime().front().second),
+                                          to_string(success_StrRecon), to_string(initRes.VmemUsed),
+                                          to_string(Alice.getVirMem(0))});
+                            }else {
+                                plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
+                                          to_string(report.bytesTot + report.bytesRTot),
+                                          to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+                                          to_string(report.totalTime), to_string(Alice.getTime().front().second),
+                                          to_string(success_StrRecon), to_string(initRes.VmemUsed),
+                                          to_string(Alice.getVirMem(0))});
+                            }
 
                             delete Alicetxt;
                             delete Bobtxt;
                         } catch (std::exception) {
                             cout << "We failed after " <<last_passed_before_exception<< endl;
-                            plot.add({to_string(lvl), to_string(par), to_string(0),
-                                      to_string(0), to_string(0), to_string(0),to_string(0), to_string(0), to_string(0),to_string(0)});
+                            if(changing_tree_par) {
+                                plot.add({to_string(lvl), to_string(par), to_string(0),
+                                          to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
+                                          to_string(0), to_string(0)});
+                            }else {
+                                plot.add({to_string(str_size), to_string((double) 1 / edit_dist), to_string(0),
+                                          to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
+                                          to_string(0), to_string(0)});
+                            }
                         }
                     }
                     plot.update();
@@ -224,7 +243,8 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence) {
     int set_sizeinterval = floor((set_sizeRange.second - set_sizeRange.first) / tesPts);
 
-    PlotRegister plot = PlotRegister("Strata Est",{"Set Size","Set Diff","Est"});
+    PlotRegister plot;
+    plot.create("Strata Est",{"Set Size","Set Diff","Est"});
 
 //#if __APPLE__
 //    confidence /=omp_get_max_threads();
@@ -274,11 +294,16 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
 
 // Graph and Plot functions
 
-PlotRegister::PlotRegister(string _title, vector<string> _labels) : title(_title), labels(_labels) {
-    init();
-}
+PlotRegister::PlotRegister(){}
 
 PlotRegister::~PlotRegister() {}
+
+void PlotRegister::create(string _title, vector<string> _labels) {
+    data.clear();
+    title = _title;
+    labels = _labels;
+    init();
+}
 
 void PlotRegister::init() {
     ofstream myfile;

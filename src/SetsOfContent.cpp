@@ -26,8 +26,8 @@ vector<size_t> SetsOfContent::create_HashSet(string str,size_t win_size, size_t 
         hash_set = {str_to_hash(str)};
     } else { // else we partitions it
 
-        if (space==0) throw invalid_argument("Space for windowing is 0 at create_HashSet");
-        if (shingle_size<2)throw invalid_argument("shingle size should not go under 2");
+        if (space == 0) throw invalid_argument("Space for windowing is 0 at create_HashSet");
+        if (shingle_size < 2)throw invalid_argument("Shingle size should not go under 2");
         for (size_t i = 0; i < str.size() - shingle_size + 1; ++i) {
             std::hash<std::string> shash;
             hash_val.push_back(shash(str.substr(i, shingle_size)) % space);
@@ -44,10 +44,11 @@ vector<size_t> SetsOfContent::create_HashSet(string str,size_t win_size, size_t 
     }
     // write it to cyc-dict
     auto cyc_it = Cyc_dict.find(str_to_hash(str));
-    if (cyc_it == Cyc_dict.end()) { // check if cyc exists
+    if (cyc_it == Cyc_dict.end()) // check if cyc exists
         Cyc_dict[str_to_hash(str)] = hash_set; // update Cyc_dict
-    }
-    else if(cyc_it->second != hash_set) // check if it is getting overwritten
+    else if (cyc_it->second != hash_set and cyc_it->second.size() == 1 and cyc_it->second.front() == cyc_it->first)
+        Cyc_dict[str_to_hash(str)] = hash_set;// last stage no partition, update Cyc_dict
+    else if (cyc_it->second != hash_set) // check if it is getting overwritten
         throw invalid_argument("More than one answer is possible for Cyc_dict");
 
     return hash_set;
@@ -107,10 +108,10 @@ void SetsOfContent::go_through_tree() {
                 to_string(Levels) + ", Terminal String Size: " + to_string(TermStrSize) + ", Actual String Size: " +
                 to_string(myString.size()));
 
-    size_t shingle_size = floor(log2(String_Size));
+    size_t shingle_size = max(floor(log2(String_Size)),pow(2,Levels+1));
     if (shingle_size < 2)
         throw invalid_argument("Consider larger the parameters for auto shingle size to be more than 2");
-    size_t space = TermStrSize * 126; //126 for ascii content
+    size_t space = 2 *pow(2*Partition,Levels); //126 for ascii content
     vector<size_t> cur_level;
     // fill up the tree
     myTree.resize(Levels);
@@ -141,7 +142,7 @@ void SetsOfContent::go_through_tree() {
 //            const_cast<cycle&> (shingle.compose) = cycle{.cyc = 0, .head = it->second.front(), .len = it->second.size()};
 //        }
         space = floor((space / Partition) / 2);
-        shingle_size = floor(shingle_size / 2);
+        shingle_size = floor(shingle_size/2 );
     }
 //    for(auto lvl : myTree) for (auto shingle : lvl) cout<< shingle<<endl; // TODO: delete this print tree function
 //    cout<<myTree[0].size()<<":"<<myTree[1].size()<<":"<<myTree[2].size()<<endl;
@@ -207,7 +208,8 @@ void SetsOfContent::answer_queries(const map<size_t,bool> &queries, const vector
             cycle tmp = cycle{.head = tmp_vec.front(), .len = tmp_vec.size(), .cyc=0};
 
             if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) {
-                cout << "We failed to get a cycle number to send to an other party at lvl: " << shingle.lvl << endl;
+                //cout << "We failed to get a cycle number to send to an other party at lvl: " << shingle.lvl << endl;
+                continue;
             }
 
             cyc_concern[shingle.second] = tmp;
@@ -567,10 +569,11 @@ string SetsOfContent::retriveString() {
                 vector<size_t> tmp;
                 substring = "";
                 cycle tmp_cyc = it->second;
-                shingle2hash_train(tmp_cyc, myTree[i + 1], tmp);
+                if(!shingle2hash_train(tmp_cyc, myTree[i + 1], tmp))
+                    substring = Dictionary[shingle.second];
                 for (size_t hash:tmp) {
                     if (Dictionary.find(hash) == Dictionary.end())
-                        cout << "Recover may have failed - Dictionary lookup failed for "<< hash << " at level " << endl;
+                        cout << "Recover may have failed - Dictionary lookup failed for "<< hash << " at level " <<shingle.lvl<< endl;
                     substring += Dictionary[hash];
                 }
                 add_to_dictionary(substring);

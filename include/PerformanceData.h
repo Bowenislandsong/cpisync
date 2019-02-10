@@ -35,7 +35,7 @@ public:
                     vector<int> str_sizeRange, int confidence, string (*stringInput)(int), int portnum);
 
     void setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
-                       vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, int confidence, string (*stringInput)(int), int portnum);
+                       vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, int confidence, string (*stringInput)(int), int portnum,bool changing_tree_par);
 
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 
@@ -60,10 +60,11 @@ private:
 
 class PlotRegister { // Export Data into a txt file for external code to graph
 public:
-    PlotRegister(string _title, vector<string> _labels);// init - open a file with a title and labels
+    PlotRegister();
 
     ~PlotRegister();
 
+    void create(string _title, vector<string> _labels);// init - open a file with a title and labels
     void add(vector<string> datum); // add to data
     void update(); // bulk insert to what is in the data, clear data, close file after.
 private:

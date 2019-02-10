@@ -32,6 +32,9 @@ void SetsOfContentTest::SelfUnitTest() {
 //    CPPUNIT_ASSERT(Shingle_A != Shingle_B);
 //    CPPUNIT_ASSERT(Shingle_C < Shingle_A);
 
+    auto recon_t = clock();
+    string tmp = randCharacters(2e7);
+    cout<<"String Creation time: "<<(double) (clock() - recon_t) / CLOCKS_PER_SEC<<endl;
 //
 ////    cout << Shingle_A << endl;
 //    cycle cyc_A{.head = 298273671273645, .tail = 1231239, .cyc = 9128};
@@ -51,7 +54,11 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
+    string alicetxt = randSampleTxt(1e5); // 20MB is top on MAC
+    int partition = 10;
+    int lvl = 4;
+
+
 
     DataObject *atxt = new DataObject(alicetxt);
 
@@ -60,14 +67,17 @@ void SetsOfContentTest::testAll() {
             setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
-            setNumPartitions(3).
-            setlvl(7).
+            setNumPartitions(partition).
+            setlvl(lvl).
             setPort(8003).
             build();
 
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
-    string bobtxt = randStringEditBurst(alicetxt, 2e3);
+
+    string bobtxt = randStringEditBurst(alicetxt, 1e4);
+    if(bobtxt.size()<pow(partition,lvl))
+        bobtxt += randCharacters(pow(partition,lvl)-bobtxt.size());
 
     DataObject *btxt = new DataObject(bobtxt);
 
@@ -76,8 +86,8 @@ void SetsOfContentTest::testAll() {
             setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
-            setNumPartitions(3).
-            setlvl(7).
+            setNumPartitions(partition).
+            setlvl(lvl).
             setPort(8003).
             build();
 
