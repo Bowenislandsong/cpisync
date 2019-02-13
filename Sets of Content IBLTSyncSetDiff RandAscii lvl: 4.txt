@@ -1,2 +1,0 @@
-Level|Partition|Comm (bytes)|Actual Sym Diff|Time Tree(s)|Time Recon(s)|Time Backtrack (included in Time Recon) (s)|Str Recon True|Tree Heap SIze|High Water Heap
-4 10 4567342 11321 2.675710 3.372743 1.216854 1 0 0

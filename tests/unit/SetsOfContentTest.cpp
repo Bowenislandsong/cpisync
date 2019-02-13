@@ -54,9 +54,9 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randSampleTxt(1e5); // 20MB is top on MAC
+    string alicetxt = randCharacters(2e7); // 20MB is top on MAC
     int partition = 10;
-    int lvl = 4;
+    int lvl = 6;
 
 
 
@@ -112,6 +112,7 @@ cout<<initRes.VmemUsed<<endl;
     cout << "Time: " + to_string(report.totalTime) << endl;
     cout << "bitsTot: " + to_string(report.bytesTot) << endl;
     cout << "bitsR: " + to_string(report.bytesRTot) << endl;
+    cout << "Comm%: "<<(report.bytesTot+report.bytesRTot)/alicetxt.size()<<endl;
     cout << "Btyes: " << report.bytes << endl;
     cout << "String Add Time: "<< str_time<<endl;
     cout << "Rest of the Recon time: " <<recon_time<<endl;

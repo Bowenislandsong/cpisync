@@ -174,7 +174,7 @@ void SetsOfContent::prepare_querys(const vector<shingle_hash> & shingle_hash_the
 
         if (Dictionary.find(shingle.second) == Dictionary.end()) {
             if (shingle.lvl < Levels - 1)
-                cyc_query[shingle.second] = cycle {.head=0, .len=0, .cyc=0};//TODO: see if it is cycle of zeros
+                cyc_query[shingle.second] = cycle {.head=0, .len=0, .cyc=0};
             else
                 term_query[shingle.second] = "";
         }
