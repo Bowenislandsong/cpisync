@@ -63,7 +63,7 @@ bool AdjMtx::delWeigth(ZZ vfrom, ZZ vto, int del_weight){
 
 
 void AdjMtx::printGraph(map<ZZ,bool> print_vertex){
-    cout << "   ";
+    cout << "  ";
     for (auto vex: print_vertex) {
         cout << ZZtoStr(vex.first)<< "|";
     }
