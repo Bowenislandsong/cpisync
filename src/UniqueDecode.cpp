@@ -10,9 +10,7 @@ UniqueDecode::UniqueDecode(const size_t shingle_len, const char stop_word){
     stopWord = stop_word;
 }
 
-UniqueDecode::~UniqueDecode(){
-
-};
+UniqueDecode::~UniqueDecode(){};
 
 void UniqueDecode::injectStr(string &str) {
     str = string(1, stopWord) + str; // stop word is char, always size 1
@@ -20,7 +18,7 @@ void UniqueDecode::injectStr(string &str) {
     MergIndex.clear(); // make sure nothing is in it
     UDonline(str,MergIndex);
 
-    cout<< MergIndex.size()<<endl;
+    cout<<"number of merge shingles: "<< MergIndex.size()<<endl;
     // we can test if it works here
     vector<string> shingle_set;
     std::map<string,bool> unique;
@@ -53,7 +51,7 @@ void UniqueDecode::UDonline(const string &str, std::map<string,vector<size_t>>& 
     std::map<string, size_t> order_reference; // reference for location
     AdjMtx adjMatrix;
     vector<string> shingle_history;
-    for (size_t i = 0; i < str.size() - shingleLen+1; ++i) { // go throw the string
+    for (size_t i = 0; i < str.size() - shingleLen + 1; ++i) { // go throw the string
         string tmpstr = str.substr(i, shingleLen-1);
         if (adjMatrix.addNewVex(tmpstr)) { // create vertices
             order_reference[tmpstr] = 0; // put all possible shingle and arrange them later
@@ -61,21 +59,22 @@ void UniqueDecode::UDonline(const string &str, std::map<string,vector<size_t>>& 
         }
     }
 
-    size_t tmp_idx = 0; // shingles lexicographic order
+    size_t tmp_idx = 0; // arrange shingles lexicographic order
     for (auto it = order_reference.begin(); it != order_reference.end(); ++it) it->second = tmp_idx++;
 
     string head = str.substr(0, shingleLen-1);
     isCycVis[head].second = true;
     shingle_history.push_back(head); // visit the head
 
-    for (size_t j = 1; j < str.size()- shingleLen+1; ++j) {
+    for (size_t j = 1; j < str.size() - shingleLen + 1; ++j) {
         string cur = str.substr(j, shingleLen-1);
         auto cur_it = isCycVis.find(cur);
 
         if (!cur_it->second.second)
             cur_it->second.second = true;
         else {
-            if (adjMatrix.getWeight(shingle_history.back(), cur) == 0) {  // does edge w[i-1] -> w[i] not already exist in G?
+            if (adjMatrix.getWeight(shingle_history.back(), cur) ==
+                0) {  // does edge w[i-1] -> w[i] not already exist in G?
                 if (cur_it->second.first) {  //does w[i] already belongs to a cycle
                     // It is no longer a Uniquely decodable string, we koping the last two shingles and assess this again
                     // merge with previous shingle
@@ -98,24 +97,28 @@ void UniqueDecode::UDonline(const string &str, std::map<string,vector<size_t>>& 
             }
         }
 
-        // this is a N^2 time or high communicaiton cost
-        // unless the number of vertices is small, aka a lot more eularian cycles, then bad communicaiton cost
-        // on the other hand, N as big as string size then we have N^2
-        bool distinct = true; // init distinct
-        for (auto tmp_shingle : order_reference) {
-            if (adjMatrix.getWeight(tmp_shingle.first, cur) == 1 and distinct) {
-                distinct = false;
-            } else if (adjMatrix.getWeight(tmp_shingle.first, cur) == 1 and not distinct) {
-                mergeNredo(cur, order_reference, shingle_history, j, adjMatrix);
-                continue;
-            }
-        }
+//        // this is a N^2 time or high time cost
+//        // unless the number of vertices is small, aka a lot more eularian cycles, then bad communicaiton cost
+//        // on the other hand, N as big as string size then we have N^2
+//        bool distinct = true; // init distinct
+//        for (auto tmp_shingle : order_reference) {
+//            if (adjMatrix.getWeight(tmp_shingle.first, cur) == 1 and distinct) {
+//                distinct = false;
+//            } else if (adjMatrix.getWeight(tmp_shingle.first, cur) == 1 and not distinct) {
+//                mergeNredo(cur, order_reference, shingle_history, j, adjMatrix);
+//                continue;
+//            }
+//        }
+
+        if (adjMatrix.getInDegree(cur) > 2) mergeNredo(cur, order_reference, shingle_history, j, adjMatrix);
 
 
-        if (!adjMatrix.setWeight(shingle_history.back(), cur, 1)) {
+        if (!adjMatrix.addWeigth(shingle_history.back(), cur, 1)) {
             throw invalid_argument("setWeight error, a vex does not exist");
         }
         shingle_history.push_back(cur);
+
+        adjMatrix.printGraph();
     }
 }
 

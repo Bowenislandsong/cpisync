@@ -49,7 +49,7 @@ public:
      */
     vector<string> getGraphVex() {
         vector<string> res;
-        for (auto vex : vertex) res.push_back(ZZtoStr(vex));
+        for (auto vex : vertex) res.push_back(ZZtoStr(vex.first));
         return res;
     }
 
@@ -61,15 +61,13 @@ public:
         return vertex.size();
     }
 
-    void sortVex();
-
     /**
      * check if vex is one of the Vertices
      * @param vex
      * @return
      */
     bool contains(string vex) {
-        return vertex_map.find(StrtoZZ(vex)) != vertex_map.end();
+        return vertex.find(StrtoZZ(vex)) != vertex.end();
     }
 
     /**
@@ -77,23 +75,29 @@ public:
      * @param print_vertex ONLY applicable to string input
      */
 
-    void printGraph();
+    void printGraph() { printGraph(vertex); };
 
     // wrapper functions
     bool addWeigth(string vfrom, string vto, int add_weight = 1) {
         return addWeigth(StrtoZZ(vfrom), StrtoZZ(vto), add_weight);
     };
 
-    bool setWeight(string vfrom, string vto, int set_weight){
-        return setWeight(StrtoZZ(vfrom), StrtoZZ(vto),set_weight);
+    bool setWeight(string vfrom, string vto, int set_weight) {
+        return setWeight(StrtoZZ(vfrom), StrtoZZ(vto), set_weight);
     };
 
-    bool delWeigth(string vfrom, string vto, int del_weight = 1){
+    bool delWeigth(string vfrom, string vto, int del_weight = 1) {
         return delWeigth(StrtoZZ(vfrom), StrtoZZ(vto), del_weight);
     };
 
-    int getWeight(string vfrom, string vto){
+    int getWeight(string vfrom, string vto) {
         return getWeight(StrtoZZ(vfrom), StrtoZZ(vto));
+    };
+
+    // special fxn for UD getting the number of unique incomming edges
+    int getInDegree(string edge) {
+        auto it = distinct_in_edge.find(StrtoZZ(edge));
+        return (it == distinct_in_edge.end()) ? 0 : it->second.size();
     };
 
 protected:
@@ -101,10 +105,10 @@ protected:
 
     void create(const vector<ZZ> &_ver);
 
-    void printGraph(vector<ZZ> print_vertex);
+    void printGraph(map<ZZ, bool> print_vertex);
 
     bool contains(ZZ vex) {
-        return vertex_map.find(vex) != vertex_map.end();
+        return vertex.find(vex) != vertex.end();
     }
 
     /**
@@ -124,8 +128,9 @@ protected:
 
 private:
     map<pair<ZZ, ZZ>, int> graph;  // if two vex tex is not connected, it would not be in the graph.
-    vector<ZZ> vertex;
-    map<ZZ, bool> vertex_map;
+    map<ZZ, bool> vertex;
+
+    map<ZZ, std::set<ZZ>> distinct_in_edge;    // special for UD, registering distinctive incoming node
 };
 
 
