@@ -50,11 +50,12 @@ void UniqueDecode::UDonline(const string &str, std::map<string,std::set<size_t>>
     std::map<string, size_t> order_reference; // reference for location
     AdjMtx adjMatrix;
     vector<string> shingle_history;
+    int p_fix_len = shingleLen-1;
 
     // nlog(n), n = string size
-    adjMatrix.addNewVex(str.substr(0, shingleLen-1));
-    for (size_t i = shingleLen-1; i < str.size(); ++i) { // go throw the string
-            order_reference[str.substr(i-(shingleLen-1), shingleLen)] = 0; // put all possible shingle and arrange them later
+    adjMatrix.addNewVex(str.substr(0, p_fix_len));
+    for (size_t i = p_fix_len; i < str.size(); ++i) { // go throw the string
+            order_reference[str.substr(i-p_fix_len, shingleLen)] = 0; // put all possible shingle and arrange them later
         if (adjMatrix.addNewVex(str.substr(i,1))) { // create vertices
             isCycVis[str.substr(i,1)] = {false, false}; // init isCycle and isVisited
         }
@@ -63,15 +64,18 @@ void UniqueDecode::UDonline(const string &str, std::map<string,std::set<size_t>>
     size_t tmp_idx = 0; // arrange shingles lexicographic order
     for (auto it = order_reference.begin(); it != order_reference.end(); ++it) it->second = tmp_idx++;
 
-    string head = str.substr(0, shingleLen-1);
+    string head = str.substr(0, p_fix_len);
     isCycVis[head].second = true;
     shingle_history.push_back(head); // visit the head
 
-    for (size_t j = shingleLen-1; j < str.size() - (shingleLen - 1)+1; ++j) {
+    for (size_t j = p_fix_len; j < str.size()-1; ++j) {
         string cur = str.substr(j, 1);
-        while(MergIndex[str.substr(j, shingleLen)].find(order_reference[str.substr(j-1, shingleLen)]) != MergIndex[str.substr(j, shingleLen)].end()) {
-            j++;
-            cur +=str.substr(j, 1);
+
+        auto merg_it = MergIndex.find(str.substr(j-p_fix_len,shingleLen));
+        while(merg_it != MergIndex.end() and
+                merg_it->second.find(order_reference[str.substr(j-p_fix_len, shingleLen)]) != merg_it->second.end()) {
+            j--;
+            cur += str.substr(j, 1);
         }
         auto cur_it = isCycVis.find(cur);
 
@@ -84,7 +88,8 @@ void UniqueDecode::UDonline(const string &str, std::map<string,std::set<size_t>>
                     // It is no longer a Uniquely decodable string, we hoping the last two shingles and assess this again
                     // merge with previous shingle
                     // revisit previous shingle
-                    mergeNredo(str.substr(j-shingleLen-1, shingleLen), order_reference, shingle_history, j, adjMatrix,isCycVis);
+                    mergeNredo(str.substr(j - shingleLen, shingleLen+1), order_reference, shingle_history, j,
+                               adjMatrix, isCycVis);
                     continue;
                 } else { // creating a new cycle
                     isCycVis[cur].first = true;
@@ -99,9 +104,9 @@ void UniqueDecode::UDonline(const string &str, std::map<string,std::set<size_t>>
                 if (isCycVis[shingle_history[j]].first) j++;
             }
         }
-
+auto a = adjMatrix.getInDegree(cur);
         if (adjMatrix.getInDegree(cur) > 1) {
-            mergeNredo(str.substr(j-shingleLen-1, shingleLen), order_reference, shingle_history, j, adjMatrix,isCycVis);
+            mergeNredo(str.substr(j-shingleLen, shingleLen+1), order_reference, shingle_history, j, adjMatrix,isCycVis);
             continue;
         }
 
@@ -114,10 +119,11 @@ void UniqueDecode::UDonline(const string &str, std::map<string,std::set<size_t>>
 }
 
 void UniqueDecode::mergeNredo(const string cur_mg,map<string, size_t>& order_reference,vector<string>& shingle_history, size_t& j, AdjMtx& adjMatrix, map<string, pair<bool, bool>>& isCycVis){
-    MergIndex[cur_mg.substr(1)].insert(order_reference[cur_mg.substr(0,shingleLen)]);
-    if(adjMatrix.addNewVex(shingle_history.back()+cur_mg.substr(1,1)))
-        isCycVis[shingle_history.back()+cur_mg.substr(2,1)] = {false, false};
-    j -= shingle_history.back().size()+1;
+    MergIndex[cur_mg.substr(shingleLen-1)].insert(order_reference[cur_mg.substr(0,shingleLen)]);
+    auto newVex = shingle_history.back()+cur_mg.substr(shingleLen);
+    if(adjMatrix.addNewVex(newVex))
+        isCycVis[newVex] = {false, false};
+    j -= shingle_history.back().size();
     if(!shingle_history.empty())shingle_history.pop_back();
 }
 

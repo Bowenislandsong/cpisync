@@ -24,6 +24,11 @@ void kshinglingTest::tearDown() {
 }
 
 void kshinglingTest::testAll() {
+
+    shingle s = shingle{.vex = "Bowe", .edge = "n", .occurr = 58};
+
+    CPPUNIT_ASSERT(s==ZZtoShingle(ShingletoZZ(s)));
+
     // init a string of random byte (shortest,longest) possible string len
     string Alicetxt = randAsciiStr(50);  // generate a string, no longer than 1e4
     //string Bobtxt = randStringEdit(Alicetxt,10);  // Generate a edited string

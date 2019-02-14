@@ -24,14 +24,48 @@ using namespace NTL;
 
 typedef unsigned int idx_t;
 
-static const double MAX_TIME = 100; // secs
+static const double MAX_TIME = 300; // secs
 static const size_t MAX_VM_SIZE = 1e10; //bytes
 
+struct shingle{
+    string vex,edge;
+    size_t occurr;
+};
+
+
+static shingle ZZtoShingle(const ZZ& zz){
+    shingle shingle;
+    BytesFromZZ((uint8_t *) &shingle, zz, sizeof(shingle));
+    return shingle;
+}
+
+
+static ZZ ShingletoZZ(shingle _shingle) {
+    char *my_s_bytes = reinterpret_cast<char *>(&_shingle);
+    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(shingle));
+}
+
+//Compare and help differentiate struct shingle
+
+//Compare and help order struct shingle_hash from a vector
+static bool operator<(const shingle& a, const shingle& b) {
+    return (a.vex < b.vex) or
+           (a.vex == b.vex and a.edge < b.edge) or
+           (a.vex == b.vex and a.edge == b.edge and a.occurr < b.occurr);
+};
+
+static bool operator==(const shingle& a, const shingle& b) {
+    return a.vex == b.vex and a.edge == b.edge and a.occurr == b.occurr;
+};
+
+static bool operator!=(const shingle& a, const shingle& b) {
+    return !(a == b);
+};
 
 class K_Shingle {
 public:
     // Communicant needs to access the internal representation of an kshingle to send it and receive it
-    friend class Communicant;
+//    friend class Communicant;
 
     /**
      * Construct a K_Shingle set object with k as each shingle size
@@ -82,7 +116,7 @@ public:
         //return sizeof(DataObject*);
         int act_size = k+(floor(log(floor(orig_string.size()/k)))+2);
         return sizeof(ZZ)*(floor(act_size/sizeof(ZZ)) + ((act_size%sizeof(DataObject*)>0)? 1:0));
-        //return StrtoZZ(randAsciiStr(k+(floor(log(floor(orig_string.size()/k)))+2))).size();
+        // sizeof(shingle)+k; //bytes
     }
 
     char getStopWord() const {
