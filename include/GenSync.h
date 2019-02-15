@@ -367,6 +367,7 @@ public:
     editDistance(DFT_MBAR),
     shingleLen(DFT_SHINGLELEN),
     numExpElem(DFT_EXPELEMS),
+    baseSpace(DFT_SHINGLELEN),
     TerminalStrSize(TERMINAL_STR_SIZE),
     lvl(NOT_SET){
         myComm = nullptr;
@@ -481,6 +482,16 @@ public:
         return *this;
     }
 
+    /**
+     * Sets the terminal string hash space
+     * @param theSpace
+     * @return
+     */
+    Builder& setSpace(size_t theSpace) {
+        this->baseSpace = theSpace;
+        return *this;
+    }
+
     Builder& setNumExpectedElements(size_t theNumExpElems) {
         this->numExpElem = theNumExpElems;
         return *this;
@@ -512,6 +523,7 @@ private:
     long mbar; /** an upper estimate on the number of differences between synchronizing data multisets. */
     long bits; /** the number of bits per element of data */
     int numParts; /** the number of partitions into which to divide recursively for interactive methods. */
+    size_t baseSpace;
     size_t numExpElem; /** the number of expected elements to be stored in an IBLT */
     size_t shingleLen; /** each of k-shingle length */
     StringSyncProtocol stringProto; /** string recon protocol */
@@ -536,7 +548,7 @@ private:
     static const string DFT_HOST;
     static const string DFT_IO;
     static const int DFT_ERROR;
-    static const size_t DFT_SHINGLELEN = 2;
+    static const size_t DFT_SHINGLELEN = 2; // can not gfo lower than 2
     static const char DFT_STOPWORD = '$';
     static const size_t TERMINAL_STR_SIZE = 100;
     static const size_t NOT_SET = 0;

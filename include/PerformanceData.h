@@ -35,7 +35,7 @@ public:
                     vector<int> str_sizeRange, int confidence, string (*stringInput)(int), int portnum);
 
     void setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
-                       vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, int confidence, string (*stringInput)(int), int portnum,bool changing_tree_par);
+                       vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, int confidence, string (*stringInput)(int), int portnum,bool changing_tree_par, vector<int> TershingleLen = {2}, vector<int> space = {2});
 
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 

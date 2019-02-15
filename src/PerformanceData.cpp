@@ -100,7 +100,7 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 
 
 void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
-                                 vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, int confidence, string (*stringInput)(int), int portnum, bool changing_tree_par) {
+                                 vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, int confidence, string (*stringInput)(int), int portnum, bool changing_tree_par, vector<int> TershingleLen, vector<int> space) {
     string protoName, str_type;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == setReconProto) protoName = "IBLTSyncSetDiff";
     if (GenSync::SyncProtocol::InteractiveCPISync == setReconProto) protoName = "InteractiveCPISync";
@@ -111,18 +111,25 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
     string last_passed_before_exception;
     PlotRegister plot;
-if(!changing_tree_par) {
-    plot.create(
-            "Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
-            {"Sting Size", "Edit Dist %", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
-             "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-             "Str Recon True", "Tree Heap SIze", "High Water Heap"});
-} else {
-    plot.create("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
-                        {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
-                         "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-                         "Str Recon True", "Tree Heap SIze", "High Water Heap"});
-}
+    if (changing_tree_par) {
+                plot.create("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
+                    {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+                     "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
+                     "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+    }
+    else {
+        plot.create("Sets of Content " + protoName + " " + str_type + "2mStr20kED4L8P",
+                    {"TershingleLen", "space", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+                     "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
+                     "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+    }
+//    else {
+//    plot.create(
+//            "Sets of Content " + protoName + " " + str_type + " lvl: " + to_string(levelRange.front()),
+//            {"Sting Size", "Edit Dist %", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+//             "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
+//             "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+//    }
     //TODO: Separate Comm, and Time, Separate Faile rate.
     for (int str_size : str_sizeRange) {
 //        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;
@@ -133,104 +140,127 @@ if(!changing_tree_par) {
 
                 for (int par: partitionRange) {
 
-                    for (int con = 0; con < confidence; ++con) {
-                        try {
+                    for (int t : TershingleLen) {
+                        for (int s : space) {
+
+                            for (int con = 0; con < confidence; ++con) {
+                                try {
 //                            cout << "level: " << lvl << ", partitions: " << par
 //                                 << ", Confidence: " << con << endl;
 
-                            Resources initRes;
+                                    Resources initRes;
 //                            initResources(initRes);
 
-                            GenSync Alice = GenSync::Builder().
-                                    setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-                                    setProtocol(setReconProto).
-                                    setComm(GenSync::SyncComm::socket).
-                                    setTerminalStrSize(100).
-                                    setNumPartitions(par).
-                                    setlvl(lvl).
-                                    setPort(portnum).
-                                    build();
+                                    GenSync Alice = GenSync::Builder().
+                                            setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
+                                            setProtocol(setReconProto).
+                                            setComm(GenSync::SyncComm::socket).
+                                            setTerminalStrSize(100).
+                                            setNumPartitions(par).
+                                            setShingleLen(t).
+                                            setSpace(s).
+                                            setlvl(lvl).
+                                            setPort(portnum).
+                                            build();
 
-                            last_passed_before_exception = "Alice GenSync"; // success Tag
+                                    last_passed_before_exception = "Alice GenSync"; // success Tag
 
 
-                            DataObject *Alicetxt = new DataObject(stringInput(str_size));
+                                    DataObject *Alicetxt = new DataObject(stringInput(str_size));
 
-                            last_passed_before_exception = "Alice Create String"; // success Tag
+                                    last_passed_before_exception = "Alice Create String"; // success Tag
 //                            cout<<"Alice String Size"<<Alicetxt->to_string().size()<<endl;
 
-                            clock_t strStart = clock();
-                            Alice.addStr(Alicetxt, false);
-                            auto tree_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
-                            resourceReport(initRes);
+                                    clock_t strStart = clock();
+                                    Alice.addStr(Alicetxt, false);
+                                    auto tree_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
+                                    resourceReport(initRes);
 
-                            last_passed_before_exception = "Alice Add String"; // success Tag
+                                    last_passed_before_exception = "Alice Add String"; // success Tag
 
-                            GenSync Bob = GenSync::Builder().
-                                    setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-                                    setProtocol(setReconProto).
-                                    setComm(GenSync::SyncComm::socket).
-                                    setTerminalStrSize(100).
-                                    setNumPartitions(par).
-                                    setlvl(lvl).
-                                    setPort(portnum).
-                                    build();
+                                    GenSync Bob = GenSync::Builder().
+                                            setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
+                                            setProtocol(setReconProto).
+                                            setComm(GenSync::SyncComm::socket).
+                                            setTerminalStrSize(100).
+                                            setNumPartitions(par).
+                                            setShingleLen(t).
+                                            setSpace(s).
+                                            setlvl(lvl).
+                                            setPort(portnum).
+                                            build();
 
-                            last_passed_before_exception = "Bob GenSync"; // success Tag
+                                    last_passed_before_exception = "Bob GenSync"; // success Tag
 
-                            string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(), (int) (str_size / edit_dist));
-                            if(bobtmpstring.size()<pow(par,lvl))
-                                bobtmpstring += randCharacters(pow(par,lvl)-bobtmpstring.size());
+                                    string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(),
+                                                                              (int) (str_size / edit_dist));
+                                    if (bobtmpstring.size() < pow(par, lvl))
+                                        bobtmpstring += randCharacters(pow(par, lvl) - bobtmpstring.size());
 
-                            DataObject *Bobtxt = new DataObject(bobtmpstring);
+                                    DataObject *Bobtxt = new DataObject(bobtmpstring);
 
-                            last_passed_before_exception = "Bob Create String"; // success Tag
+                                    last_passed_before_exception = "Bob Create String"; // success Tag
 //                            cout<<"BOB String Size"<<Bobtxt->to_string().size()<<endl;
-                            Bob.addStr(Bobtxt, false);
+                                    Bob.addStr(Bobtxt, false);
 
-                            last_passed_before_exception = "Bob Add String"; // success Tag
+                                    last_passed_before_exception = "Bob Add String"; // success Tag
 
-                            forkHandleReport report = forkHandle(Alice, Bob, false);
+                                    forkHandleReport report = forkHandle(Alice, Bob, false);
 
-                            last_passed_before_exception = "String Recon"; // success Tag
+                                    last_passed_before_exception = "String Recon"; // success Tag
 
-                            bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
+                                    bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
-                            if(!success_StrRecon) // success Tag
-                                last_passed_before_exception += ", Alice str size: "+ to_string(Alice.dumpString()->to_string().size())
-                                        + "Bob Str size: "+to_string(Bobtxt->to_string().size());
-                            if(changing_tree_par) {
-                                plot.add({to_string(lvl), to_string(par),
-                                          to_string(report.bytesTot + report.bytesRTot),
-                                          to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
-                                          to_string(report.totalTime), to_string(Alice.getTime().front().second),
-                                          to_string(success_StrRecon), to_string(initRes.VmemUsed),
-                                          to_string(Alice.getVirMem(0))});
-                            }else {
-                                plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
-                                          to_string(report.bytesTot + report.bytesRTot),
-                                          to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
-                                          to_string(report.totalTime), to_string(Alice.getTime().front().second),
-                                          to_string(success_StrRecon), to_string(initRes.VmemUsed),
-                                          to_string(Alice.getVirMem(0))});
+                                    if (!success_StrRecon) // success Tag
+                                        last_passed_before_exception +=
+                                                ", Alice str size: " + to_string(Alice.dumpString()->to_string().size())
+                                                + "Bob Str size: " + to_string(Bobtxt->to_string().size());
+                                    if (changing_tree_par) {
+                                        plot.add({to_string(lvl), to_string(par),
+                                                  to_string(report.bytesTot + report.bytesRTot),
+                                                  to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+                                                  to_string(report.totalTime),
+                                                  to_string(Alice.getTime().front().second),
+                                                  to_string(success_StrRecon), to_string(initRes.VmemUsed),
+                                                  to_string(Alice.getVirMem(0))});
+                                    }
+                                    else {
+                                        plot.add({to_string(t), to_string(s),
+                                                  to_string(report.bytesTot + report.bytesRTot),
+                                                  to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+                                                  to_string(report.totalTime),
+                                                  to_string(Alice.getTime().front().second),
+                                                  to_string(success_StrRecon), to_string(initRes.VmemUsed),
+                                                  to_string(Alice.getVirMem(0))});
+                                    }
+//                                    else {
+//                                        plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
+//                                                  to_string(report.bytesTot + report.bytesRTot),
+//                                                  to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+//                                                  to_string(report.totalTime),
+//                                                  to_string(Alice.getTime().front().second),
+//                                                  to_string(success_StrRecon), to_string(initRes.VmemUsed),
+//                                                  to_string(Alice.getVirMem(0))});
+//                                    }
+
+                                    delete Alicetxt;
+                                    delete Bobtxt;
+                                } catch (std::exception) {
+                                    cout << "We failed after " << last_passed_before_exception << endl;
+                                    if (changing_tree_par) {
+                                        plot.add({to_string(lvl), to_string(par), to_string(0),
+                                                  to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
+                                                  to_string(0), to_string(0)});
+                                    } else {
+                                        plot.add({to_string(str_size), to_string((double) 1 / edit_dist), to_string(0),
+                                                  to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
+                                                  to_string(0), to_string(0)});
+                                    }
+                                }
                             }
-
-                            delete Alicetxt;
-                            delete Bobtxt;
-                        } catch (std::exception) {
-                            cout << "We failed after " <<last_passed_before_exception<< endl;
-                            if(changing_tree_par) {
-                                plot.add({to_string(lvl), to_string(par), to_string(0),
-                                          to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
-                                          to_string(0), to_string(0)});
-                            }else {
-                                plot.add({to_string(str_size), to_string((double) 1 / edit_dist), to_string(0),
-                                          to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
-                                          to_string(0), to_string(0)});
-                            }
+                            plot.update();
                         }
                     }
-                    plot.update();
                 }
             }
         }

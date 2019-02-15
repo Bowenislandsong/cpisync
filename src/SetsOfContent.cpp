@@ -3,8 +3,8 @@
 //
 
 #include "SetsOfContent.h"
-SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto, size_t shingle_size)
-        : TermStrSize(terminal_str_size), Levels(levels), Partition(partition), baseSyncProtocol(base_set_proto), HashShingleSize(shingle_size) {
+SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto, size_t shingle_size, size_t space)
+        : TermStrSize(terminal_str_size), Levels(levels), Partition(partition), baseSyncProtocol(base_set_proto), terShingleLen(shingle_size), terSpace(space) {
     SyncID = SYNC_TYPE::SetsOfContent;
     if (levels > USHRT_MAX or levels < 2)
         throw invalid_argument("Num of Level specified should be between 2 and " + to_string(USHRT_MAX));
@@ -108,10 +108,10 @@ void SetsOfContent::go_through_tree() {
                 to_string(Levels) + ", Terminal String Size: " + to_string(TermStrSize) + ", Actual String Size: " +
                 to_string(myString.size()));
 
-    size_t shingle_size = max(floor(log2(String_Size)),pow(2,Levels+1));
+    size_t shingle_size = pow(terShingleLen,Levels+1); //(Parameter c, terminal rolling hash window size) //max(floor(log2(String_Size)),pow(terWin_s,Levels+1))
     if (shingle_size < 2)
         throw invalid_argument("Consider larger the parameters for auto shingle size to be more than 2");
-    size_t space = 2 *pow(2*Partition,Levels); //126 for ascii content
+    size_t space = terSpace *pow(2*Partition,Levels); //126 for ascii content (Parameter terminal space)
     vector<size_t> cur_level;
     // fill up the tree
     myTree.resize(Levels);

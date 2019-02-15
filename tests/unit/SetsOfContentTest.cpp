@@ -55,7 +55,7 @@ void SetsOfContentTest::testAll() {
 //    initResources(initRes);
 
     string alicetxt = randCharacters(1e5); // 20MB is top on MAC
-    int partition = 8;
+    int partition = 10;
     int lvl = 3;
 
 
@@ -68,6 +68,8 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(partition).
+            setShingleLen(2).
+            setSpace(2).
             setlvl(lvl).
             setPort(8003).
             build();
@@ -87,6 +89,8 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(partition).
+            setShingleLen(2).
+            setSpace(2).
             setlvl(lvl).
             setPort(8003).
             build();

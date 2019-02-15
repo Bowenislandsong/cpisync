@@ -117,7 +117,7 @@ static ostream& operator<<(ostream &os, const shingle_hash shingle) {
 class SetsOfContent : public SyncMethod {
 public:
     SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto,
-                  size_t shingle_size = 2);
+                  size_t shingle_size = 2, size_t ter_win_size = 2);
 
     ~SetsOfContent();
 
@@ -154,7 +154,7 @@ private:
     size_t highwater;
 
     string myString; // original input string
-    size_t TermStrSize, Levels, Partition, HashShingleSize;
+    size_t TermStrSize, Levels, Partition, terShingleLen, terSpace;
 
     GenSync::SyncProtocol baseSyncProtocol;
 
