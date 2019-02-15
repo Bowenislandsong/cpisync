@@ -56,7 +56,25 @@ class fileIO:
 
 class rsync_com:
     def __init__(self,org_fname,ed_fname):
-        return subprocess.call(["rsync", "-v", "--stats", "--progress", org_fname, ed_fname])
+        self.res = subprocess.check_output(["rsync", "-v", "--stats", "--progress", org_fname, ed_fname]).decode("utf-8")
+        self.xmit = 0
+        self.recv = 0
+        self.timeGen = 0
+        self.timeTrans = 0
+    
+    def get_costs(self):
+        s_res = self.res.split('\n')
+        for s in s_res:
+            if s.startswith('File list generation time: '):
+                self.timeGen = s[len('File list generation time: '):].split(' ')[0]
+            elif s.startswith('File list transfer time: '):
+                self.timeTrans = s[len('File list transfer time: '):].split(' ')[0]
+            elif s.startswith('Total bytes sent: '):
+                self.xmit = s[len('Total bytes sent: '):]
+            elif s.startswith('Total bytes received: '):
+                self.recv = s[len('Total bytes received: '):]
+        return [self.timeGen, self.timeTrans, self.xmit, self.recv]
+            
 
 if __name__== "__main__":
     fName = "SampleTxt.txt"
@@ -65,7 +83,8 @@ if __name__== "__main__":
 
     f = fileIO(fName)
     f.createEdfiles(strSize,Edist)
-    print(rsync_com("SampleTxtorg.txt","SampleTxted.txt"))
+    sync = rsync_com("SampleTxtorg.txt","SampleTxted.txt")
+    print(sync.get_costs())
 # Load target file
 # create original file of size A
 # Make bounded edit burst

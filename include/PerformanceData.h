@@ -39,6 +39,25 @@ public:
 
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 
+
+//    string getRsyncData(const string f_name, const string f_ed) {
+//        char buffer[128];
+//        string result;
+//        FILE* pipe = popen("", "r");
+//        if (!pipe) throw std::runtime_error("popen() failed!");
+//        try {
+//            while (fgets(buffer, sizeof buffer, pipe) != NULL) {
+//                result += buffer;
+//            }
+//        } catch (...) {
+//            pclose(pipe);
+//            throw;
+//        }
+//        pclose(pipe);
+//        return result;
+//    }
+
+
 private:
 
     int  mbar, tesPts;
