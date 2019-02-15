@@ -405,7 +405,7 @@ vector<shingle_hash> SetsOfContent::get_nxt_shingle_vec(const size_t cur_edge,
 }
 
 // functions for backtracking using front, length, and cycle number
-bool SetsOfContent::shingle2hash_train(cycle& cyc_info, const set<shingle_hash>& shingle_set, vector<size_t>& final_str) {
+bool SetsOfContent::shingle2hash_train(cycle& cyc_info, const std::set<shingle_hash>& shingle_set, vector<size_t>& final_str) {
 
     map<size_t, vector<shingle_hash>> original_state_stack = tree2shingle_dict(
             shingle_set); // get a shingle dict from a level of a tree for fast next edge lookup

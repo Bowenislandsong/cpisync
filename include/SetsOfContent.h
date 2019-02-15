@@ -230,7 +230,7 @@ private:
      * @param str_order
      * @param final_str a hash train in string order
      */
-    bool shingle2hash_train(cycle &cyc_info, const set <shingle_hash> &shingle_set, vector<size_t> &final_str);
+    bool shingle2hash_train(cycle &cyc_info, const std::set <shingle_hash> &shingle_set, vector<size_t> &final_str);
 
     std::map<size_t, vector<shingle_hash>> tree2shingle_dict(const std::set<shingle_hash> &tree_lvl);
 
