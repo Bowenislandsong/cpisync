@@ -10,6 +10,7 @@
 #ifndef AUX_H
 #define	AUX_H
 
+
 #include <sstream>
 #include <unistd.h>
 #include <NTL/ZZ.h>
@@ -459,6 +460,64 @@ inline string randCharacters(int len = 10) {
 
     }
     return str;
+}
+
+inline string subprocess_commandline(const char* command){
+    // borrowed from https://stackoverflow.com/questions/478898/how-do-i-execute-a-command-and-get-output-of-command-within-c-using-posix
+    char buffer[128];
+    string result = "";
+    FILE* pipe = popen(command, "r");
+    if (!pipe) Logger::error("popen() failed!");
+    try {
+        while (fgets(buffer, sizeof buffer, pipe) != NULL) {
+            result += buffer;
+        }
+    } catch (exception e) {
+        pclose(pipe);
+        cout<< "We fialed to get command line response: " <<e.what()<<endl;
+        Logger::error("Failed to read command reply");
+    }
+    pclose(pipe);
+    return result;
+}
+
+struct rsync_stats {
+    size_t xmit,recv; 
+    double time;
+};
+
+inline ostream& operator<<(ostream &os, const rsync_stats &stats) {
+    os << "xmit: "+to_string(stats.xmit)+", recv: "+to_string(stats.recv)+", time: "+to_string(stats.time);
+    return os;
+};
+
+inline string extractStringIn(string org, string from, string to){
+    auto start = org.find(from);
+    if (start==string::npos) return "";
+    org = org.substr(start+from.size());
+    auto end  = org.find(to);
+    if (end==string::npos) return "";
+    return org.substr(0,end);
+}
+
+// write string to file and return true if success
+inline void writeStrToFile(string file_name, string content){
+    ofstream myfile;
+    myfile.open(file_name);
+    myfile<<content;
+    myfile.close();
+}
+
+inline rsync_stats getRsyncStats(string origin, string target){
+// only works for one type of rsync outputs
+    rsync_stats stats;
+
+    string res = subprocess_commandline(("rsync -v --progress --stats "+origin+" "+target).c_str());
+    stats.time = stod(extractStringIn(res,"File list generation time: ","seconds"));
+    stats.time += stod(extractStringIn(res,"File list transfer time: ","seconds"));
+    stats.xmit = stoll(extractStringIn(res,"Total bytes sent: ","\n"));
+    stats.recv = stoll(extractStringIn(res,"Total bytes received: ","\n"));
+    return stats;
 }
 
 inline string scanTxtFromFile(string dir, int len) {

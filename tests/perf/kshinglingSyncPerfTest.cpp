@@ -94,34 +94,21 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 4, 1, randSampleTxt, 8001);
 
     strSizeRange = {2000000};
-    editDistRange = {1000};
+    editDistRange = {1,10,100,1000,10000};
 
 
 
 //    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,lvlRange, parRange, 100, randSampleTxt, 8001,true);
 
-    lvlRange = {4};
-    parRange = {8};
-    vector<int> shingle = { 2,3,4,5,6,7};
-    vector<int> space = {1,2,3,4,5,6};
-
-    char buffer[128];
-    std::string result = "";
-    FILE* pipe = popen("ls", "r");
-    if (!pipe) throw std::runtime_error("popen() failed!");
-    try {
-        while (fgets(buffer, sizeof buffer, pipe) != NULL) {
-            result += buffer;
-        }
-    } catch (...) {
-        pclose(pipe);
-        throw;
-    }
-    pclose(pipe);
+    lvlRange = {5};
+    parRange = {10};
+    vector<int> shingle = { 2};
+    vector<int> space = {6};
 
 
-//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,lvlRange, parRange, 100, randAsciiStr, 8001,
-//                       false, shingle,space);
+
+   test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,lvlRange, parRange, 1, randAsciiStr, 8001,
+                      false, shingle,space);
 
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange, 1, randAsciiStr, 8001);
 

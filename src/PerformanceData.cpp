@@ -115,13 +115,13 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                 plot.create("Sets of Content " + protoName + " " + str_type + "2mStr20kED",
                     {"Level", "Partition", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
                      "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-                     "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+                     "Str Recon True", "Tree Heap SIze", "High Water Heap","Rsync time","Rsync Comm"});
     }
     else {
         plot.create("Sets of Content " + protoName + " " + str_type + "2mStr20kED4L8P",
                     {"TershingleLen", "space", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
                      "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-                     "Str Recon True", "Tree Heap SIze", "High Water Heap"});
+                     "Str Recon True", "Tree Heap SIze", "High Water Heap","Rsync time","Rsync Comm"});
     }
 //    else {
 //    plot.create(
@@ -211,10 +211,16 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
+                                    // rsync recon
+                                    writeStrToFile("Alice.txt",Alicetxt->to_string());
+                                    writeStrToFile("Bob.txt",Bobtxt->to_string());
+                                    auto r_res = getRsyncStats("Alice.txt","Bob.txt");
+
                                     if (!success_StrRecon) // success Tag
                                         last_passed_before_exception +=
                                                 ", Alice str size: " + to_string(Alice.dumpString()->to_string().size())
                                                 + "Bob Str size: " + to_string(Bobtxt->to_string().size());
+                                                
                                     if (changing_tree_par) {
                                         plot.add({to_string(lvl), to_string(par),
                                                   to_string(report.bytesTot + report.bytesRTot),
@@ -222,7 +228,9 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                                   to_string(report.totalTime),
                                                   to_string(Alice.getTime().front().second),
                                                   to_string(success_StrRecon), to_string(initRes.VmemUsed),
-                                                  to_string(Alice.getVirMem(0))});
+                                                  to_string(Alice.getVirMem(0)),
+                                                  to_string(r_res.time),
+                                                  to_string(r_res.xmit+r_res.recv)});
                                     }
                                     else {
                                         plot.add({to_string(t), to_string(s),
@@ -231,7 +239,9 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                                   to_string(report.totalTime),
                                                   to_string(Alice.getTime().front().second),
                                                   to_string(success_StrRecon), to_string(initRes.VmemUsed),
-                                                  to_string(Alice.getVirMem(0))});
+                                                  to_string(Alice.getVirMem(0)),
+                                                  to_string(r_res.time),
+                                                  to_string(r_res.xmit+r_res.recv)});
                                     }
 //                                    else {
 //                                        plot.add({to_string(str_size), to_string((double) 1 / edit_dist),
@@ -250,11 +260,11 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     if (changing_tree_par) {
                                         plot.add({to_string(lvl), to_string(par), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
-                                                  to_string(0), to_string(0)});
+                                                  to_string(0), to_string(0),to_string(0), to_string(0)});
                                     } else {
                                         plot.add({to_string(str_size), to_string((double) 1 / edit_dist), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
-                                                  to_string(0), to_string(0)});
+                                                  to_string(0), to_string(0),to_string(0), to_string(0)});
                                     }
                                 }
                             }
