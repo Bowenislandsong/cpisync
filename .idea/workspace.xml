@@ -18,11 +18,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandAscii2mStr20kED4L8P.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandAscii2mStr20kED4L8P.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/Auxiliary.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Auxiliary.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PerformanceData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/PerformanceData.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -94,7 +89,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="51693" />
+          <entry key="cpp" value="51694" />
           <entry key="h" value="18568" />
           <entry key="mm" value="18" />
           <entry key="txt" value="115" />
@@ -104,7 +99,7 @@
         <counts>
           <entry key="CMakeLists.txt" value="114" />
           <entry key="Doxygen file" value="30" />
-          <entry key="ObjectiveC" value="70249" />
+          <entry key="ObjectiveC" value="70250" />
           <entry key="PLAIN_TEXT" value="1" />
         </counts>
       </usages-collector>
@@ -165,8 +160,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="95" column="29" lean-forward="true" selection-start-line="95" selection-start-column="29" selection-end-line="95" selection-end-column="29" />
+            <state relative-caret-position="211">
+              <caret line="109" column="112" selection-start-line="109" selection-start-column="112" selection-end-line="109" selection-end-column="112" />
             </state>
           </provider>
         </entry>
@@ -575,12 +570,12 @@
       <workItem from="1550199041743" duration="5684000" />
       <workItem from="1550245782705" duration="449000" />
       <workItem from="1550257199240" duration="2400000" />
-      <workItem from="1550427385798" duration="1545000" />
+      <workItem from="1550427385798" duration="1684000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1033987000" />
+    <option name="totallyTimeSpent" value="1034126000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -922,8 +917,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="95" column="29" lean-forward="true" selection-start-line="95" selection-start-column="29" selection-end-line="95" selection-end-column="29" />
+        <state relative-caret-position="211">
+          <caret line="109" column="112" selection-start-line="109" selection-start-column="112" selection-end-line="109" selection-end-column="112" />
         </state>
       </provider>
     </entry>
