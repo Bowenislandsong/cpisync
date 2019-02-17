@@ -1,0 +1,4 @@
+TershingleLen|space|Comm (bytes)|Actual Sym Diff|Time Tree(s)|Time Recon(s)|Time Backtrack (included in Time Recon) (s)|Str Recon True|Tree Heap SIze|High Water Heap|Rsync time|Rsync Comm
+2 6 750825 664 12.369136 0.250854 0.039067 1 140735177623504 0 0.001000 2000376
+2 6 527662 760 12.235636 0.218193 0.035973 1 140735177623504 0 0.001000 2000376
+2 6 540250 853 13.494600 0.266572 0.041877 1 140735177623504 0 0.001000 2000376
