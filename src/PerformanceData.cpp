@@ -115,7 +115,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
 
     string last_passed_before_exception;
-    vector<string> catag{"", "", "Comm (bytes)", "Actual Sym Diff", "Time Tree(s)",
+    vector<string> catag{"", "", "Comm (bytes)","hash vec comm", "Terminal comm","Actual Sym Diff", "Time Tree(s)",
                          "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
                          "Str Recon True", "Tree Heap SIze", "High Water Heap", "Rsync time", "Rsync Comm"};
     PlotRegister plot;
@@ -226,9 +226,11 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     report_vec = {"", "",
                                                   to_string(report.bytesTot + report.bytesRTot),
+                                                  to_string(Alice.getCustomResult("hash vec comm")),
+                                                  to_string(Alice.getCustomResult("Terminal comm")),
                                                   to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
                                                   to_string(report.totalTime),
-                                                  to_string(Alice.getTime().front().second),
+                                                  to_string(Alice.getCustomResult("Str Reconstruction Time")),
                                                   to_string(success_StrRecon), to_string(initRes.VmemUsed),
                                                   to_string(Alice.getVirMem(0)),
                                                   to_string(r_res.time),
@@ -238,7 +240,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     delete Bobtxt;
                                 } catch (std::exception) {
                                     cout << "We failed after " << last_passed_before_exception << endl;
-                                    report_vec = {to_string(0), to_string(0), to_string(0),
+                                    report_vec = {to_string(0), to_string(0),to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0)};
 
@@ -256,10 +258,11 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     report_vec[1] = to_string(s);
                                     plot.add(report_vec);
                                 }
+                                plot.update();
                             }
 
                         }
-                        plot.update();
+
                     }
                 }
             }

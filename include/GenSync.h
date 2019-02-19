@@ -124,7 +124,9 @@ public:
 
     const size_t getTotalSetDiffSize();
 
-    const vector<pair<string,double>> getTime();
+    const void pushCustomResult(string name, double res);
+
+    const double getCustomResult(string name);
 
     // COMMUNICANT MANIPULATION
     /* Communicants are entities that can communicate [and thus sync] with this GenSync object.
@@ -329,7 +331,7 @@ private:
     /** records a actual set difference used to see string reconcilliation*/
     size_t myDiffSize = 0, theirDiffSize = 0;
 
-    vector<pair<string,double>> timeFrame;
+    map<string,double> CustomResult;
 
     /** A container for the string stored by this GenSync object. */
     DataObject* myString;

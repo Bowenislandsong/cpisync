@@ -159,10 +159,13 @@ bool GenSync::startSync(int method_num,bool isRecon) {
 
         // do the sync
         try {
-
-            if (!(*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf)) {
-                Logger::gLog(Logger::METHOD, "Sync to " + (*itComm)->getName() + " failed!");
-                syncSuccess = false;
+            if ((*syncAgentIt)->isStringReconMethod())
+                (*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf,CustomResult);
+            else {
+                if (!(*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf)) {
+                    Logger::gLog(Logger::METHOD, "Sync to " + (*itComm)->getName() + " failed!");
+                    syncSuccess = false;
+                }
             }
         } catch (SyncFailureException s) {
             Logger::error_and_quit(s.what());
@@ -183,7 +186,7 @@ bool GenSync::startSync(int method_num,bool isRecon) {
             clock_t time = clock();
             syncSuccess = (*syncAgentIt)->reconstructString(
                     myString, myData); // reconstruct the string based on the new information from set reconciliation
-            timeFrame.emplace_back("Str Reconstruction Time",(double) (clock() - time) / CLOCKS_PER_SEC);
+            pushCustomResult("Str Reconstruction Time",(double) (clock() - time) / CLOCKS_PER_SEC);
         }
 
     }
@@ -350,8 +353,12 @@ const size_t GenSync::getTotalSetDiffSize() {
     return myDiffSize + theirDiffSize;
 }
 
-const vector<std::pair<string,double>> GenSync::getTime() {
-    return timeFrame;
+const void GenSync::pushCustomResult(string name, double res){
+    CustomResult[name] = res;
+}
+
+const double GenSync::getCustomResult(string name) {
+    return CustomResult[name];
 }
 
 const long GenSync::getXmitBytes(int commIndex) const {

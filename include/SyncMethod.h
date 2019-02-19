@@ -44,6 +44,11 @@ public:
         return true;
     }
 
+    // allow to seek out some result for testing
+    virtual bool SyncClient(const shared_ptr<Communicant>& commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf, map<string,double>& CustomResult) {
+        commSync->resetCommCounters();
+        return true;
+    }
     /**
      * Waits for a client to connect from a specific communicant and computes differences between the two (without actually updating them).
      * All results are *added* to the selfMinusOther and otherMinusSelf parameters (passed by reference).

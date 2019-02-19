@@ -612,6 +612,10 @@ inline string randTxt(int len,string loc) {
     if(isFile(loc)) { // it is a file
         MAX_LEN = getFileSize(loc);
         if (MAX_LEN<len) throw invalid_argument("Requested string size exceeds file size. Current file size: "+to_string(MAX_LEN));
+
+        full_txt = scanTxtFromFile(loc, MAX_LEN);
+        int start_pt = randLenBetween(0,full_txt.size()-len);
+        return full_txt.substr(start_pt,len);
     }
     else { // it is a directory
         vector<string> file_lst = getFileList(loc);
@@ -624,12 +628,12 @@ inline string randTxt(int len,string loc) {
             full_txt += randTxt(file_size, full_path);
             len -= file_size;
         }
+        return full_txt;
     }
 
-    full_txt = scanTxtFromFile(loc, MAX_LEN);
-    int start_pt = randLenBetween(0,full_txt.size()-len);
 
-    return full_txt.substr(start_pt,len);
+
+
 
 }
 
