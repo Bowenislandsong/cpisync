@@ -74,6 +74,9 @@ void AuxiliaryTest::testStringEditing() {
 
     std::string bookTxt = scanTxtFromFile("./tests/SampleTxt.txt",2000);
     CPPUNIT_ASSERT(bookTxt.size()==2000);
+
+    std::string longBookTxt = randTxt(2200000,"./tests/");
+    CPPUNIT_ASSERT(bookTxt.size()==2200000);
 }
 
 void AuxiliaryTest::testBase64_encode() {

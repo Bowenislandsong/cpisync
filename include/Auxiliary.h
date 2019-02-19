@@ -17,6 +17,7 @@
 #include <string>
 #include <stdexcept>
 #include <map>
+#include <sys/stat.h>
 #include <vector>
 #include <iterator>
 #include <list>
@@ -31,6 +32,7 @@
 #include "Logger.h"
 #include <iostream>
 #include <fstream>
+#include <dirent.h>
 
 // some standard names
 using std::cout;
@@ -47,7 +49,6 @@ using std::map;
 using std::multiset;
 using std::invalid_argument;
 using std::runtime_error;
-
 // FUNCTIONS
 
 /**
@@ -438,12 +439,12 @@ inline string randString(int lower=0, int upper=10) {
     return str.str();
 }
 
-inline string randAsciiStr(int len = 10) {
+inline string randAsciiStr(int len = 10,string stop_word="$") {
     string str;
 
     for (int jj = 0; jj < len; ++jj) {
         auto intchar = rand() % 126;  // avoid random string to be "$" changed to "%"
-        if (intchar == 36 || intchar ==0)intchar++;// avoid random string to be "$" changed to "%" and avoid \0 which is NULL
+        if (intchar == int(stop_word[0]) || intchar ==0)intchar++;// avoid random string to be "$" changed to "%" and avoid \0 which is NULL
         str += toascii(intchar);
 
     }
@@ -503,7 +504,7 @@ inline string extractStringIn(string org, string from, string to){
 // write string to file and return true if success
 inline void writeStrToFile(string file_name, string content){
     ofstream myfile;
-    myfile.open(file_name);
+    myfile.open(file_name,ios::trunc);
     myfile<<content;
     myfile.close();
 }
@@ -512,7 +513,7 @@ inline rsync_stats getRsyncStats(string origin, string target){
 // only works for one type of rsync outputs
     rsync_stats stats;
 
-    string res = subprocess_commandline(("rsync -v --progress --stats "+origin+" "+target).c_str());
+    string res = subprocess_commandline(("rsync --checksum --no-whole-file --progress --stats "+origin+" "+target).c_str());  // -a archive -z compress -v for verbose
     stats.time = stod(extractStringIn(res,"File list generation time: ","seconds"));
     stats.time += stod(extractStringIn(res,"File list transfer time: ","seconds"));
     stats.xmit = stoll(extractStringIn(res,"Total bytes sent: ","\n"));
@@ -535,15 +536,111 @@ inline string scanTxtFromFile(string dir, int len) {
     return txt.str();
 }
 
-inline string randSampleTxt(int len) {
-    // max at 1 million characters
-    int MAX_LEN = (int) 2e6; // the sample file is 8e5 characters long
-    if (len > MAX_LEN) throw invalid_argument("rand Sample Txt can not be more than " + to_string(MAX_LEN));
-    string full_txt = scanTxtFromFile("./tests/SampleTxt.txt", MAX_LEN);
+/**
+ * Chekc if file or directory path exist
+ * @param path
+ * @return
+ */
+inline bool isPathExist(const string& path){
+    struct stat buf;
+    return (stat(path.c_str(), &buf) == 0);
+}
+
+/**
+ * Check if it is a file or directory
+ * throw error if it is either
+ * @param path
+ * @return
+ */
+inline bool isFile(const string& path){
+    struct stat buf;
+    int a = stat(path.c_str(), &buf);
+    if (stat(path.c_str(), &buf) == 0){
+        if(buf.st_mode & S_IFREG)
+            return true;
+        else if (buf.st_mode & S_IFDIR)
+            return false;
+        else
+            throw invalid_argument("Given path: "+path+" exist, but it is not a file nor directory");
+    }
+    throw invalid_argument("Given path: "+path+" does not exist.");
+}
+
+inline size_t getFileSize(const string& path){
+    struct stat st;
+    if(stat(path.c_str(), &st) != 0) {
+        return 0;
+    }
+    return st.st_size;
+}
+
+/**
+ * count the number of txt file avaliable in a folder
+ */
+inline vector<string> getFileList(string dir_path, string file_type=".txt"){
+    vector<string> f_lst;
+    if(isPathExist(dir_path) and not isFile(dir_path)){
+        DIR *dir;
+        struct dirent *dirp;
+        if((dir  = opendir(dir_path.c_str()))!=NULL){
+            while ((dirp = readdir(dir)) != NULL) {
+                string f_name = string(dirp->d_name);
+                if(f_name.find(file_type)!=std::string::npos)
+                    f_lst.push_back(f_name);
+            }
+            closedir(dir);
+        }else{
+            throw invalid_argument("Failed at opening directory: "+dir_path);
+        }
+    }
+    return f_lst;
+}
+
+/**
+ * Get string of length=len from directory or file.
+ * throw error if file is smaller than requrested string size
+ * throw error if path does not exist
+ * file: "./tests/SampleTxt.txt"
+ * dir: ./tests/
+ * @param len
+ * @param loc
+ * @return
+ */
+inline string randTxt(int len,string loc) {
+    string full_txt;
+    size_t MAX_LEN;
+    if(isFile(loc)) { // it is a file
+        MAX_LEN = getFileSize(loc);
+        if (MAX_LEN<len) throw invalid_argument("Requested string size exceeds file size. Current file size: "+to_string(MAX_LEN));
+    }
+    else { // it is a directory
+        vector<string> file_lst = getFileList(loc);
+//        std::random_shuffle ( file_lst.begin(), file_lst.end() );
+        while (len > 0) {
+            string full_path = loc + file_lst[randLenBetween(0, file_lst.size() - 1)];
+            int file_size = getFileSize(full_path);
+            if (len < file_size) file_size = len;
+
+            full_txt += randTxt(file_size, full_path);
+            len -= file_size;
+        }
+    }
+
+    full_txt = scanTxtFromFile(loc, MAX_LEN);
     int start_pt = randLenBetween(0,full_txt.size()-len);
 
     return full_txt.substr(start_pt,len);
 
+}
+
+inline string randSampleTxt(int len){
+    int MAX_LEN = (int) 2e6; // the sample file is 1e5 characters long
+    if (len > MAX_LEN) throw invalid_argument("rand Sample Txt can not be more than " + to_string(MAX_LEN));
+    string full_txt = scanTxtFromFile("./tests/SampleTxt.txt", MAX_LEN);
+    if (len == MAX_LEN) return  full_txt;
+    int start_pt = randLenBetween(0,full_txt.size()-len-1);
+
+    return full_txt.substr(start_pt,len);
 }
 
 inline string randSampleCode(int len) {

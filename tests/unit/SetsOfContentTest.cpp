@@ -47,16 +47,13 @@ void SetsOfContentTest::SelfUnitTest() {
 
 
 void SetsOfContentTest::testAll() {
-//    auto ssss = clock();
-//        string alicetxt = randAsciiStr(2e7); // 20MB is top on MAC
-//
-//    cout<< (double) (clock() - ssss) / CLOCKS_PER_SEC<<endl;
+
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randCharacters(1e5); // 20MB is top on MAC
-    int partition = 10;
-    int lvl = 3;
+    string alicetxt = randSampleTxt(1e6); // 20MB is top on MAC
+    int partition = 3;
+    int lvl = 8;
 
 
 
@@ -64,11 +61,11 @@ void SetsOfContentTest::testAll() {
 
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(partition).
-            setShingleLen(2).
+            setShingleLen(8).
             setSpace(2).
             setlvl(lvl).
             setPort(8003).
@@ -85,11 +82,11 @@ void SetsOfContentTest::testAll() {
 
     GenSync Bob = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(100).
             setNumPartitions(partition).
-            setShingleLen(2).
+            setShingleLen(8).
             setSpace(2).
             setlvl(lvl).
             setPort(8003).
@@ -103,6 +100,12 @@ void SetsOfContentTest::testAll() {
     Alice.addStr(atxt, false);
     double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
 
+
+    writeStrToFile("Alice.txt",alicetxt);
+    writeStrToFile("Bob.txt",bobtxt);
+
+    auto r_res = getRsyncStats("Alice.txt","Bob.txt");
+    cout<<"rsync comm cost: "<<r_res.recv+r_res.xmit<<endl;
 
     auto recon_t = clock();
     auto report = forkHandle(Alice, Bob, false);

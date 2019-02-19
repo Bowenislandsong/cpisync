@@ -108,7 +108,7 @@ void SetsOfContent::go_through_tree() {
                 to_string(Levels) + ", Terminal String Size: " + to_string(TermStrSize) + ", Actual String Size: " +
                 to_string(myString.size()));
 
-    size_t shingle_size = pow(terShingleLen,Levels+1); //(Parameter c, terminal rolling hash window size) //max(floor(log2(String_Size)),pow(terWin_s,Levels+1))
+    size_t shingle_size = terShingleLen*pow(2,Levels); //(Parameter c, terminal rolling hash window size) //max(floor(log2(String_Size)),pow(terWin_s,Levels+1))
     if (shingle_size < 2)
         throw invalid_argument("Consider larger the parameters for auto shingle size to be more than 2");
     size_t space = terSpace *pow(2*Partition,Levels); //126 for ascii content (Parameter terminal space)
@@ -606,13 +606,13 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 
     go_through_tree();
 
-//    //show the info of the tree
-//    for(auto lvl:myTree) {
-//        vector<size_t> lvl_vec;
-//        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
-//        sort(lvl_vec.begin(),lvl_vec.end());
-//        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
-//    }//TODO: delete this
+    //show the info of the tree
+    for(auto lvl:myTree) {
+        vector<size_t> lvl_vec;
+        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
+        sort(lvl_vec.begin(),lvl_vec.end());
+        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
+    }//TODO: delete this
 
     for (DataObject *dop : setPointers) delete dop;
     for (ZZ item : getShingles_ZZ()) {
@@ -823,13 +823,14 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     for (auto &cyc:cyc_query) {
         cyc.second = ZZtoCycle(commSync->commRecv_ZZ(sizeof(cycle)));
     }
-
+size_t counter = 0;
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
+        counter+=tmp.size();
         if (tmp != "$")
             add_to_dictionary(tmp);
     }
-
+ cout<<"we transffered: "<<counter<<endl;
 //    cout<<"Client Close"<<endl;
     Logger::gLog(Logger::METHOD, "Set Of Content Done");
     commSync->commClose();
@@ -841,9 +842,9 @@ void SetsOfContent::configure(shared_ptr<SyncMethod>& setHost, long mbar) {
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol)
         setHost = make_shared<IBLTSync_SetDiff>(mbar, sizeof(shingle_hash), true);
     else if (GenSync::SyncProtocol::InteractiveCPISync == baseSyncProtocol)
-        setHost = make_shared<InterCPISync>(5, sizeof(shingle_hash) * 4, 64, 7, true);
+        setHost = make_shared<InterCPISync>(5, sizeof(shingle_hash) * 8, 64, 3, true);
     else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol)
-        setHost = make_shared<ProbCPISync>(mbar, sizeof(shingle_hash) * 4, 64, true);
+        setHost = make_shared<ProbCPISync>(mbar, sizeof(shingle_hash) * 8, 64, true);
 }
 
 bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *>& mySetData) {
