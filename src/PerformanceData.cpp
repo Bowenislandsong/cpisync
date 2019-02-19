@@ -98,6 +98,35 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 }
 
 
+
+void PerformanceData::cascadingMissmatch(int num_error,vector<int> win,vector<int> space){
+    PlotRegister plot;
+    vector<string> catag{"win", "space","symmetric diff"};
+    plot.create("cascading Missmatch", catag);
+    for(int w : win){
+        for (int s:space) {
+            for (int k = 0; k <1000; ++k) {
+
+                vector<size_t> vec;
+
+                for (int i = 0; i < 2000; ++i) {
+                    vec.push_back(rand() % s);
+                }
+                vector<size_t> vec1{vec.begin(), vec.end()};
+                for (int j = 0; j < num_error; ++j) {
+                    vec1[randLenBetween(0, 10)] = rand() % s;
+                }
+
+                auto SA = ContentDeptPartition(vec, w);
+                auto SB = ContentDeptPartition(vec1, w);
+
+                plot.add({to_string(w), to_string(s), to_string(multisetDiff(SA, SB).size())});
+            }
+            plot.update();
+        }
+    }
+}
+
 void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
                                  vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, vector<int> TershingleLen, vector<int> space, int confidence, string (*stringInput)(int,string), string src,int portnum, int mode) {
     // mode 1: change string size and edit distance

@@ -14,6 +14,36 @@
 #include <numeric>
 #include <thread>
 
+
+static multiset<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_size) {
+
+    vector<size_t> mins; // min positions
+    map<size_t, size_t> hash_occurr;
+    for (size_t j = 0; j < 2 * win_size; ++j) {
+        auto it = hash_occurr.find(hash_val[j]);
+        if (it != hash_occurr.end())
+            it->second++;
+        else
+            hash_occurr[hash_val[j]] = 1;
+    }
+
+    for (size_t i = win_size+1; i < hash_val.size() - win_size+1; ++i) {
+        if (hash_val[i-1] <= hash_occurr.begin()->first and i - ((!mins.empty())?mins.back():0) > win_size)
+            mins.push_back(i-1);
+        auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
+        if (it_prev != hash_occurr.end())
+            it_prev->second--;
+
+        auto it_pos = hash_occurr.find(hash_val[i+win_size]);
+        if (it_pos != hash_occurr.end())
+            it_pos->second++;
+        else
+            hash_occurr[hash_val[i+win_size]] = 1;
+    }
+
+    return multiset<size_t>(mins.begin(),mins.end());
+}
+
 class PerformanceData {
 public:
     PerformanceData(int tes_pts) {
@@ -42,23 +72,10 @@ public:
 
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 
+    void cascadingMissmatch(int num_error,vector<int> win,vector<int> space);
 
-//    string getRsyncData(const string f_name, const string f_ed) {
-//        char buffer[128];
-//        string result;
-//        FILE* pipe = popen("", "r");
-//        if (!pipe) throw std::runtime_error("popen() failed!");
-//        try {
-//            while (fgets(buffer, sizeof buffer, pipe) != NULL) {
-//                result += buffer;
-//            }
-//        } catch (...) {
-//            pclose(pipe);
-//            throw;
-//        }
-//        pclose(pipe);
-//        return result;
-//    }
+
+
 
 
 private:
