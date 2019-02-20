@@ -614,19 +614,19 @@ inline string randTxt(int len,string loc) {
         if (MAX_LEN<len) throw invalid_argument("Requested string size exceeds file size. Current file size: "+to_string(MAX_LEN));
 
         full_txt = scanTxtFromFile(loc, MAX_LEN);
+        (len>full_txt.size())?len = full_txt.size():0;
         int start_pt = randLenBetween(0,full_txt.size()-len);
         return full_txt.substr(start_pt,len);
     }
     else { // it is a directory
         vector<string> file_lst = getFileList(loc);
 //        std::random_shuffle ( file_lst.begin(), file_lst.end() );
-        while (len > 0) {
+        while (len > full_txt.size()) {
             string full_path = loc + file_lst[randLenBetween(0, file_lst.size() - 1)];
             int file_size = getFileSize(full_path);
-            if (len < file_size) file_size = len;
+            if (len < file_size+full_txt.size()) file_size = len-full_txt.size();
 
             full_txt += randTxt(file_size, full_path);
-            len -= file_size;
         }
         return full_txt;
     }
