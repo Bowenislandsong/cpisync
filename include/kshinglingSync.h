@@ -38,7 +38,7 @@ public:
      * @param Estimate whether estimate using existing estimation protocol, set mbar (maximum difference) if false
      * @return
      */
-    bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) override;
+    bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf,map<string,double>& CustomResult) override;
 
     bool SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) override;
 

@@ -187,7 +187,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                                             setProtocol(setReconProto).
                                             setComm(GenSync::SyncComm::socket).
-                                            setTerminalStrSize(100).
+                                            setTerminalStrSize(10).
                                             setNumPartitions(par).
                                             setShingleLen(t).
                                             setSpace(s).
@@ -213,7 +213,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                                             setProtocol(setReconProto).
                                             setComm(GenSync::SyncComm::socket).
-                                            setTerminalStrSize(100).
+                                            setTerminalStrSize(10).
                                             setNumPartitions(par).
                                             setShingleLen(t).
                                             setSpace(s).

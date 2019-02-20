@@ -51,9 +51,11 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randSampleTxt(1e6); // 20MB is top on MAC
-    int partition = 3;
-    int lvl = 8;
+    string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
+    int partition = 18;
+    int lvl = 5;
+    int space = 1;
+    int shingleLen = 1;
 
 
 
@@ -63,10 +65,10 @@ void SetsOfContentTest::testAll() {
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
             setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
-            setTerminalStrSize(100).
+            setTerminalStrSize(10).
             setNumPartitions(partition).
-            setShingleLen(8).
-            setSpace(2).
+            setShingleLen(shingleLen).
+            setSpace(space).
             setlvl(lvl).
             setPort(8003).
             build();
@@ -74,7 +76,7 @@ void SetsOfContentTest::testAll() {
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
 
-    string bobtxt = randStringEditBurst(alicetxt, 1e3);
+    string bobtxt = randStringEditBurst(alicetxt, 2e4);
     if(bobtxt.size()<pow(partition,lvl))
         bobtxt += randCharacters(pow(partition,lvl)-bobtxt.size());
 
@@ -84,10 +86,10 @@ void SetsOfContentTest::testAll() {
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
             setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
-            setTerminalStrSize(100).
+            setTerminalStrSize(10).
             setNumPartitions(partition).
-            setShingleLen(8).
-            setSpace(2).
+            setShingleLen(shingleLen).
+            setSpace(space).
             setlvl(lvl).
             setPort(8003).
             build();
@@ -118,7 +120,11 @@ void SetsOfContentTest::testAll() {
     cout << "Time: " + to_string(report.totalTime) << endl;
     cout << "bitsTot: " + to_string(report.bytesTot) << endl;
     cout << "bitsR: " + to_string(report.bytesRTot) << endl;
-    cout << "Btyes: " << report.bytes << endl;
+
+    cout << "Number of node diff: " << Alice.getTotalSetDiffSize() << endl;
+    cout << "Terminal Str Trans: " << Alice.getCustomResult("Terminal comm")<<endl;
+    cout << "hash vec comm: " << Alice.getCustomResult("hash vec comm")<<endl;
+    cout << "String Reconstruction Time: " << Alice.getCustomResult("Str Reconstruction Time")<<endl;
     cout << "String Add Time: "<< str_time<<endl;
     cout << "Rest of the Recon time: " <<recon_time<<endl;
     delete btxt;

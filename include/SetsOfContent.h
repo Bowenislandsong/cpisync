@@ -114,6 +114,36 @@ static ostream& operator<<(ostream &os, const shingle_hash shingle) {
     return os;
 };
 
+
+static vector<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_size) {
+
+    vector<size_t> mins; // min positions
+    map<size_t, size_t> hash_occurr;
+    for (size_t j = 0; j < 2 * win_size; ++j) {
+        auto it = hash_occurr.find(hash_val[j]);
+        if (it != hash_occurr.end())
+            it->second++;
+        else
+            hash_occurr[hash_val[j]] = 1;
+    }
+
+    for (size_t i = win_size+1; i < hash_val.size() - win_size+1; ++i) {
+        if (hash_val[i-1] <= hash_occurr.begin()->first and i - ((!mins.empty())?mins.back():0) > win_size)
+            mins.push_back(i-1);
+        auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
+        if (it_prev != hash_occurr.end())
+            it_prev->second--;
+
+        auto it_pos = hash_occurr.find(hash_val[i+win_size]);
+        if (it_pos != hash_occurr.end())
+            it_pos->second++;
+        else
+            hash_occurr[hash_val[i+win_size]] = 1;
+    }
+    return mins;
+}
+
+
 class SetsOfContent : public SyncMethod {
 public:
     SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto,
@@ -165,7 +195,7 @@ private:
     map<size_t, string> Dictionary;  // terminla strings
 
     // origin, cycle information to reform this string rep
-    map<size_t, vector<size_t>> Cyc_dict; // has to be unique
+    map<size_t, vector<size_t>> Cyc_dict,hashcontent_dict; // has to be unique
 
     //requests
     map<size_t, string> term_concern, term_query;

@@ -21,13 +21,14 @@ vector<size_t> SetsOfContent::create_HashSet(string str,size_t win_size, size_t 
     // Time Complexity 2n, where n is the string size.
     vector<size_t> hash_val, hash_set;
 
+    /* ---------original begin  */
     // if the substring is smaller than the terminal string size, we do not partition it anymore.
     if (str.size() <= TermStrSize) {
-        hash_set = {str_to_hash(str)};
+        hash_set = {add_to_dictionary(str)};
     } else { // else we partitions it
 
         if (space == 0) throw invalid_argument("Space for windowing is 0 at create_HashSet");
-        if (shingle_size < 2)throw invalid_argument("Shingle size should not go under 2");
+        if (shingle_size < 2) throw invalid_argument("Shingle size should not go under 2");
         for (size_t i = 0; i < str.size() - shingle_size + 1; ++i) {
             std::hash<std::string> shash;
             hash_val.push_back(shash(str.substr(i, shingle_size)) % space);
@@ -42,6 +43,36 @@ vector<size_t> SetsOfContent::create_HashSet(string str,size_t win_size, size_t 
 
         hash_set.push_back(add_to_dictionary(str.substr(prev)));
     }
+    /* ---------original end  */
+    /* ---------fixed win size begin */
+//    if (str.size() <= TermStrSize) {
+//        hash_set = {str_to_hash(str)};
+//    }else {
+//        for (int i = 0; i < str.size(); i += win_size) {
+//            hash_set.push_back(add_to_dictionary(str.substr(i, win_size)));
+//        }
+//    }
+    /* ---------fixed win size end */
+
+    /* ---------fixed hash value begin */
+//    if (str.size() <= TermStrSize) {
+//        hash_set = {add_to_dictionary(str)};
+//    }else {size_t prev = 0;
+//    auto hash_content = hashcontent_dict[str_to_hash(str)];
+//                for (size_t min:local_mins(hash_content, win_size)) {
+//
+//                    min+=shingle_size;
+//            hash_set.push_back(add_to_dictionary(str.substr(prev, min - prev)));
+//                    hashcontent_dict[str_to_hash(str.substr(prev, min - prev))] = {hash_content.begin()+(prev-shingle_size),hash_content.begin()+(min-shingle_size)};
+//
+//                    prev = min;
+//        }
+//        hash_set.push_back(add_to_dictionary(str.substr(prev)));
+//        hashcontent_dict[str_to_hash(str.substr(prev))] = {hash_content.begin()+(prev-shingle_size),hash_content.end()};
+//
+//    }
+    /* ---------fixed hash value end */
+
     // write it to cyc-dict
     auto cyc_it = Cyc_dict.find(str_to_hash(str));
     if (cyc_it == Cyc_dict.end()) // check if cyc exists
@@ -109,9 +140,9 @@ void SetsOfContent::go_through_tree() {
                 to_string(myString.size()));
 
     size_t shingle_size = terShingleLen*pow(2,Levels); //(Parameter c, terminal rolling hash window size) //max(floor(log2(String_Size)),pow(terWin_s,Levels+1))
-    if (shingle_size < 2)
-        throw invalid_argument("Consider larger the parameters for auto shingle size to be more than 2");
-    size_t space = terSpace *pow(2*Partition,Levels); //126 for ascii content (Parameter terminal space)
+    if (shingle_size < 1)
+        throw invalid_argument("Consider larger the parameters for auto shingle size to be more than 1");
+    size_t space = terSpace*pow(2*Partition,Levels); //126 for ascii content (Parameter terminal space)
     vector<size_t> cur_level;
     // fill up the tree
     myTree.resize(Levels);
@@ -120,6 +151,14 @@ void SetsOfContent::go_through_tree() {
     // put up the first level
     update_tree_shingles({add_to_dictionary(myString)}, 0);
 
+/* ---------fixed hash value begin */
+//vector<size_t> hash_val;
+//            for (size_t i = 0; i < myString.size() - shingle_size + 1; ++i) {
+//            std::hash<std::string> shash;
+//            hash_val.push_back(shash(myString.substr(i, shingle_size)) % space);
+//        }
+//    hashcontent_dict[str_to_hash(myString)] = hash_val;
+/* ---------fixed hash value end */
 
 //    cout << "Lvl 1 time with BackTracking: " << (double) (clock() - lvl1_t) / CLOCKS_PER_SEC << endl;
 
@@ -135,12 +174,7 @@ void SetsOfContent::go_through_tree() {
             update_tree_shingles(cur_level, l);
         }
 
-//        // update lost level's cycle since it is done with cyc dict
-//        for (const shingle_hash& shingle : myTree[l - 1]){
-//            auto it = Cyc_dict.find(shingle.second);
-//            if (it == Cyc_dict.end()) throw invalid_argument("Cycle not found, should have been inserted");
-//            const_cast<cycle&> (shingle.compose) = cycle{.cyc = 0, .head = it->second.front(), .len = it->second.size()};
-//        }
+
         space = floor((space / Partition) / 2);
         shingle_size = floor(shingle_size/2 );
     }
@@ -606,7 +640,7 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 
     go_through_tree();
 
-//    //show the info of the tree
+    //show the info of the tree
 //    for(auto lvl:myTree) {
 //        vector<size_t> lvl_vec;
 //        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());

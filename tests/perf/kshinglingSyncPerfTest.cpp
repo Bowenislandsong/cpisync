@@ -75,8 +75,8 @@ void KshingleSyncPerf::setsofcontent3D() {
 
     vector<int> strSizeRange = {100000, 400000, 800000, 1200000, 1600000, 2000000};
     editDistRange = {100000,10000,1000,100,10,1};
-    vector<int> lvlRange = {2,3,4,5,6};
-    vector<int> parRange = {2,4,6,8,10};
+    vector<int> lvlRange = {2,3,4,5};
+    vector<int> parRange = {3,8,12,15};
 
     string bookpath = string(std::getenv("HOME"))+"/Desktop/sync_database/BookText/";
 //    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{2}, {10}, 10, randSampleTxt, 8001,false);
@@ -96,19 +96,20 @@ void KshingleSyncPerf::setsofcontent3D() {
 
     strSizeRange = {1000000};
     editDistRange = {1000};
+    vector<int> shingle = {1};
+    vector<int> space = {1};
 
 
+    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange,shingle,space, 1, randTxt,bookpath, 8002,2);
 
-//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,lvlRange, parRange, 100, randSampleTxt, 8001,true);
-
-    lvlRange = {5};
+    lvlRange = {4};
     parRange = {8};
-    vector<int> shingle = { 2,3,4,5,6,7};
-    vector<int> space = {1,2,4,8,16,32};
+    shingle = {1,2,3,4,5,6};
+    space = {1,2,4,8,16,32};
 
 
 
-//   test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange,shingle,space, 100, randTxt,bookpath, 8001,3);
+   test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange,shingle,space, 1, randTxt,bookpath, 8002,3);
 //test.cascadingMissmatch(1,{1,2,3,4,5,6},{1,2,4,8,16,32});
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange, 1, randAsciiStr, 8001);
 

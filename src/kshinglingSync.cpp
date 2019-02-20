@@ -19,7 +19,7 @@ kshinglingSync::~kshinglingSync() {
 }
 
 //Alice
-bool kshinglingSync::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) {
+bool kshinglingSync::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf,map<string,double>& CustomResult) {
     Logger::gLog(Logger::METHOD, "Entering kshinglingSync::SyncClient");
     bool syncSuccess = true;
     shared_ptr<SyncMethod> setHost;
