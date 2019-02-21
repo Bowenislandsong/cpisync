@@ -99,31 +99,34 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 
 
 
-void PerformanceData::cascadingMissmatch(int num_error,vector<int> win,vector<int> space){
+void PerformanceData::cascadingMissmatch(vector<int> num_error,vector<int> win,vector<int> space){
     PlotRegister plot;
     vector<string> catag{"win", "space","symmetric diff", "Total"};
     plot.create("cascading Mismatch", catag);
     for(int w : win){
         for (int s:space) {
-            for (int k = 0; k <1000; ++k) {
+            for (int e : num_error) {
+                for (int k = 0; k < 1000; ++k) {
 
-                int string_size = 2000;
-                vector<size_t> vec;
+                    int string_size = 2000;
+                    vector<size_t> vec;
 
-                for (int i = 0; i < string_size; ++i) {
-                    vec.push_back(rand() % s);
+                    for (int i = 0; i < string_size; ++i) {
+                        vec.push_back(rand() % s);
+                    }
+                    vector<size_t> vec1{vec.begin(), vec.end()};
+                    for (int j = 0; j < e; ++j) {
+                        vec1[randLenBetween(0, 2 * w + 1)] = rand() % s;
+                    }
+
+                    auto SA = ContentDeptPartition(vec, w);
+                    auto SB = ContentDeptPartition(vec1, w);
+
+                    plot.add({to_string(w), to_string(e), to_string(multisetDiff(SA, SB).size()),
+                              to_string(SA.size() + SB.size())});
                 }
-                vector<size_t> vec1{vec.begin(), vec.end()};
-                for (int j = 0; j < num_error; ++j) {
-                    vec1[randLenBetween(0, 2*w+1)] = rand() % s;
-                }
-
-                auto SA = ContentDeptPartition(vec, w);
-                auto SB = ContentDeptPartition(vec1, w);
-
-                plot.add({to_string(w), to_string(s), to_string(multisetDiff(SA, SB).size()), to_string(SA.size()+SB.size())});
+                plot.update();
             }
-            plot.update();
         }
     }
 }

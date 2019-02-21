@@ -72,7 +72,7 @@ public:
 
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 
-    void cascadingMissmatch(int num_error,vector<int> win,vector<int> space);
+    void cascadingMissmatch(vector<int> num_error,vector<int> win,vector<int> space);
 
 
 
