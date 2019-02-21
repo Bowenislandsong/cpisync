@@ -100,7 +100,7 @@ void KshingleSyncPerf::setsofcontent3D() {
     vector<int> space = {1};
 
 
-    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange,shingle,space, 1, randTxt,bookpath, 8002,2);
+    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange,shingle,space, 100, randTxt,bookpath, 8002,2);
 
     lvlRange = {4};
     parRange = {8};
@@ -109,7 +109,7 @@ void KshingleSyncPerf::setsofcontent3D() {
 
 
 
-   test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange,shingle,space, 1, randTxt,bookpath, 8002,3);
+   test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange,shingle,space, 100, randTxt,bookpath, 8002,3);
 //test.cascadingMissmatch(1,{1,2,3,4,5,6},{1,2,4,8,16,32});
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange, 1, randAsciiStr, 8001);
 
