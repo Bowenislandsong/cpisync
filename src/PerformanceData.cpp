@@ -192,12 +192,12 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     // choosing parameters
                                     double tmp_min = 1;
-                                    auto par_c = {5,6,8,9,10,11,12,13,14,15};
+                                    auto par_c = {5,7,9,11,13,15,17,19,21,23,25};
                                     for(auto c :par_c) {
                                         double tmp  = log10(str_size) / log10(c);
                                         if(tmp-floor(tmp)<tmp_min and tmp >3 and tmp < 10) {
                                             tmp_min = tmp-floor(tmp);
-                                            lvl = floor(tmp);
+                                            lvl = floor(tmp)-1;
                                             par = c;
                                         }
                                     }
@@ -242,7 +242,6 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                             build();
 
                                     last_passed_before_exception = "Bob GenSync"; // success Tag
-
                                     string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(),edit_dist,src);
                                                                               //(int) (str_size / edit_dist));
                                     if (bobtmpstring.size() < pow(par, lvl))

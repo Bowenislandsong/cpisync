@@ -52,10 +52,10 @@ void SetsOfContentTest::testAll() {
 //    initResources(initRes);
 
     string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
-    int partition = 18;
-    int lvl = 5;
-    int space = 1;
-    int shingleLen = 1;
+    int partition =4;
+    int lvl = 8;
+    int space = 4;
+    int shingleLen = 2;
 
 
 
@@ -75,8 +75,9 @@ void SetsOfContentTest::testAll() {
 
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
+//    string bobtxt = randStringEdit((*atxt).to_string(),2e3);
 
-    string bobtxt = randStringEditBurst(alicetxt, 2e4,"./tests/SampleTxt.txt");
+    string bobtxt = randStringEditBurst(alicetxt, 2e3,"./tests/SampleTxt.txt");
     if(bobtxt.size()<pow(partition,lvl))
         bobtxt += randCharacters(pow(partition,lvl)-bobtxt.size());
 
@@ -103,12 +104,6 @@ void SetsOfContentTest::testAll() {
     double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
 
 
-    writeStrToFile("Alice.txt",alicetxt);
-    writeStrToFile("Bob.txt",bobtxt);
-
-    auto r_res = getRsyncStats("Alice.txt","Bob.txt");
-    cout<<"rsync comm cost: "<<r_res.recv+r_res.xmit<<endl;
-
     auto recon_t = clock();
     auto report = forkHandle(Alice, Bob, false);
     double recon_time = (double) (clock() - recon_t) / CLOCKS_PER_SEC;
@@ -116,13 +111,23 @@ void SetsOfContentTest::testAll() {
     resourceReport(initRes);
     string finally = Alice.dumpString()->to_string();
 
+
+
+    writeStrToFile("Alice.txt",alicetxt);
+    writeStrToFile("Bob.txt",bobtxt);
+
+    auto r_res = getRsyncStats("Alice.txt","Bob.txt",true);
+    cout<<"rsync comm cost: "<<r_res.recv+r_res.xmit<<endl;
+
+
     cout << "CPU Time: " + to_string(report.CPUtime) << endl;
     cout << "Time: " + to_string(report.totalTime) << endl;
     cout << "bitsTot: " + to_string(report.bytesTot) << endl;
     cout << "bitsR: " + to_string(report.bytesRTot) << endl;
 
+    cout << "Terminal Str Trans: ------------------ " << Alice.getCustomResult("Terminal comm")<<endl;
+    cout << "Set Comm: ------------------ " << report.bytesTot+report.bytesRTot-Alice.getCustomResult("Terminal comm")<<endl;
     cout << "Number of node diff: " << Alice.getTotalSetDiffSize() << endl;
-    cout << "Terminal Str Trans: " << Alice.getCustomResult("Terminal comm")<<endl;
     cout << "hash vec comm: " << Alice.getCustomResult("hash vec comm")<<endl;
     cout << "String Reconstruction Time: " << Alice.getCustomResult("Str Reconstruction Time")<<endl;
     cout << "String Add Time: "<< str_time<<endl;

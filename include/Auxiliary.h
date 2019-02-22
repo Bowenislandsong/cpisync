@@ -509,7 +509,7 @@ inline void writeStrToFile(string file_name, string content){
     myfile.close();
 }
 
-inline rsync_stats getRsyncStats(string origin, string target){
+inline rsync_stats getRsyncStats(string origin, string target, bool full_report = false){
 // only works for one type of rsync outputs
     rsync_stats stats;
 
@@ -518,6 +518,8 @@ inline rsync_stats getRsyncStats(string origin, string target){
     stats.time += stod(extractStringIn(res,"File list transfer time: ","seconds"));
     stats.xmit = stoll(extractStringIn(res,"Total bytes sent: ","\n"));
     stats.recv = stoll(extractStringIn(res,"Total bytes received: ","\n"));
+    if(full_report)
+        cout<<res<<endl;
     return stats;
 }
 

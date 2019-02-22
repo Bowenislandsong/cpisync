@@ -640,13 +640,21 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 
     go_through_tree();
 
+    //TODO: delete below
     //show the info of the tree
-//    for(auto lvl:myTree) {
-//        vector<size_t> lvl_vec;
-//        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
-//        sort(lvl_vec.begin(),lvl_vec.end());
-//        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
-//    }//TODO: delete this
+    for(auto lvl:myTree) {
+        vector<size_t> lvl_vec;
+        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
+        sort(lvl_vec.begin(),lvl_vec.end());
+        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
+    }
+    std::set<size_t> unique_hashes;
+    for (auto term :myTree.back()){
+        cout<<term<<endl;
+        unique_hashes.insert(term.second);
+    }
+    cout<<"We have "<<unique_hashes.size()<<" unique terminal hashes over "<<myTree.back().size() <<" shingles"<<endl;
+    //TODO: delete above
 
     for (DataObject *dop : setPointers) delete dop;
     for (ZZ item : getShingles_ZZ()) {
@@ -865,6 +873,7 @@ size_t counter = 0;
         if (tmp != "$")
             add_to_dictionary(tmp);
     }
+    cout<<"we queried "<<cyc_query.size() <<" cycles and "<<term_query.size()<<" hashes"<<endl;
     CustomResult["Terminal comm"] = (double)counter;
 //    cout<<"Client Close"<<endl;
     Logger::gLog(Logger::METHOD, "Set Of Content Done");
