@@ -7,7 +7,8 @@
 PerformanceData::~PerformanceData() = default;
 
 void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
-                                 vector<int> str_sizeRange, int confidence, string (*stringInput)(int,string),string src, int portnum) {
+                                 vector<int> str_sizeRange, int confidence, string (*stringInput)(int, string),
+                                 string src, int portnum) {
     string protoName, str_type;
     if (GenSync::SyncProtocol::CPISync == setReconProto) protoName = "CPISync";
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == setReconProto) protoName = "IBLTSyncSetDiff";
@@ -18,8 +19,8 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 
     PlotRegister plot;
     plot.create("kshingle " + protoName + " " + str_type,
-                                     {"Str Size", "Edit Diff", "Comm (bits)", "Time Set(s)", "Time Str(s)",
-                                      "Space (bits)", "Set Recon True", "Str Recon True"});
+                {"Str Size", "Edit Diff", "Comm (bits)", "Time Set(s)", "Time Str(s)",
+                 "Space (bits)", "Set Recon True", "Str Recon True"});
     //TODO: Separate Comm, and Time, Separate Faile rate.
 
     for (int str_size : str_sizeRange) {
@@ -43,7 +44,7 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
                         build();
 
 
-                DataObject *Alicetxt = new DataObject(stringInput(str_size,src));
+                DataObject *Alicetxt = new DataObject(stringInput(str_size, src));
 
                 Alice.addStr(Alicetxt, false);
                 GenSync Bob = GenSync::Builder().
@@ -98,12 +99,11 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 }
 
 
-
-void PerformanceData::cascadingMissmatch(vector<int> num_error,vector<int> win,vector<int> space){
+void PerformanceData::cascadingMissmatch(vector<int> num_error, vector<int> win, vector<int> space) {
     PlotRegister plot;
-    vector<string> catag{"win", "space","symmetric diff", "Total"};
+    vector<string> catag{"win", "space", "symmetric diff", "Total"};
     plot.create("cascading Mismatch", catag);
-    for(int w : win){
+    for (int w : win) {
         for (int s:space) {
             for (int e : num_error) {
                 for (int k = 0; k < 1000; ++k) {
@@ -132,7 +132,9 @@ void PerformanceData::cascadingMissmatch(vector<int> num_error,vector<int> win,v
 }
 
 void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
-                                 vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange, vector<int> TershingleLen, vector<int> space, int confidence, string (*stringInput)(int,string), string src,int portnum, int mode) {
+                                    vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange,
+                                    vector<int> TershingleLen, vector<int> space, int confidence,
+                                    string (*stringInput)(int, string), string src, int portnum, int mode) {
     // mode 1: change string size and edit distance
     // mode 2: change tree size with num of partitions and tree height
     // mode 3: change terminal space and
@@ -143,30 +145,31 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (GenSync::SyncProtocol::CPISync == setReconProto) protoName = "CPISync";
 
     if (*stringInput == randAsciiStr) str_type = "RandAscii";
-    if (*stringInput == randTxt and src.find("Code")!=string::npos) str_type = "RandCode" ;
-    if (*stringInput == randTxt and src.find("Book")!=string::npos) str_type = "RandBook" ;
+    if (*stringInput == randTxt and src.find("Code") != string::npos) str_type = "RandCode";
+    if (*stringInput == randTxt and src.find("Book") != string::npos) str_type = "RandBook";
 
 
     string last_passed_before_exception;
-    vector<string> catag{"", "", "Comm (bytes)","hash vec comm", "Terminal comm","Actual Sym Diff", "Time Tree(s)",
+    vector<string> catag{"", "", "Comm (bytes)", "hash vec comm", "Terminal comm", "Actual Sym Diff", "Time Tree(s)",
                          "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
                          "Str Recon True", "Tree Heap SIze", "High Water Heap", "Rsync time", "Rsync Comm"};
     PlotRegister plot;
     if (mode == 1) {
         catag[0] = "Sting Size";
-        catag[1] = "Edit Dist ratio";
-        plot.create("Sets of Content " + protoName + " " + str_type + "lvl "+to_string(levelRange.front()), catag);
+        catag[1] = "Edit Dist ";
+        plot.create("Sets of Content " + protoName + " " + str_type + "Error " + to_string(edit_distRange.front()), catag);
     } else if (mode == 2) {
         catag[0] = "Level";
         catag[1] = "Partition";
-        plot.create("Sets of Content " + protoName + " " + str_type + "Str "+to_string(str_sizeRange.front()), catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()), catag);
     } else if (mode == 3) {
         catag[0] = "TerShingle Length";
         catag[1] = "Space";
-        plot.create("Sets of Content " + protoName + " " + str_type + "Str "+to_string(str_sizeRange.front())+"TS", catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()) + "TS",
+                    catag);
     }
 
-    //TODO: Separate Comm, and Time, Separate Faile rate.
+    //TODO: Separate Comm, and Time, Separate Fail rate.
     for (int str_size : str_sizeRange) {
 //        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;
         for (int edit_dist : edit_distRange) {
@@ -186,6 +189,19 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     Resources initRes;
 //                            initResources(initRes);
+
+                                    // choosing parameters
+                                    double tmp_min = 1;
+                                    auto par_c = {5,6,8,9,10,11,12,13,14,15};
+                                    for(auto c :par_c) {
+                                        double tmp  = log10(str_size) / log10(c);
+                                        if(tmp-floor(tmp)<tmp_min and tmp >3 and tmp < 10) {
+                                            tmp_min = tmp-floor(tmp);
+                                            lvl = floor(tmp);
+                                            par = c;
+                                        }
+                                    }
+                                    cout<<par<<"and"<<lvl<<endl;
 
                                     GenSync Alice = GenSync::Builder().
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -227,8 +243,8 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     last_passed_before_exception = "Bob GenSync"; // success Tag
 
-                                    string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(),
-                                                                              (int) (str_size / edit_dist));
+                                    string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(),edit_dist,src);
+                                                                              //(int) (str_size / edit_dist));
                                     if (bobtmpstring.size() < pow(par, lvl))
                                         bobtmpstring += randCharacters(pow(par, lvl) - bobtmpstring.size());
 
@@ -273,14 +289,15 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     delete Bobtxt;
                                 } catch (std::exception) {
                                     cout << "We failed after " << last_passed_before_exception << endl;
-                                    report_vec = {to_string(0), to_string(0),to_string(0), to_string(0), to_string(0),
+                                    report_vec = {to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0)};
 
                                 }
                                 if (mode == 1) {
                                     report_vec[0] = to_string(str_size);
-                                    report_vec[1] = to_string((double) 1 / edit_dist);
+//                                    report_vec[1] = to_string((double) 1 / edit_dist);
+                                    report_vec[1] = to_string( edit_dist);
                                     plot.add(report_vec);
                                 } else if (mode == 2) {
                                     report_vec[0] = to_string(lvl);
@@ -305,21 +322,20 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 }
 
 
-
-
 void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence) {
     int set_sizeinterval = floor((set_sizeRange.second - set_sizeRange.first) / tesPts);
 
     PlotRegister plot;
-    plot.create("Strata Est",{"Set Size","Set Diff","Est"});
+    plot.create("Strata Est", {"Set Size", "Set Diff", "Est"});
 
 //#if __APPLE__
 //    confidence /=omp_get_max_threads();
 //#pragma omp parallel num_threads(omp_get_max_threads())
 //#endif
     for (int set_size = set_sizeRange.first; set_size <= set_sizeRange.second; set_size += set_sizeinterval) {
-    (set_size < set_sizeRange.first + (set_sizeRange.second-set_sizeRange.first)/2) ? confidence : confidence=5;
-    cout<<"Current Set Size:"+to_string(set_size)<<endl;
+        (set_size < set_sizeRange.first + (set_sizeRange.second - set_sizeRange.first) / 2) ? confidence
+                                                                                            : confidence = 5;
+        cout << "Current Set Size:" + to_string(set_size) << endl;
         printMemUsage();
         int top_set_diff = set_size / 10;
         int set_diffinterval = floor((top_set_diff) / tesPts);
@@ -353,7 +369,7 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
 //#if __APPLE__
 //#pragma omp critical
 //#endif
-	plot.update();
+        plot.update();
     }
 }
 
@@ -361,7 +377,7 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
 
 // Graph and Plot functions
 
-PlotRegister::PlotRegister(){}
+PlotRegister::PlotRegister() {}
 
 PlotRegister::~PlotRegister() {}
 
@@ -377,11 +393,11 @@ void PlotRegister::init() {
     //TODO: do soemthing about the directories, this hard coding is not a long term solution
     myfile.open(title + ".txt");
 
-    myfile<< accumulate(std::next(labels.begin()), labels.end(),
-                    labels[0], // start with first element
-                    [](string a, string b) {
-                        return a + "|" + b;
-                    }) + "\n";
+    myfile << accumulate(std::next(labels.begin()), labels.end(),
+                         labels[0], // start with first element
+                         [](string a, string b) {
+                             return a + "|" + b;
+                         }) + "\n";
 
 
 //    myfile<<accumulate(labels.begin(), labels.end(), string("|")) + "\n";
@@ -389,14 +405,14 @@ void PlotRegister::init() {
 }
 
 void PlotRegister::update() {
-    ofstream myfile(title+".txt",ios::app);
+    ofstream myfile(title + ".txt", ios::app);
     if (!myfile.good()) init();
     for (auto datum : data)
-        myfile<< accumulate(next(datum.begin()), datum.end(),
-                            datum[0], // start with first element
-                            [](string a, string b) {
-                                return a + " " + b;
-                            }) + "\n";
+        myfile << accumulate(next(datum.begin()), datum.end(),
+                             datum[0], // start with first element
+                             [](string a, string b) {
+                                 return a + " " + b;
+                             }) + "\n";
     data.clear();
     myfile.close();
 }

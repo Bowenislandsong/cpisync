@@ -711,7 +711,7 @@ inline string randStringEdit(string str, int upperE) {
  * @param upperE Edit upper bound
  * @return Edited string upperE edit distance away from the original string
  */
-inline string randStringEditBurst(string str, int burstE, int numLoc) {
+inline string randStringEditBurst(string str, int burstE, int numLoc, string loc) {
     for (int ii = 0; ii < numLoc; ++ii) {
         int tmpBurst = (burstE > str.size()) ? str.size() : burstE;
         int pos = randLenBetween(0, str.size() - tmpBurst);
@@ -719,16 +719,17 @@ inline string randStringEditBurst(string str, int burstE, int numLoc) {
         if (rand() % 2 == 0) //delete
             str = str.substr(0, pos) + str.substr(pos + tmpBurst);
         else  // insert
-            str = str.substr(0, pos) + str.substr(randLenBetween(0, str.size() - tmpBurst), tmpBurst) + str.substr(pos);
+            str = str.substr(0, pos) + randTxt(tmpBurst,loc) + str.substr(pos);
+//            str = str.substr(0, pos) + str.substr(randLenBetween(0, str.size() - tmpBurst), tmpBurst) + str.substr(pos);
     }
     return str;
 }
 
-inline string randStringEditBurst(string str, int upperE) {
+inline string randStringEditBurst(string str, int upperE, string loc) {
     while (upperE > 0) {
         int burst = randLenBetween(1, upperE);
         upperE -= burst;
-        str = randStringEditBurst(str, burst, 1);
+        str = randStringEditBurst(str, burst, 1,loc);
     }
     return str;
 }

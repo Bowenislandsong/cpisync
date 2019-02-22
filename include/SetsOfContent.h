@@ -36,21 +36,21 @@ struct cycle {
     size_t head, len, cyc;
 };
 
-static bool operator==(const cycle& a, const cycle& b){
+static bool operator==(const cycle &a, const cycle &b) {
     return a.head == b.head and a.len == b.len and a.cyc == b.cyc;
 };
 
-static bool operator!=(const cycle& a, const cycle& b) {
+static bool operator!=(const cycle &a, const cycle &b) {
     return !(a == b);
 };
 
-static ostream& operator<<(ostream &os, const cycle cyc) {
+static ostream &operator<<(ostream &os, const cycle cyc) {
     os << "head: " + to_string(cyc.head) + ", len: " + to_string(cyc.len) + ", cyc: " +
           to_string(cyc.cyc);
     return os;
 };
 
-static cycle ZZtoCycle(const ZZ& zz){
+static cycle ZZtoCycle(const ZZ &zz) {
     cycle cyc;
     BytesFromZZ((uint8_t *) &cyc, zz, sizeof(cycle));
     return cyc;
@@ -69,14 +69,14 @@ static ZZ CycletoZZ(cycle cyc) {
  * occurrence, how manny time this occrred
  * compose states the composite of second
  */
-struct shingle_hash{
+struct shingle_hash {
     size_t first, second, occurr;
     sm_i lvl;
 };
 
 
 //Compare and help order struct shingle_hash from a vector
-static bool operator<(const shingle_hash& a, const shingle_hash& b) {
+static bool operator<(const shingle_hash &a, const shingle_hash &b) {
     return (a.first < b.first) or
            (a.first == b.first and a.second < b.second) or
            (a.first == b.first and a.second == b.second and a.occurr < b.occurr);
@@ -85,15 +85,15 @@ static bool operator<(const shingle_hash& a, const shingle_hash& b) {
 
 
 //Compare and help differentiate struct shingle_hash
-static bool operator==(const shingle_hash& a, const shingle_hash& b) {
+static bool operator==(const shingle_hash &a, const shingle_hash &b) {
     return a.first == b.first and a.second == b.second and a.occurr == b.occurr and a.lvl == b.lvl;
 };
 
-static bool operator!=(const shingle_hash& a, const shingle_hash& b) {
+static bool operator!=(const shingle_hash &a, const shingle_hash &b) {
     return !(a == b);
 };
 
-static shingle_hash ZZtoShingleHash(const ZZ& zz){
+static shingle_hash ZZtoShingleHash(const ZZ &zz) {
     shingle_hash shingle;
     BytesFromZZ((uint8_t *) &shingle, zz, sizeof(shingle_hash));
     return shingle;
@@ -106,11 +106,16 @@ static ZZ ShingleHashtoZZ(shingle_hash shingle) {
 }
 
 
-static string to_string(const vector<size_t> a) {string res; for (size_t t : a) res+=to_string(t)+":"; res.pop_back(); return res;};
+static string to_string(const vector<size_t> a) {
+    string res;
+    for (size_t t : a) res += to_string(t) + ":";
+    res.pop_back();
+    return res;
+};
 
-static ostream& operator<<(ostream &os, const shingle_hash shingle) {
+static ostream &operator<<(ostream &os, const shingle_hash shingle) {
     os << "fst: " + to_string(shingle.first) + ", sec: " + to_string(shingle.second) + ", occ: " +
-          to_string(shingle.occurr) + ", lvl: "+to_string(shingle.lvl);
+          to_string(shingle.occurr) + ", lvl: " + to_string(shingle.lvl);
     return os;
 };
 
@@ -127,18 +132,18 @@ static vector<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_s
             hash_occurr[hash_val[j]] = 1;
     }
 
-    for (size_t i = win_size+1; i < hash_val.size() - win_size+1; ++i) {
-        if (hash_val[i-1] <= hash_occurr.begin()->first and i - ((!mins.empty())?mins.back():0) > win_size)
-            mins.push_back(i-1);
+    for (size_t i = win_size + 1; i < hash_val.size() - win_size + 1; ++i) {
+        if (hash_val[i - 1] <= hash_occurr.begin()->first and i - ((!mins.empty()) ? mins.back() : 0) > win_size)
+            mins.push_back(i - 1);
         auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
         if (it_prev != hash_occurr.end())
             it_prev->second--;
 
-        auto it_pos = hash_occurr.find(hash_val[i+win_size]);
+        auto it_pos = hash_occurr.find(hash_val[i + win_size]);
         if (it_pos != hash_occurr.end())
             it_pos->second++;
         else
-            hash_occurr[hash_val[i+win_size]] = 1;
+            hash_occurr[hash_val[i + win_size]] = 1;
     }
     return mins;
 }
@@ -156,13 +161,15 @@ public:
 // functions for SyncMethods
     bool addStr(DataObject *str, vector<DataObject *> &datum, bool sync) override;
 
-    bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf, map<string,double>& CustomResult) override;
+    bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
+                    list<DataObject *> &otherMinusSelf, map<string, double> &CustomResult) override;
 
-    bool SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) override;
+    bool SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
+                    list<DataObject *> &otherMinusSelf) override;
 
     string getName() override { return "Sets of Content"; }
 
-    long getVirMem() override { return (long)highwater;};
+    long getVirMem() override { return (long) highwater; };
 
     //getShinglesAt
     vector<ZZ> getShingles_ZZ() {
@@ -195,7 +202,7 @@ private:
     map<size_t, string> Dictionary;  // terminla strings
 
     // origin, cycle information to reform this string rep
-    map<size_t, vector<size_t>> Cyc_dict,hashcontent_dict; // has to be unique
+    map<size_t, vector<size_t>> Cyc_dict, hashcontent_dict; // has to be unique
 
     //requests
     map<size_t, string> term_concern, term_query;
@@ -260,7 +267,7 @@ private:
      * @param str_order
      * @param final_str a hash train in string order
      */
-    bool shingle2hash_train(cycle &cyc_info, const std::set <shingle_hash> &shingle_set, vector<size_t> &final_str);
+    bool shingle2hash_train(cycle &cyc_info, const std::set<shingle_hash> &shingle_set, vector<size_t> &final_str);
 
     std::map<size_t, vector<shingle_hash>> tree2shingle_dict(const std::set<shingle_hash> &tree_lvl);
 
@@ -291,7 +298,7 @@ private:
 
 //    void prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
 
-    void answer_queries(const map<size_t,bool>& queries, const vector<shingle_hash> &shingle_hash_mine);
+    void answer_queries(const map<size_t, bool> &queries, const vector<shingle_hash> &shingle_hash_mine);
 
     void go_through_tree();
 
@@ -303,6 +310,7 @@ private:
 
     void configure(shared_ptr<SyncMethod> &setHost, long mbar);
 
-    bool reconstructString(DataObject *& recovered_string, const list<DataObject *>& mySetData) override;
+    bool reconstructString(DataObject *&recovered_string, const list<DataObject *> &mySetData) override;
 };
+
 #endif //CPISYNCLIB_SETSOFCONTENT_H
