@@ -76,7 +76,7 @@ void SetsOfContentTest::testAll() {
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
 
-    string bobtxt = randStringEditBurst(alicetxt, 2e4);
+    string bobtxt = randStringEditBurst(alicetxt, 2e4,"./tests/SampleTxt.txt");
     if(bobtxt.size()<pow(partition,lvl))
         bobtxt += randCharacters(pow(partition,lvl)-bobtxt.size());
 
