@@ -62,7 +62,7 @@ static ZZ CycletoZZ(cycle cyc) {
     return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(cycle));
 }
 
-
+ // we manipulate these shingles in a tree
 /**
  * first is the first part of a shingle
  * second is the second part of the shingle
@@ -93,6 +93,7 @@ static bool operator!=(const shingle_hash &a, const shingle_hash &b) {
     return !(a == b);
 };
 
+
 static shingle_hash ZZtoShingleHash(const ZZ &zz) {
     shingle_hash shingle;
     BytesFromZZ((uint8_t *) &shingle, zz, sizeof(shingle_hash));
@@ -119,6 +120,42 @@ static ostream &operator<<(ostream &os, const shingle_hash shingle) {
     return os;
 };
 
+
+//// ---------------------------------- shingle trans
+// we transmit these shingles
+struct shingle_trans {
+    size_t sum;
+    sm_i lvl,occurr,duplicate;
+};
+
+// xor first and second may cause duplicated shingles, we register their duplications
+static shingle_trans hash2Trans(shingle_hash shingle,sm_i dup=0){
+    return (shingle_trans {.sum = shingle.first^shingle.second,.lvl=shingle.lvl,.occurr=(sm_i)shingle.occurr, .duplicate = dup});
+};
+
+static shingle_trans ZZtoShingleHashTrans(const ZZ &zz) {
+    shingle_trans shingle;
+    BytesFromZZ((uint8_t *) &shingle, zz, sizeof(shingle_trans));
+    return shingle;
+}
+
+static ZZ ShingleHashTranstoZZ(shingle_trans shingle) {
+    char *my_s_bytes = reinterpret_cast<char *>(&shingle);
+    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(shingle_trans));
+}
+
+static size_t ZZtoSize_t(const ZZ &zz) {
+    size_t hash_val;
+    BytesFromZZ((uint8_t *) &hash_val, zz, sizeof(size_t));
+    return hash_val;
+}
+
+static ZZ size_ttoZZ(size_t hash_val) {
+    char *my_s_bytes = reinterpret_cast<char *>(&hash_val);
+    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(size_t));
+}
+
+//// ---------------------------------- shingle trans
 
 static vector<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_size) {
 
@@ -171,16 +208,7 @@ public:
 
     long getVirMem() override { return (long) highwater; };
 
-    //getShinglesAt
-    vector<ZZ> getShingles_ZZ() {
-        vector<ZZ> res;
-        for (auto treelvl : myTree) {
-            for (auto item:treelvl) {
-                res.push_back(ShingleHashtoZZ(item));
-            }
-        }
-        return res;
-    };
+
 
 
 protected:
@@ -195,7 +223,7 @@ private:
 
     GenSync::SyncProtocol baseSyncProtocol;
 
-    vector<DataObject *> setPointers; // garbage collector
+    vector<DataObject *> setPointers,hashPointers; // garbage collector
 
     vector<std::set<shingle_hash>> myTree; // the hash shingle tree   // RECONCILLING TARGET
 
@@ -304,11 +332,40 @@ private:
 
     // functions for Sync Methods
 
+
+    //Get shingle_trans in ZZ O(n*log^2(n))
+    vector<ZZ> getALLShingleZZ() {
+        std::set<ZZ> res;
+        for (auto treelvl : myTree) {
+            for (auto item:treelvl) {
+                ZZ tmp = ShingleHashTranstoZZ(hash2Trans(item));
+                auto it = res.find(tmp);
+                if(it==res.end()) {
+                    res.insert(tmp);
+                }else{
+                    res.insert(ShingleHashTranstoZZ(hash2Trans(item,ZZtoShingleHashTrans(*it).duplicate)));
+                    res.erase(it);
+                }
+            }
+        }
+        return vector<ZZ>{res.begin(),res.end()};
+    };
+    // Get all individual hashes
+    vector<ZZ> getALLHashZZ() {
+        std::set<ZZ> res;
+        for (auto treelvl : myTree) {
+            for (auto item:treelvl) {
+                res.insert(size_ttoZZ(item.second));
+            }
+        }
+        return vector<ZZ>{res.begin(),res.end()};
+    };
+
     void SendSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false) override;
 
     void RecvSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false) override;
 
-    void configure(shared_ptr<SyncMethod> &setHost, long mbar);
+    void configure(shared_ptr<SyncMethod> &setHost, long mbar, size_t elem_size);
 
     bool reconstructString(DataObject *&recovered_string, const list<DataObject *> &mySetData) override;
 };
