@@ -73,7 +73,7 @@ inline forkHandleReport forkHandle(GenSync& client, GenSync server, bool isRecon
             throw err;
         } else {
             Logger::gLog(Logger::COMM,"created a client process");
-            client.startSync(method_num,isRecon);
+            result.success = client.startSync(method_num,isRecon);
             result.totalTime = (double) (clock() - start) / CLOCKS_PER_SEC;
             result.CPUtime = client.getSyncTime(method_num); /// assuming method_num'th communicator corresponds to method_num'th syncagent
             result.bytesRTot = client.getRecvBytesTot(method_num);
@@ -81,7 +81,6 @@ inline forkHandleReport forkHandle(GenSync& client, GenSync server, bool isRecon
             result.bytesXTot = client.getXmitBytesTot(method_num);
             result.bytes = client.getXmitBytes(method_num);
             waitpid(pID, &chld_state, my_opt);
-            result.success=true;
         }
     } catch (int& err) {
         sleep(1); // why?

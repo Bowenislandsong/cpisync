@@ -150,23 +150,26 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
 
     string last_passed_before_exception;
-    vector<string> catag{"", "", "Comm (bytes)", "hash vec comm", "Terminal comm", "Actual Sym Diff", "Time Tree(s)",
-                         "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-                         "Str Recon True", "Tree Heap SIze", "High Water Heap", "Rsync time", "Rsync Comm"};
+    vector<string> catag{"", "", "Total Comm (bytes)", "Literal comm", "Partition Sym Diff",
+                         "Total Num Partitions", "Time Tree(s)",
+                         "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)", "Set Recon Success",
+                         "Str Recon Success", "Tree Heap SIze", "High Water Heap", "Rsync Comm"};
     PlotRegister plot;
     if (mode == 1) {
         catag[0] = "Sting Size";
         catag[1] = "Edit Dist ";
-        plot.create("Sets of Content " + protoName + " " + str_type + "Error " + to_string(edit_distRange.front()), catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "P" + to_string(partitionRange.front()) + "L" +
+                    to_string(levelRange.front()), catag);
     } else if (mode == 2) {
         catag[0] = "Level";
         catag[1] = "Partition";
-        plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()), catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "STR" + to_string(str_sizeRange.front()) + "ED" +
+                    to_string(edit_distRange.front()) + "LP", catag);
     } else if (mode == 3) {
         catag[0] = "TerShingle Length";
         catag[1] = "Space";
-        plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()) + "TS",
-                    catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()) + "ED" +
+                    to_string(edit_distRange.front()) + "TS", catag);
     }
 
     //TODO: Separate Comm, and Time, Separate Fail rate.
@@ -190,18 +193,6 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     Resources initRes;
 //                            initResources(initRes);
 
-                                    // choosing parameters
-//                                    double tmp_min = 1;
-//                                    auto par_c = {5,7,9,11,13,15,17,19,21,23,25};
-//                                    for(auto c :par_c) {
-//                                        double tmp  = log10(str_size) / log10(c);
-//                                        if(tmp-floor(tmp)<tmp_min and tmp >3 and tmp < 10) {
-//                                            tmp_min = tmp-floor(tmp);
-//                                            lvl = floor(tmp)-1;
-//                                            par = c;
-//                                        }
-//                                    }
-//                                    cout<<par<<"and"<<lvl<<endl;
 
                                     GenSync Alice = GenSync::Builder().
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -242,8 +233,8 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                             build();
 
                                     last_passed_before_exception = "Bob GenSync"; // success Tag
-                                    string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(),edit_dist,src);
-                                                                              //(int) (str_size / edit_dist));
+                                    string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(), edit_dist, src);
+                                    //(int) (str_size / edit_dist));
                                     if (bobtmpstring.size() < pow(par, lvl))
                                         bobtmpstring += randCharacters(pow(par, lvl) - bobtmpstring.size());
 
@@ -274,14 +265,16 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     report_vec = {"", "",
                                                   to_string(report.bytesXTot + report.bytesRTot),
-                                                  to_string(Alice.getCustomResult("hash vec comm")),
-                                                  to_string(Alice.getCustomResult("Terminal comm")),
-                                                  to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+                                                  to_string(Alice.getCustomResult("Literal comm")),
+                                                  to_string(Alice.getCustomResult("Partition Sym Diff")),
+                                                  to_string(Alice.getCustomResult("Total Num Partitions")),
+                                                  to_string(tree_time),
                                                   to_string(report.totalTime),
                                                   to_string(Alice.getCustomResult("Str Reconstruction Time")),
-                                                  to_string(success_StrRecon), to_string(initRes.VmemUsed),
+                                                  to_string(report.success),
+                                                  to_string(success_StrRecon),
+                                                  to_string(initRes.VmemUsed),
                                                   to_string(Alice.getVirMem(0)),
-                                                  to_string(r_res.time),
                                                   to_string(r_res.xmit + r_res.recv)};
 
                                     delete Alicetxt;
@@ -290,13 +283,13 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     cout << "We failed after " << last_passed_before_exception << endl;
                                     report_vec = {to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
-                                                  to_string(0), to_string(0), to_string(0), to_string(0)};
+                                                  to_string(0), to_string(0), to_string(0), to_string(0),to_string(0)};
 
                                 }
                                 if (mode == 1) {
                                     report_vec[0] = to_string(str_size);
 //                                    report_vec[1] = to_string((double) 1 / edit_dist);
-                                    report_vec[1] = to_string( edit_dist);
+                                    report_vec[1] = to_string(edit_dist);
                                     plot.add(report_vec);
                                 } else if (mode == 2) {
                                     report_vec[0] = to_string(lvl);

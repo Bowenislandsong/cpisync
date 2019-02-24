@@ -114,8 +114,6 @@ bool GenSync::listenSync(int method_num,bool isRecon) {
             Logger::error_and_quit(s.what());
             return false;
         }
-        myDiffSize = selfMinusOther.size();
-        theirDiffSize = otherMinusSelf.size();
 
         // add any items that were found in the reconciliation
         list<DataObject *>::iterator itDO;
@@ -171,8 +169,6 @@ bool GenSync::startSync(int method_num,bool isRecon) {
             Logger::error_and_quit(s.what());
             return false;
         }
-        myDiffSize = selfMinusOther.size();
-        theirDiffSize = otherMinusSelf.size();
 
         // add any items that were found in the reconciliation
         list<DataObject *>::iterator itDO;
@@ -347,10 +343,6 @@ const list<DataObject *> GenSync::dumpElements() {
 
 const DataObject* GenSync::dumpString() {
     return myString;
-}
-
-const size_t GenSync::getTotalSetDiffSize() {
-    return myDiffSize + theirDiffSize;
 }
 
 const void GenSync::pushCustomResult(string name, double res){

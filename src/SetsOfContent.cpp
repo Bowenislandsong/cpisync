@@ -89,7 +89,6 @@ vector<size_t> SetsOfContent::create_HashSet(string str, size_t win_size, size_t
 }
 
 
-
 size_t SetsOfContent::add_to_dictionary(const string &str) {
     (Dictionary.find(str_to_hash(str)) == Dictionary.end() or Dictionary[str_to_hash(str)] == str)
     ? Dictionary[str_to_hash(str)] = str : throw invalid_argument(
@@ -191,7 +190,7 @@ void SetsOfContent::answer_queries(std::set<size_t> &theirQueries) {
                     term_concern[shingle.second] = Dictionary[shingle.second];
                 else {
                     vector<size_t> tmp_vec = Cyc_dict[shingle.second];
-                    cycle tmp = cycle{.head = tmp_vec.front(), .len = tmp_vec.size(), .cyc=0};
+                    cycle tmp = cycle{.head = tmp_vec.front(), .len = (unsigned int)tmp_vec.size(), .cyc=0};
 
                     if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) {
                         continue;
@@ -716,10 +715,9 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
         success = false;
 
 
-
     answer_queries(theirQueries);
 
-    cleanup(fuzzyPts, selfMinusOther, otherMinusSelf,true);
+    cleanup(fuzzyPts, selfMinusOther, otherMinusSelf, true);
 
 //    size_t top_str_size = SIZE_T_MAX;
 //    while (!success and mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
@@ -757,7 +755,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
 //    }
 //    answer_queries(queries, mine_hash);
 
-    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
+//    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
     for (auto groupcyc : cyc_concern) {
         commSync->commSend(CycletoZZ(groupcyc.second), sizeof(cycle));
     }
@@ -778,7 +776,6 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
 
 bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
                                list<DataObject *> &otherMinusSelf, map<string, double> &CustomResult) {
-    //TODO: needs a flag, but  this will do for now
     bool success = true;
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncClient");
 
@@ -790,8 +787,6 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
         for (auto item :setPointers) {
             est.insert(item); // Add to estimator
         }
-
-        // since Kshingling are the same, Strata Est parameters would also be the same.
         commSync->commSend(est.getStrata(), false);
 
         mbar = commSync->commRecv_long(); // cast long to long long
@@ -806,18 +801,23 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     // sync shingle xor sum
     if (!setReconClient(commSync, mbar, sizeof(fuzzy_shingle), setPointers, selfMinusOther, otherMinusSelf))
         success = false;
-    cout << "We used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
+
+//    cout << "We used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
     cleanup(setPointers, selfMinusOther, otherMinusSelf);
 
     // ------------------------- Sync Individual Hash
+    auto myPartitions = hashPointers.size();
     // sync hash
     if (!setReconClient(commSync, mbar, sizeof(size_t), hashPointers, selfMinusOther, otherMinusSelf))
         success = false;
 
+    CustomResult["Partition Sym Diff"] = (selfMinusOther.size() + otherMinusSelf.size()); // recorder # symmetrical partition difference
+    CustomResult["Total Num Partitions"] = hashPointers.size()+myPartitions;
+
     std::set<size_t> myQueries;
     for (DataObject *item : otherMinusSelf)
         myQueries.insert(ZZtoSize_t(item->to_ZZ()));
-    cout << "We used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
+
     cleanup(hashPointers, selfMinusOther, otherMinusSelf);
 
     // Collect fuzzy shingles in use and their composite
@@ -855,7 +855,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     // set recon
     if (!setReconClient(commSync, mbar, sizeof(fuzzyorder), fuzzyPts, selfMinusOther, otherMinusSelf))
         success = false;
-    cout << "We used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
+
     vector<sm_i> newOrder(fuzzyPts.size());
     for (auto pts:fuzzyPts) {
         fuzzyorder tmp = ZZtoFuzzyorder(pts->to_ZZ());
@@ -875,7 +875,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
 
     prepare_querys(myQueries);
 
-    cleanup(fuzzyPts, selfMinusOther, otherMinusSelf,true);
+    cleanup(fuzzyPts, selfMinusOther, otherMinusSelf, true);
 
 
 //    vector<shingle_hash> theirs_hash, mine_hash;
@@ -920,11 +920,14 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
 //    }
 //    CustomResult["hash vec comm"] = (double)(term_query.size()+cyc_query.size())*sizeof(size_t); // record bytes
 //// get answers from server
-    cout << "We queried " << cyc_query.size() << " cycles and " << term_query.size() << " hashes" << endl;
+//    cout << "We queried " << cyc_query.size() << " cycles and " << term_query.size() << " hashes" << endl;
+
 
     for (auto &cyc:cyc_query) {
         cyc.second = ZZtoCycle(commSync->commRecv_ZZ(sizeof(cycle)));
     }
+
+
     size_t term_counter = 0;
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
@@ -932,10 +935,9 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
         if (tmp != "$")
             add_to_dictionary(tmp);
     }
-    CustomResult["Terminal comm"] = (double) term_counter;
+    CustomResult["Literal comm"] = (double) term_counter;
 //    cout<<"Client Close"<<endl;
     Logger::gLog(Logger::METHOD, "Set Of Content Done");
-
 
     commSync->commClose();
     return success;
