@@ -85,7 +85,7 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 //                                             Alice.dumpString()->to_string()); // str Recon is deterministic, if not success , set recon is the problem
                 forkHandleReport report = forkHandle(Alice, Bob, false);
 
-                plot.add({to_string(str_size), to_string(edit_dist), to_string(report.bytesTot),
+                plot.add({to_string(str_size), to_string(edit_dist), to_string(report.bytesXTot),
                           to_string(report.CPUtime), to_string(str_time),
                           to_string(Bob.getVirMem(0)), to_string(success_SetRecon), to_string(success_StrRecon)});
 
@@ -273,7 +273,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                                 + "Bob Str size: " + to_string(Bobtxt->to_string().size());
 
                                     report_vec = {"", "",
-                                                  to_string(report.bytesTot + report.bytesRTot),
+                                                  to_string(report.bytesXTot + report.bytesRTot),
                                                   to_string(Alice.getCustomResult("hash vec comm")),
                                                   to_string(Alice.getCustomResult("Terminal comm")),
                                                   to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),

@@ -3027,7 +3027,7 @@ PerformanceData::~PerformanceData() = default;
 //                    }catch(exception&s){
 //                        success = check_outcome;
 //                        res.CPUtime = 0;
-//                        res.bytesTot = 0;
+//                        res.bytesXTot = 0;
 //                        res.bytesRTot = 0;
 //                        cout<<"failed at:"+to_string(editDist)+":"+ to_string(mbar/2)+":"+to_string(stringSize)<<endl;
 //                    }
@@ -3044,7 +3044,7 @@ PerformanceData::~PerformanceData() = default;
 //    }
 //    res.CPUtime+=time_final;
 //    return res;
-////    long comm_cost = res.bytesTot;
+////    long comm_cost = res.bytesXTot;
 ////    //for Interactive CPI we care bout the total comm cost
 ////    if (baseSetProto==GenSync::SyncProtocol::InteractiveCPISync) comm_cost +=res.bytesRTot;
 ////
@@ -3099,7 +3099,7 @@ PerformanceData::~PerformanceData() = default;
 //            for (auto setRecon:setReconProto) {
 //                prepareSetComm(StringReconProtocol::KshinglingSync, setRecon);
 //                forkHandleReport res = calCostReport(PerformanceData::PlotType::PLOT3D);
-//                double comm_cost = res.bytesTot;
+//                double comm_cost = res.bytesXTot;
 //                //for Interactive CPI we care bout the total comm cost
 //                if (baseSetProto == GenSync::SyncProtocol::InteractiveCPISync) comm_cost += res.bytesRTot;
 //
@@ -3128,7 +3128,7 @@ PerformanceData::~PerformanceData() = default;
 //            for (auto setRecon:setReconProto) {
 //                prepareSetComm(StringReconProtocol::KshinglingSync, setRecon);
 //                forkHandleReport res = calCostReport(PerformanceData::PlotType::PLOT3D);
-//                double comm_cost = res.bytesTot;
+//                double comm_cost = res.bytesXTot;
 //                //for Interactive CPI we care bout the total comm cost
 //                if (baseSetProto == GenSync::SyncProtocol::InteractiveCPISync) comm_cost += res.bytesRTot;
 //
@@ -3155,7 +3155,7 @@ PerformanceData::~PerformanceData() = default;
 //            for (auto setRecon:setReconProto) {
 //                prepareSetComm(StringReconProtocol::KshinglingSync, setRecon);
 //                forkHandleReport res = calCostReport(PerformanceData::PlotType::PLOT3D);
-//                double comm_cost = res.bytesTot;
+//                double comm_cost = res.bytesXTot;
 //                //for Interactive CPI we care bout the total comm cost
 //                if (baseSetProto == GenSync::SyncProtocol::InteractiveCPISync) comm_cost += res.bytesRTot;
 //

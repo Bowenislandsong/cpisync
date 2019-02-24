@@ -53,7 +53,7 @@ void SetsOfContentTest::testAll() {
 
     string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
     int partition =4;
-    int lvl = 8;
+    int lvl =7;
     int space = 4;
     int shingleLen = 2;
 
@@ -65,7 +65,7 @@ void SetsOfContentTest::testAll() {
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
             setProtocol(GenSync::SyncProtocol::CPISync).
             setComm(GenSync::SyncComm::socket).
-            setTerminalStrSize(10).
+            setTerminalStrSize(8).
             setNumPartitions(partition).
             setShingleLen(shingleLen).
             setSpace(space).
@@ -87,7 +87,7 @@ void SetsOfContentTest::testAll() {
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
             setProtocol(GenSync::SyncProtocol::CPISync).
             setComm(GenSync::SyncComm::socket).
-            setTerminalStrSize(10).
+            setTerminalStrSize(8).
             setNumPartitions(partition).
             setShingleLen(shingleLen).
             setSpace(space).
@@ -118,15 +118,16 @@ void SetsOfContentTest::testAll() {
 
     auto r_res = getRsyncStats("Alice.txt","Bob.txt",true);
     cout<<"rsync comm cost: "<<r_res.recv+r_res.xmit<<endl;
-
+    cout<<"Set of Content cost: "<<to_string(report.bytesRTot+report.bytesXTot)<<endl;
 
     cout << "CPU Time: " + to_string(report.CPUtime) << endl;
     cout << "Time: " + to_string(report.totalTime) << endl;
-    cout << "bitsTot: " + to_string(report.bytesTot) << endl;
+    cout << "bitsTot: " + to_string(report.bytesXTot) << endl;
     cout << "bitsR: " + to_string(report.bytesRTot) << endl;
 
+
     cout << "Terminal Str Trans: ------------------ " << Alice.getCustomResult("Terminal comm")<<endl;
-    cout << "Set Comm: ------------------ " << report.bytesTot+report.bytesRTot-Alice.getCustomResult("Terminal comm")<<endl;
+    cout << "Set Comm: ------------------ " << report.bytesXTot+report.bytesRTot-Alice.getCustomResult("Terminal comm")<<endl;
     cout << "Number of node diff: " << Alice.getTotalSetDiffSize() << endl;
     cout << "hash vec comm: " << Alice.getCustomResult("hash vec comm")<<endl;
     cout << "String Reconstruction Time: " << Alice.getCustomResult("Str Reconstruction Time")<<endl;
@@ -134,6 +135,6 @@ void SetsOfContentTest::testAll() {
     cout << "Rest of the Recon time: " <<recon_time<<endl;
     delete btxt;
     delete atxt;
-//    CPPUNIT_ASSERT(finally == bobtxt);
+    CPPUNIT_ASSERT(finally == bobtxt);
 
 }
