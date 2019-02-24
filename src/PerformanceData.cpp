@@ -191,17 +191,17 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 //                            initResources(initRes);
 
                                     // choosing parameters
-                                    double tmp_min = 1;
-                                    auto par_c = {5,7,9,11,13,15,17,19,21,23,25};
-                                    for(auto c :par_c) {
-                                        double tmp  = log10(str_size) / log10(c);
-                                        if(tmp-floor(tmp)<tmp_min and tmp >3 and tmp < 10) {
-                                            tmp_min = tmp-floor(tmp);
-                                            lvl = floor(tmp)-1;
-                                            par = c;
-                                        }
-                                    }
-                                    cout<<par<<"and"<<lvl<<endl;
+//                                    double tmp_min = 1;
+//                                    auto par_c = {5,7,9,11,13,15,17,19,21,23,25};
+//                                    for(auto c :par_c) {
+//                                        double tmp  = log10(str_size) / log10(c);
+//                                        if(tmp-floor(tmp)<tmp_min and tmp >3 and tmp < 10) {
+//                                            tmp_min = tmp-floor(tmp);
+//                                            lvl = floor(tmp)-1;
+//                                            par = c;
+//                                        }
+//                                    }
+//                                    cout<<par<<"and"<<lvl<<endl;
 
                                     GenSync Alice = GenSync::Builder().
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).

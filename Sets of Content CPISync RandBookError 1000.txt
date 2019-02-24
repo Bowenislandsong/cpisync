@@ -1,0 +1,1 @@
+Sting Size|Edit Dist |Comm (bytes)|hash vec comm|Terminal comm|Actual Sym Diff|Time Tree(s)|Time Recon(s)|Time Backtrack (included in Time Recon) (s)|Str Recon True|Tree Heap SIze|High Water Heap|Rsync time|Rsync Comm

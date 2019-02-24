@@ -53,7 +53,7 @@ void SetsOfContentTest::testAll() {
 
     string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
     int partition =4;
-    int lvl =7;
+    int lvl =6;
     int space = 4;
     int shingleLen = 2;
 
@@ -77,7 +77,7 @@ void SetsOfContentTest::testAll() {
 //    string bobtxt = randStringEdit(alicetxt, 10);
 //    string bobtxt = randStringEdit((*atxt).to_string(),2e3);
 
-    string bobtxt = randStringEditBurst(alicetxt, 2e3,"./tests/SampleTxt.txt");
+    string bobtxt = randStringEditBurst(alicetxt, 1e3,"./tests/SampleTxt.txt");
     if(bobtxt.size()<pow(partition,lvl))
         bobtxt += randCharacters(pow(partition,lvl)-bobtxt.size());
 

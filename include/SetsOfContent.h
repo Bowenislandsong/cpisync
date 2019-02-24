@@ -241,20 +241,29 @@ static ZZ TtoZZ(T val) {
 }
 //// ---------------------------------- Fuzzy shingle trans
 
-static vector<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_size) {
+inline vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size) {
+    // relying on hashMap sorting (We expect HashMap arrange keys in an increasing order)
 
-    vector<size_t> mins; // min positions
+    // minimum partition distance
+    if (win_size < 1) {
+        cout
+                << "Content Partition window size is less than 1 and adjusted to 1. Consider adjusting number of partition levels"
+                << endl;
+        win_size = 1;
+    }
+
+    vector<size_t> mins;
     map<size_t, size_t> hash_occurr;
     for (size_t j = 0; j < 2 * win_size; ++j) {
         auto it = hash_occurr.find(hash_val[j]);
         if (it != hash_occurr.end())
             it->second++;
         else
-            hash_occurr[hash_val[j]] = 1;
+            hash_occurr.emplace(hash_val[j],1);
     }
 
     for (size_t i = win_size + 1; i < hash_val.size() - win_size + 1; ++i) {
-        if (hash_val[i - 1] <= hash_occurr.begin()->first and i - ((!mins.empty()) ? mins.back() : 0) > win_size)
+        if (hash_val[i - 1] <= hash_occurr.begin()->first and i - ((!mins.empty()) ? mins.back() : 0) > win_size) // this define partition rule to be min or equal instead of strictly less as local min
             mins.push_back(i - 1);
         auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
         if (it_prev != hash_occurr.end())
@@ -264,7 +273,7 @@ static vector<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_s
         if (it_pos != hash_occurr.end())
             it_pos->second++;
         else
-            hash_occurr[hash_val[i + win_size]] = 1;
+            hash_occurr.emplace(hash_val[i + win_size],1);
     }
     return mins;
 }
@@ -335,7 +344,6 @@ private:
      */
     vector<size_t> create_HashSet(string str, size_t win_size, size_t space = NOT_SET, size_t shingle_size = NOT_SET);
 
-    vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size);
 
     /**
      * Insert string into dictionary
