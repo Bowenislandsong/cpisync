@@ -18,7 +18,7 @@ void SetsOfContentTest::SelfUnitTest() {
 
 //    vector<size_t> tmp{298273671273648};
 //    auto t = recursion(tmp);
-    CPPUNIT_ASSERT(Shingle_A == ZZtoShingleHash(ShingleHashtoZZ(Shingle_A)));
+    CPPUNIT_ASSERT(Shingle_A == ZZtoShingleHash(TtoZZ(Shingle_A)));
 
 //
 //
