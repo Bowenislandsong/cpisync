@@ -33,7 +33,8 @@ GenSync::GenSync() = default;
 /**
  * Construct a specific GenSync object
  */
-GenSync::GenSync(const vector<shared_ptr<Communicant>> &cVec, const vector<shared_ptr<SyncMethod>> &mVec, const list<DataObject*> &data) {
+GenSync::GenSync(const vector<shared_ptr<Communicant>> &cVec, const vector<shared_ptr<SyncMethod>> &mVec,
+                 const list<DataObject *> &data) {
     myCommVec = cVec;
     mySyncVec = mVec;
     outFile = nullptr; // no output file is being used
@@ -43,7 +44,8 @@ GenSync::GenSync(const vector<shared_ptr<Communicant>> &cVec, const vector<share
         addElem(*itData);
 }
 
-GenSync::GenSync(const vector<shared_ptr<Communicant>> &cVec, const vector<shared_ptr<SyncMethod>> &mVec, string fileName) {
+GenSync::GenSync(const vector<shared_ptr<Communicant>> &cVec, const vector<shared_ptr<SyncMethod>> &mVec,
+                 string fileName) {
     myCommVec = cVec;
     mySyncVec = mVec;
     outFile = nullptr; // add elements without writing to the file at first
@@ -91,7 +93,7 @@ GenSync::~GenSync() {
 
 // listen, receive data and conduct synchronization
 
-bool GenSync::listenSync(int method_num,bool isRecon) {
+bool GenSync::listenSync(int method_num, bool isRecon) {
     Logger::gLog(Logger::METHOD, "Entering GenSync::listenSync");
     // find the right syncAgent
     auto syncAgent = mySyncVec.begin();
@@ -108,7 +110,7 @@ bool GenSync::listenSync(int method_num,bool isRecon) {
         selfMinusOther.clear();
         otherMinusSelf.clear();
         try {
-                syncSuccess &= (*syncAgent)->SyncServer(*itComm, selfMinusOther, otherMinusSelf);
+            syncSuccess &= (*syncAgent)->SyncServer(*itComm, selfMinusOther, otherMinusSelf);
 
         } catch (SyncFailureException s) {
             Logger::error_and_quit(s.what());
@@ -122,7 +124,7 @@ bool GenSync::listenSync(int method_num,bool isRecon) {
         }
 
         if (!isRecon) {
-        // newly added --- worked for general test
+            // newly added --- worked for general test
             delElemGroup(selfMinusOther);
         }
 //TODO: if not one way, enable this and set up a flag for one way , mind sync client or sync server
@@ -140,7 +142,7 @@ bool GenSync::listenSync(int method_num,bool isRecon) {
 }
 
 // request connection, send data and get the result
-bool GenSync::startSync(int method_num,bool isRecon) {
+bool GenSync::startSync(int method_num, bool isRecon) {
     Logger::gLog(Logger::METHOD, "Entering GenSync::startSync");
     // find the right syncAgent
     auto syncAgentIt = mySyncVec.begin();
@@ -157,9 +159,11 @@ bool GenSync::startSync(int method_num,bool isRecon) {
 
         // do the sync
         try {
-            if ((*syncAgentIt)->isStringReconMethod())
-                (*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf,CustomResult);
-            else {
+            if ((*syncAgentIt)->isStringReconMethod() and
+                !(*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf, CustomResult)){
+                Logger::gLog(Logger::METHOD, "Sync to " + (*itComm)->getName() + " failed!");
+                syncSuccess = false;
+            } else {
                 if (!(*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf)) {
                     Logger::gLog(Logger::METHOD, "Sync to " + (*itComm)->getName() + " failed!");
                     syncSuccess = false;
@@ -180,9 +184,10 @@ bool GenSync::startSync(int method_num,bool isRecon) {
         }
         if ((*syncAgentIt)->isStringReconMethod()) { // If it is string reconciliation
             clock_t time = clock();
-            syncSuccess = (*syncAgentIt)->reconstructString(
-                    myString, myData); // reconstruct the string based on the new information from set reconciliation
-            pushCustomResult("Str Reconstruction Time",(double) (clock() - time) / CLOCKS_PER_SEC);
+            if (!(*syncAgentIt)->reconstructString(
+                    myString,
+                    myData)) { syncSuccess = false; } // reconstruct the string based on the new information from set reconciliation
+            pushCustomResult("Str Reconstruction Time", (double) (clock() - time) / CLOCKS_PER_SEC);
         }
 
     }
@@ -194,7 +199,7 @@ bool GenSync::startSync(int method_num,bool isRecon) {
 
 // add element
 
-void GenSync::addElem(DataObject* newDatum) {
+void GenSync::addElem(DataObject *newDatum) {
     Logger::gLog(Logger::METHOD, "Entering GenSync::addElem");
     // store locally
     myData.push_back(newDatum);
@@ -225,7 +230,7 @@ bool GenSync::addStr(DataObject *newStr, bool backtrack) {
         vector<DataObject *> Elems;
         back_track_success = (*itAgt)->addStr(newStr, Elems, backtrack);
 //        if (Elems.empty()) return false;
-        for (DataObject * item : Elems) addElem(item);
+        for (DataObject *item : Elems) addElem(item);
     }
 
     // update file
@@ -241,7 +246,7 @@ void GenSync::delElemGroup(list<DataObject *> newDatumList) {
     // There are only 2 types, numbes of strings (check fact) handle both
     Logger::gLog(Logger::METHOD, "Entering GenSync::delElem");
 
-    std::map<ZZ,bool> delmap;
+    std::map<ZZ, bool> delmap;
     for (auto it : newDatumList) {
         delmap[it->to_ZZ()] = true;
     }
@@ -310,7 +315,7 @@ int GenSync::numComm() {
 void GenSync::addSyncAgt(shared_ptr<SyncMethod> newAgt, int index) {
     Logger::gLog(Logger::METHOD, "Entering GenSync::addSyncAgt");
     // create and populate the new agent
-    list<DataObject*>::iterator itData;
+    list<DataObject *>::iterator itData;
     for (itData = myData.begin(); itData != myData.end(); itData++)
         if (!newAgt->addElem(*itData))
             Logger::error_and_quit("Was not able to add an item to the next syncagent.");
@@ -341,11 +346,11 @@ const list<DataObject *> GenSync::dumpElements() {
     return myData;
 }
 
-const DataObject* GenSync::dumpString() {
+const DataObject *GenSync::dumpString() {
     return myString;
 }
 
-const void GenSync::pushCustomResult(string name, double res){
+const void GenSync::pushCustomResult(string name, double res) {
     CustomResult[name] = res;
 }
 
@@ -373,7 +378,7 @@ const double GenSync::getSyncTime(int commIndex) const {
     shared_ptr<Communicant> comm = myCommVec[commIndex];
 
     // true iff there has been a sync (since sync resets comm counters)
-    if(comm->getTotalTime() != comm->getResetTime()) {
+    if (comm->getTotalTime() != comm->getResetTime()) {
         return (double) (clock() - comm->getResetTime()) / CLOCKS_PER_SEC;
     } else {
         return (double) comm->getTotalTime() / CLOCKS_PER_SEC;
@@ -383,7 +388,7 @@ const double GenSync::getSyncTime(int commIndex) const {
 
 int GenSync::getPort(int commIndex) {
     // null iff comm isn't a CommSocket
-    if (auto cs = dynamic_cast<CommSocket*>(myCommVec[commIndex].get())) {
+    if (auto cs = dynamic_cast<CommSocket *>(myCommVec[commIndex].get())) {
         return cs->getPort();
     } else {
         return -1;
@@ -462,8 +467,8 @@ GenSync GenSync::Builder::build() {
         case StringSyncProtocol::kshinglingSync:
             myMeth = make_shared<kshinglingSync>(proto, shingleLen, stopWord);
             break;
-        case StringSyncProtocol ::SetsOfContent:
-            myMeth = make_shared<SetsOfContent>(TerminalStrSize,lvl,numParts,proto,shingleLen,baseSpace);
+        case StringSyncProtocol::SetsOfContent:
+            myMeth = make_shared<SetsOfContent>(TerminalStrSize, lvl, numParts, proto, shingleLen, baseSpace);
             break;
         default: // do nothing
             break;

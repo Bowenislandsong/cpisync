@@ -170,6 +170,11 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
         catag[1] = "Space";
         plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()) + "ED" +
                     to_string(edit_distRange.front()) + "TS", catag);
+    } else if (mode ==4){
+        catag[0] = "Str Size";
+        catag[1] = "lvl";
+        plot.create("Sets of Content " + protoName + " " + str_type + "ED " + to_string(edit_distRange.front()) + "P" +
+                            to_string(partitionRange.front()) + "SL", catag);
     }
 
     //TODO: Separate Comm, and Time, Separate Fail rate.
@@ -283,7 +288,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     cout << "We failed after " << last_passed_before_exception << endl;
                                     report_vec = {to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
-                                                  to_string(0), to_string(0), to_string(0), to_string(0),to_string(0)};
+                                                  to_string(0), to_string(0), to_string(0), to_string(0)};
 
                                 }
                                 if (mode == 1) {
@@ -298,6 +303,10 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                 } else if (mode == 3) {
                                     report_vec[0] = to_string(t);
                                     report_vec[1] = to_string(s);
+                                    plot.add(report_vec);
+                                } else if (mode == 4){
+                                    report_vec[0] = to_string(str_size);
+                                    report_vec[1] = to_string(lvl);
                                     plot.add(report_vec);
                                 }
                                 plot.update();

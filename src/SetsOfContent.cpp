@@ -190,7 +190,7 @@ void SetsOfContent::answer_queries(std::set<size_t> &theirQueries) {
                     term_concern[shingle.second] = Dictionary[shingle.second];
                 else {
                     vector<size_t> tmp_vec = Cyc_dict[shingle.second];
-                    cycle tmp = cycle{.head = tmp_vec.front(), .len = (unsigned int)tmp_vec.size(), .cyc=0};
+                    cycle tmp = cycle{.head = tmp_vec.front(), .len = (unsigned int) tmp_vec.size(), .cyc=0};
 
                     if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) {
                         continue;
@@ -588,8 +588,8 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
     if (myString.empty()) return false;
 
     if (myString.size() / pow(Partition, Levels) < 1)
-        throw invalid_argument(
-                "Terminal String size would end up less than 1, please consider lessen the levels or number of partitions");
+        cout << "Terminal String size could end up less than 1, limited at" + to_string(TermStrSize) +
+                ", please consider lessen the levels or number of partitions" << endl;
 
     if (Levels == NOT_SET) throw invalid_argument("Consider set a Level value bigger than 0");
 
@@ -708,7 +708,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
                 "Server: Fuzzy Order (Number of tree nodes) exceed UINT_MAX, CHANGE CODE to long or size_t"); // in our design, the tree size should not be that big
     for (auto fuzzy : fuzzy_lookup)
         fuzzyPts.push_back(new DataObject(
-                TtoZZ(fuzzyorder{.order = counter++, .mode =(sm_i) (fuzzy.first.duplicate ? 2 : (fuzzy.second.first >=
+                TtoZZ(fuzzyorder{.order = counter++, .mode =(sm_i) (fuzzy.first.mode==1 ? 2 : (fuzzy.second.first >=
                                                                                                  fuzzy.second.second))})));
 
     if (!setReconServer(commSync, mbar, sizeof(fuzzyorder), fuzzyPts, selfMinusOther, otherMinusSelf))
@@ -757,7 +757,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
 
 //    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
     for (auto groupcyc : cyc_concern) {
-        commSync->commSend(CycletoZZ(groupcyc.second), sizeof(cycle));
+        commSync->commSend(TtoZZ(groupcyc.second), sizeof(cycle));
     }
     for (auto dic : term_concern) {
         string tmp_str = Dictionary[dic.first];
@@ -811,8 +811,9 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     if (!setReconClient(commSync, mbar, sizeof(size_t), hashPointers, selfMinusOther, otherMinusSelf))
         success = false;
 
-    CustomResult["Partition Sym Diff"] = (selfMinusOther.size() + otherMinusSelf.size()); // recorder # symmetrical partition difference
-    CustomResult["Total Num Partitions"] = hashPointers.size()+myPartitions;
+    CustomResult["Partition Sym Diff"] = (selfMinusOther.size() +
+                                          otherMinusSelf.size()); // recorder # symmetrical partition difference
+    CustomResult["Total Num Partitions"] = hashPointers.size() + myPartitions;
 
     std::set<size_t> myQueries;
     for (DataObject *item : otherMinusSelf)
@@ -827,15 +828,21 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     for (auto pts : hashPointers) all_hashes.insert(ZZtoSize_t(pts->to_ZZ()));
     for (auto pt :setPointers) {
         fuzzy_shingle fshingle = ZZtoFuzzyShingle(pt->to_ZZ());
-
+if(fshingle.sum==0)cout<<"we have 0s"<<endl;
         auto it = fuzzy_lookup.find(fshingle);
         if (it != fuzzy_lookup.end()) {// locally available from fuzzy lookup table
-            fuzzy_map[fshingle] = FuzzyOrder({it->second.first, it->second.second}, 3, fshingle.duplicate);
+            fuzzy_map[fshingle] = FuzzyOrder({it->second.first, it->second.second}, 3, fshingle.mode ==1);
         } else {//else find its composition from all_hashes
+            if(fshingle.mode ==2) {
+                fuzzy_map[fshingle] = FuzzyOrder({fshingle.sum, fshingle.sum}, 3, false);
+                continue;
+            }
             for (size_t hash : all_hashes) {
+
                 auto tmp_it = all_hashes.find(fshingle.sum ^ hash);
                 if (tmp_it != all_hashes.end()) {
-                    fuzzy_map[fshingle] = FuzzyOrder({hash, (*tmp_it)}, 3, fshingle.duplicate);
+                    fuzzy_map[fshingle] = FuzzyOrder({hash, (*tmp_it)}, 3, fshingle.mode ==1);
+//                    cout<<"We found "<<hash<< " and "<<(*tmp_it)<< " for "<<fshingle.sum<<endl;
                     break;
                 }
             }

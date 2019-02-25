@@ -53,7 +53,7 @@ void SetsOfContentTest::testAll() {
 
     string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
     int partition =4;
-    int lvl =6;
+    int lvl =4;
     int space = 4;
     int shingleLen = 2;
 
@@ -65,7 +65,7 @@ void SetsOfContentTest::testAll() {
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
             setProtocol(GenSync::SyncProtocol::CPISync).
             setComm(GenSync::SyncComm::socket).
-            setTerminalStrSize(8).
+            setTerminalStrSize(10).
             setNumPartitions(partition).
             setShingleLen(shingleLen).
             setSpace(space).
@@ -87,7 +87,7 @@ void SetsOfContentTest::testAll() {
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
             setProtocol(GenSync::SyncProtocol::CPISync).
             setComm(GenSync::SyncComm::socket).
-            setTerminalStrSize(8).
+            setTerminalStrSize(10).
             setNumPartitions(partition).
             setShingleLen(shingleLen).
             setSpace(space).
@@ -135,5 +135,6 @@ void SetsOfContentTest::testAll() {
     delete btxt;
     delete atxt;
     CPPUNIT_ASSERT(finally == bobtxt);
+    CPPUNIT_ASSERT(report.success);
 
 }
