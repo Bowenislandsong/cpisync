@@ -708,8 +708,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
                 "Server: Fuzzy Order (Number of tree nodes) exceed UINT_MAX, CHANGE CODE to long or size_t"); // in our design, the tree size should not be that big
     for (auto fuzzy : fuzzy_lookup)
         fuzzyPts.push_back(new DataObject(
-                TtoZZ(fuzzyorder{.order = counter++, .mode =(sm_i) (fuzzy.first.mode==1 ? 2 : (fuzzy.second.first >=
-                                                                                                 fuzzy.second.second))})));
+                TtoZZ(fuzzyorder{.order = counter++, .mode =(sm_i)(fuzzy.first.duplicate==1 ? 2 : (fuzzy.second.first == std::min(fuzzy.second.first,fuzzy.second.second)?0:1))})));
 
     if (!setReconServer(commSync, mbar, sizeof(fuzzyorder), fuzzyPts, selfMinusOther, otherMinusSelf))
         success = false;
@@ -828,12 +827,12 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     for (auto pts : hashPointers) all_hashes.insert(ZZtoSize_t(pts->to_ZZ()));
     for (auto pt :setPointers) {
         fuzzy_shingle fshingle = ZZtoFuzzyShingle(pt->to_ZZ());
-if(fshingle.sum==0)cout<<"we have 0s"<<endl;
+
         auto it = fuzzy_lookup.find(fshingle);
         if (it != fuzzy_lookup.end()) {// locally available from fuzzy lookup table
-            fuzzy_map[fshingle] = FuzzyOrder({it->second.first, it->second.second}, 3, fshingle.mode ==1);
+            fuzzy_map[fshingle] = FuzzyOrder({it->second.first, it->second.second}, 3, fshingle.duplicate ==1);
         } else {//else find its composition from all_hashes
-            if(fshingle.mode ==2) {
+            if(fshingle.duplicate ==2) {
                 fuzzy_map[fshingle] = FuzzyOrder({fshingle.sum, fshingle.sum}, 3, false);
                 continue;
             }
@@ -841,7 +840,7 @@ if(fshingle.sum==0)cout<<"we have 0s"<<endl;
 
                 auto tmp_it = all_hashes.find(fshingle.sum ^ hash);
                 if (tmp_it != all_hashes.end()) {
-                    fuzzy_map[fshingle] = FuzzyOrder({hash, (*tmp_it)}, 3, fshingle.mode ==1);
+                    fuzzy_map[fshingle] = FuzzyOrder({hash, (*tmp_it)}, 3, fshingle.duplicate ==1);
 //                    cout<<"We found "<<hash<< " and "<<(*tmp_it)<< " for "<<fshingle.sum<<endl;
                     break;
                 }

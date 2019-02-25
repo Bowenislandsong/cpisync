@@ -1,1 +1,0 @@
-Sting Size|Edit Dist |Total Comm (bytes)|Literal comm|Partition Sym Diff|Total Num Partitions|Time Tree(s)|Time Recon(s)|Time Backtrack (included in Time Recon) (s)|Set Recon Success|Str Recon Success|Tree Heap SIze|High Water Heap|Rsync Comm

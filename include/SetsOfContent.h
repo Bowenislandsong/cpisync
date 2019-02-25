@@ -112,16 +112,16 @@ static ostream &operator<<(ostream &os, const shingle_hash shingle) {
 // we transmit these shingles
 struct fuzzy_shingle {
     size_t sum;
-    sm_i lvl, occurr, mode;
-}; // mode 0: no duplicate, mode 1: Duplicated, mode 2: same shingle, sum =0
+    sm_i lvl, occurr, duplicate;
+}; // duplicate 0: no duplicate, duplicate 1: Duplicated, duplicate 2: same shingle -> sum =0
 
 // xor first and second may cause duplicated shingles, we register their duplications
 static fuzzy_shingle shingle2fuzz(shingle_hash shingle, sm_i dup = 0) {
     if (shingle.first == shingle.second)
-        return (fuzzy_shingle{.sum = shingle.first, .lvl=shingle.lvl, .occurr=(sm_i) shingle.occurr, .mode = 2});
+        return (fuzzy_shingle{.sum = shingle.first, .lvl=shingle.lvl, .occurr=(sm_i) shingle.occurr, .duplicate = 2});
     else
         return (fuzzy_shingle{.sum = shingle.first ^
-                                     shingle.second, .lvl=shingle.lvl, .occurr=(sm_i) shingle.occurr, .mode = dup});
+                                     shingle.second, .lvl=shingle.lvl, .occurr=(sm_i) shingle.occurr, .duplicate = dup});
 };
 
 static fuzzy_shingle ZZtoFuzzyShingle(const ZZ &zz) {
@@ -139,13 +139,13 @@ static bool operator<(const fuzzy_shingle &a, const fuzzy_shingle &b) {
     return (a.sum < b.sum) or
            (a.sum == b.sum and a.lvl < b.lvl) or
            (a.sum == b.sum and a.lvl == b.lvl and a.occurr < b.occurr) or
-           (a.sum == b.sum and a.lvl == b.lvl and a.occurr < b.occurr and a.mode < b.mode);
+           (a.sum == b.sum and a.lvl == b.lvl and a.occurr < b.occurr and a.duplicate < b.duplicate);
 };
 
 
 //Compare and help differentiate struct shingle_hash
 static bool operator==(const fuzzy_shingle &a, const fuzzy_shingle &b) {
-    return a.sum == b.sum and a.mode == b.mode and a.occurr == b.occurr and a.lvl == b.lvl;
+    return a.sum == b.sum and a.duplicate == b.duplicate and a.occurr == b.occurr and a.lvl == b.lvl;
 };
 
 static bool operator!=(const fuzzy_shingle &a, const fuzzy_shingle &b) {
@@ -159,9 +159,9 @@ static size_t ZZtoSize_t(const ZZ &zz) {
 }
 
 static pair<vector<size_t>, sm_i> FuzzyOrder(vector<size_t> hashes, sm_i mode, bool duplicate) {
-    // mode 0: Small First
+    // mode 0: Small First (or first and second are same)
     // mode 1: Small Second
-    // mode 2: Duplicated
+    // mode 2: Duplicated (diff first and second)
     // mode 3: Define based on input
     if (hashes.size() != 2) throw invalid_argument("We expect 2 hashes in Fuzzy Order");
     if (mode > 3)
@@ -212,6 +212,9 @@ struct fuzzyorder {
     unsigned int order; // lexicographic order of xor sum
     sm_i mode;
 };
+// mode 0: Small First
+// mode 1: Small Second
+// mode 2: Duplicated (diff first and second)
 
 static fuzzyorder ZZtoFuzzyorder(const ZZ &zz) {
     fuzzyorder val;
@@ -423,8 +426,8 @@ private:
                     fuzzy_lookup[shingle2fuzz(item)] = item;
                 } else {
                     res.insert(FuzzyShingletoZZ(shingle2fuzz(item, 1)));
+                    fuzzy_lookup[shingle2fuzz(item, 1)] = item;
                     fuzzy_lookup.erase(shingle2fuzz(item));
-                    fuzzy_lookup[shingle2fuzz(item, 0)] = item;
                     res.erase(it);
                 }
             }

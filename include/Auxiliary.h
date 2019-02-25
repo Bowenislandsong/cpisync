@@ -490,12 +490,10 @@ inline string subprocess_commandline(const char *command) {
 
 struct rsync_stats {
     size_t xmit, recv;
-    double time;
 };
 
 inline ostream &operator<<(ostream &os, const rsync_stats &stats) {
-    os << "xmit: " + to_string(stats.xmit) + ", recv: " + to_string(stats.recv) + ", time: " +
-          to_string(stats.time);
+    os << "xmit: " + to_string(stats.xmit) + ", recv: " + to_string(stats.recv);
     return os;
 };
 
@@ -522,8 +520,8 @@ inline rsync_stats getRsyncStats(string origin, string target, bool full_report 
 
     string res = subprocess_commandline(("rsync --checksum --no-whole-file --progress --stats " + origin + " " +
                                          target).c_str());  // -a archive -z compress -v for verbose
-    stats.time = stod(extractStringIn(res, "File list generation time: ", "seconds"));
-    stats.time += stod(extractStringIn(res, "File list transfer time: ", "seconds"));
+//    stats.time = stod(extractStringIn(res, "File list generation time: ", "seconds"));
+//    stats.time += stod(extractStringIn(res, "File list transfer time: ", "seconds"));
     stats.xmit = stoll(extractStringIn(res, "Total bytes sent: ", "\n"));
     stats.recv = stoll(extractStringIn(res, "Total bytes received: ", "\n"));
     if (full_report)
