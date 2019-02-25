@@ -588,8 +588,8 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
     if (myString.empty()) return false;
 
     if (myString.size() / pow(Partition, Levels) < 1)
-        cout << "Terminal String size could end up less than 1, limited at" + to_string(TermStrSize) +
-                ", please consider lessen the levels or number of partitions" << endl;
+        invalid_argument( "Terminal String size could end up less than 1, limited at" + to_string(TermStrSize) +
+                ", please consider lessen the levels or number of partitions");
 
     if (Levels == NOT_SET) throw invalid_argument("Consider set a Level value bigger than 0");
 
