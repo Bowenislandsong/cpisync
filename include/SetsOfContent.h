@@ -456,7 +456,7 @@ private:
                         list<DataObject *> &otherMinusSelf) {
         selfMinusOther.clear();
         otherMinusSelf.clear();
-        cout << "Client Size: " << full_set.size();
+//        cout << "Client Size: " << full_set.size();
         shared_ptr<SyncMethod> setHost;
         SyncMethod::SyncClient(commSync, selfMinusOther, otherMinusSelf);
         configure(setHost, mbar, elem_size);
@@ -469,8 +469,8 @@ private:
         for (auto item : otherMinusSelf)
             full_set.push_back(item);
 
-        cout << " with sym Diff: " << selfMinusOther.size() + otherMinusSelf.size() << " After Sync at : "
-             << full_set.size() << endl;
+//        cout << " with sym Diff: " << selfMinusOther.size() + otherMinusSelf.size() << " After Sync at : "
+//             << full_set.size() << endl;
 
         return success;
     };
@@ -480,7 +480,7 @@ private:
                         list<DataObject *> &otherMinusSelf) {
         selfMinusOther.clear();
         otherMinusSelf.clear();
-        cout << "Server Size: " << full_set.size();
+//        cout << "Server Size: " << full_set.size();
         shared_ptr<SyncMethod> setHost;
         SyncMethod::SyncServer(commSync, selfMinusOther, otherMinusSelf);
         configure(setHost, mbar, elem_size);
@@ -493,8 +493,8 @@ private:
         for (auto item : otherMinusSelf)
             full_set.push_back(item);
 
-        cout << " with sym Diff: " << selfMinusOther.size() + otherMinusSelf.size() << " After Sync at : "
-             << full_set.size() << endl;
+//        cout << " with sym Diff: " << selfMinusOther.size() + otherMinusSelf.size() << " After Sync at : "
+//             << full_set.size() << endl;
 
         return success;
     };
