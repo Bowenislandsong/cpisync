@@ -158,8 +158,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (mode == 1) {
         catag[0] = "Sting Size";
         catag[1] = "Edit Dist ";
-        plot.create("Sets of Content " + protoName + " " + str_type + "P" + to_string(partitionRange.front()) + "L" +
-                    to_string(levelRange.front()), catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "P" + to_string(partitionRange.front())+"CL", catag);
     } else if (mode == 2) {
         catag[0] = "Level";
         catag[1] = "Partition";
@@ -178,7 +177,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     }
 
     //TODO: Separate Comm, and Time, Separate Fail rate.
-    for (int str_size : str_sizeRange) {
+    for (int i = 0; i<str_sizeRange.size(); ++i) {
 //        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;
         for (int edit_dist : edit_distRange) {
 
@@ -197,7 +196,10 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     Resources initRes;
 //                            initResources(initRes);
-
+                                    if(mode==1){
+                                        if (levelRange.size() != str_sizeRange.size()) throw invalid_argument("In mode 1, String size range and lvl range should have the same size");
+                                        lvl = levelRange[i];
+                                    }
 
                                     GenSync Alice = GenSync::Builder().
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -214,7 +216,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     last_passed_before_exception = "Alice GenSync"; // success Tag
 
 
-                                    DataObject *Alicetxt = new DataObject(stringInput(str_size, src));
+                                    DataObject *Alicetxt = new DataObject(stringInput(str_sizeRange[i], src));
 
                                     last_passed_before_exception = "Alice Create String"; // success Tag
 
@@ -250,17 +252,17 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     last_passed_before_exception = "Bob Add String"; // success Tag
 
-                                    forkHandleReport report = forkHandle(Alice, Bob, false);
+                                    forkHandleReport report = forkHandle(Alice, Bob);
 
                                     last_passed_before_exception = "String Recon"; // success Tag
 
                                     bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
                                     // rsync recon
-                                    writeStrToFile("Alice.txt", Alicetxt->to_string());
-                                    writeStrToFile("Bob.txt", Bobtxt->to_string());
+                                    writeStrToFile("Alicecopy.txt", Alicetxt->to_string());
+                                    writeStrToFile("Bobcopy.txt", Bobtxt->to_string());
 
-                                    auto r_res = getRsyncStats("Alice.txt", "Bob.txt");
+                                    auto r_res = getRsyncStats("Alicecopy.txt", "Bobcopy.txt");
 
 
                                     if (!success_StrRecon) // success Tag
@@ -292,7 +294,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                 }
                                 if (mode == 1) {
-                                    report_vec[0] = to_string(str_size);
+                                    report_vec[0] = to_string(str_sizeRange[i]);
 //                                    report_vec[1] = to_string((double) 1 / edit_dist);
                                     report_vec[1] = to_string(edit_dist);
                                     plot.add(report_vec);
@@ -305,7 +307,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     report_vec[1] = to_string(s);
                                     plot.add(report_vec);
                                 } else if (mode == 4){
-                                    report_vec[0] = to_string(str_size);
+                                    report_vec[0] = to_string(str_sizeRange[i]);
                                     report_vec[1] = to_string(lvl);
                                     plot.add(report_vec);
                                 }
@@ -316,7 +318,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                     }
                 }
-            }
+                if(mode == 1) break;}
         }
     }
 
