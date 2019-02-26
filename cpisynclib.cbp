@@ -44,7 +44,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/lib/libntl.dylib/../include"/>
+					<Add directory="/usr/local/lib/libntl.dylib/../../include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/tests"/>
 				</Compiler>
@@ -62,7 +62,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/lib/libntl.dylib/../include"/>
+					<Add directory="/usr/local/lib/libntl.dylib/../../include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/tests"/>
 				</Compiler>
@@ -80,7 +80,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/lib/libntl.dylib/../include"/>
+					<Add directory="/usr/local/lib/libntl.dylib/../../include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/tests"/>
 				</Compiler>
@@ -98,7 +98,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/lib/libntl.dylib/../include"/>
+					<Add directory="/usr/local/lib/libntl.dylib/../../include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/tests"/>
 				</Compiler>
@@ -116,7 +116,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/lib/libntl.dylib/../include"/>
+					<Add directory="/usr/local/lib/libntl.dylib/../../include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/tests"/>
 				</Compiler>
@@ -134,7 +134,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/lib/libntl.dylib/../include"/>
+					<Add directory="/usr/local/lib/libntl.dylib/../../include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/tests"/>
 				</Compiler>
@@ -152,7 +152,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/lib/libntl.dylib/../include"/>
+					<Add directory="/usr/local/lib/libntl.dylib/../../include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/tests"/>
 				</Compiler>
@@ -170,7 +170,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/lib/libntl.dylib/../include"/>
+					<Add directory="/usr/local/lib/libntl.dylib/../../include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/include"/>
 					<Add directory="/Users/bowen/Documents/cpisync/tests"/>
 				</Compiler>

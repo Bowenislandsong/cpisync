@@ -29,7 +29,7 @@ if(NOT NTL_LIB)
     message(FATAL_ERROR "CAN NOT FIND ntl")
 endif()
 
-include_directories(${NTL_LIB}/../include)
+include_directories(${NTL_LIB}/../../include)
 find_library(GMP_LIB gmp)
 if(NOT GMP_LIB)
     message(FATAL_ERROR "CAN NOT FIND gmp")
