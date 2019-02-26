@@ -255,8 +255,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="433">
-              <caret line="31" column="36" selection-start-line="31" selection-start-column="36" selection-end-line="31" selection-end-column="36" />
+            <state relative-caret-position="64">
+              <caret line="37" column="14" selection-start-line="37" selection-start-column="7" selection-end-line="37" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -615,12 +615,12 @@
       <workItem from="1551116851515" duration="14000" />
       <workItem from="1551116868778" duration="1723000" />
       <workItem from="1551121320318" duration="3861000" />
-      <workItem from="1551197446846" duration="2226000" />
+      <workItem from="1551197446846" duration="2931000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1231717000" />
+    <option name="totallyTimeSpent" value="1232422000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -640,7 +640,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32771084" />
-      <window_info active="true" anchor="bottom" x="902" y="407" width="1375" height="861" id="Run" order="2" sideWeight="0.49945176" visible="true" weight="0.2751825" />
+      <window_info anchor="bottom" x="902" y="407" width="1375" height="861" id="Run" order="2" sideWeight="0.49945176" weight="0.2751825" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="5" weight="0.32891566" />
@@ -1004,8 +1004,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="31" column="36" selection-start-line="31" selection-start-column="36" selection-end-line="31" selection-end-column="36" />
+        <state relative-caret-position="64">
+          <caret line="37" column="14" selection-start-line="37" selection-start-column="7" selection-end-line="37" selection-end-column="14" />
         </state>
       </provider>
     </entry>
