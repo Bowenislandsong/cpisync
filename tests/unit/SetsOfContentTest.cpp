@@ -70,7 +70,7 @@ void SetsOfContentTest::testAll() {
             setShingleLen(shingleLen).
             setSpace(space).
             setlvl(lvl).
-            setPort(8003).
+            setPort(8001).
             build();
 
 
@@ -92,7 +92,7 @@ void SetsOfContentTest::testAll() {
             setShingleLen(shingleLen).
             setSpace(space).
             setlvl(lvl).
-            setPort(8003).
+            setPort(8001).
             build();
 
     Bob.addStr(btxt, false);

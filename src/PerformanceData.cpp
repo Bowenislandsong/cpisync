@@ -331,10 +331,7 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
     PlotRegister plot;
     plot.create("Strata Est", {"Set Size", "Set Diff", "Est"});
 
-//#if __APPLE__
-//    confidence /=omp_get_max_threads();
-//#pragma omp parallel num_threads(omp_get_max_threads())
-//#endif
+
     for (int set_size = set_sizeRange.first; set_size <= set_sizeRange.second; set_size += set_sizeinterval) {
         (set_size < set_sizeRange.first + (set_sizeRange.second - set_sizeRange.first) / 2) ? confidence
                                                                                             : confidence = 5;
@@ -348,16 +345,12 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
 //            if (set_size>set_sizeRange.second/2)confidence = 100;
 //            printMemUsage();
             //printMemUsage();
-//#if __APPLE__
-//#pragma omp critical
-//#endif
+
             for (int conf = 0; conf < confidence; ++conf) {
 
                 StrataEst Alice = StrataEst(sizeof(DataObject));
                 StrataEst Bob = StrataEst(sizeof(DataObject));
-//#if __APPLE__
-//#pragma omp parallel firstprivate(Alice,Bob)
-//#endif
+
                 for (int j = 0; j < set_size; ++j) {
                     auto tmp = randZZ();
                     if (j < set_size - ceil(set_diff / 2)) Alice.insert(new DataObject(tmp));
@@ -369,9 +362,7 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
             //printMemUsage();
 
         }
-//#if __APPLE__
-//#pragma omp critical
-//#endif
+
         plot.update();
     }
 }

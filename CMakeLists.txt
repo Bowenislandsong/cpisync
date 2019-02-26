@@ -2,59 +2,9 @@ cmake_minimum_required(VERSION 3.6)
 project(cpisynclib)
 set(CMAKE_CXX_STANDARD 11)
 
-
-# Parallel Programming OMP for MAC
-if (APPLE)
-    find_library(LLVM_LIB llvm)
-#    if (NOT LLVM_LIB)
-#        message(FATAL_ERROR "brew install llvm 7.0.0 or change directory in the folowing sets")
-#    endif()
-    # rest of the OMP solution found on https://stackoverflow.com/questions/46414660/macos-cmake-and-openmp
-
-    set(CMAKE_C_COMPILER "/usr/local/Cellar/llvm/7.0.0/bin/clang")
-    set(CMAKE_CXX_COMPILER "/usr/local/Cellar/llvm/7.0.0/bin/clang++")
-    set(OPENMP_LIBRARIES "/usr/local/Cellar/llvm/7.0.0/lib")
-    set(OPENMP_INCLUDES "/usr/local/Cellar/llvm/7.0.0/include")
-
-    OPTION (USE_OpenMP "Use OpenMP to enamble <omp.h>" ON)
-
-    # Find OpenMP
-    if(USE_OpenMP)
-        if(CMAKE_C_COMPILER_ID MATCHES "Clang")
-            set(OpenMP_C "${CMAKE_C_COMPILER}")
-            set(OpenMP_C_FLAGS "-fopenmp=libomp -Wno-unused-command-line-argument")
-            set(OpenMP_C_LIB_NAMES "libomp" "libgomp" "libiomp5")
-            set(OpenMP_libomp_LIBRARY ${OpenMP_C_LIB_NAMES})
-            set(OpenMP_libgomp_LIBRARY ${OpenMP_C_LIB_NAMES})
-            set(OpenMP_libiomp5_LIBRARY ${OpenMP_C_LIB_NAMES})
-        endif()
-        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            set(OpenMP_CXX "${CMAKE_CXX_COMPILER}")
-            set(OpenMP_CXX_FLAGS "-fopenmp=libomp -Wno-unused-command-line-argument")
-            set(OpenMP_CXX_LIB_NAMES "libomp" "libgomp" "libiomp5")
-            set(OpenMP_libomp_LIBRARY ${OpenMP_CXX_LIB_NAMES})
-            set(OpenMP_libgomp_LIBRARY ${OpenMP_CXX_LIB_NAMES})
-            set(OpenMP_libiomp5_LIBRARY ${OpenMP_CXX_LIB_NAMES})
-        endif()
-    endif()
-
-    if(USE_OpenMP)
-        find_package(OpenMP REQUIRED)
-    endif(USE_OpenMP)
-
-    if (OPENMP_FOUND)
-        include_directories("${OPENMP_INCLUDES}")
-        link_directories("${OPENMP_LIBRARIES}")
-        set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-        # set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-    endif(OPENMP_FOUND)
-
-endif(APPLE)
-
 # some flags
 if(APPLE)
-set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -fopenmp -ltcmalloc")
+set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -ltcmalloc")
 else()
 set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -lntl")
 endif(APPLE)
@@ -72,10 +22,14 @@ set(PERF_DIR ${TEST_DIR}/perf)
 # Set location of the test runner
 set(TEST_RUNNER ${TEST_DIR}/testRunner.cpp)
 
+
+
 find_library(NTL_LIB ntl)
 if(NOT NTL_LIB)
     message(FATAL_ERROR "CAN NOT FIND ntl")
 endif()
+
+include_directories(${NTL_LIB}/../include)
 find_library(GMP_LIB gmp)
 if(NOT GMP_LIB)
     message(FATAL_ERROR "CAN NOT FIND gmp")
@@ -121,19 +75,7 @@ include_directories(tests)
 
 # Add libs and executables
 add_library(cpisynclib ${SOURCE_FILES})
-#
-#if(UNIX AND NOT APPLE) # if linux without sudo previleges or centos gird where ntl is not installed
-#    message("Link to ntl libraries")
-##    add_library(ntl STATIC IMPORTED)
-##    set_property(TARGET ntl PROPERTY IMPORTED_LOCATION ${install_dir}/lib/libntl.a)
-##    add_dependencies(ntl project_ntl)
-##    include_directories(${install_dir}/include/)
-##    target_link_libraries(cpisynclib ntl)
-#    include_directories("${CMAKE_BINARY_DIR}/libs/NTL/src/")
-#    link_directories()
-#target_link_libraries(cpisynclib ${CMAKE_BINARY_DIR}/libs/NTL/src/ntl.a)
-#
-#endif()
+
 
 # Define a macro for adding executables testing multiple files
 # @param dir The relative path to the folder containing test files to add

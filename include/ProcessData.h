@@ -7,7 +7,7 @@
 
 #if __APPLE__
 #include<mach/mach.h>
-
+#include <iomanip>
 #include <mach/vm_statistics.h>
 #include <mach/mach_types.h>
 #include <mach/mach_init.h>
