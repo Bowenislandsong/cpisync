@@ -22,7 +22,6 @@ set(PERF_DIR ${TEST_DIR}/perf)
 # Set location of the test runner
 set(TEST_RUNNER ${TEST_DIR}/testRunner.cpp)
 
-#ln -s ${HOME}/ntl/lib/libntl.so (if -lntl is not found, create symbolic link)
 
 find_library(NTL_LIB ntl)
 if(NOT NTL_LIB)

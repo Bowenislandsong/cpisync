@@ -26,6 +26,7 @@
       <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookP3CL.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookP3CL.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/SetsOfContent.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/SetsOfContent.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SetsOfContent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/SetsOfContent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
@@ -195,8 +196,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="453">
-              <caret line="233" selection-start-line="233" selection-end-line="235" selection-end-column="39" />
+            <state relative-caret-position="238">
+              <caret line="243" column="2" selection-start-line="243" selection-start-column="2" selection-end-line="243" selection-end-column="2" />
             </state>
           </provider>
         </entry>
@@ -270,8 +271,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>fuzzy_map</find>
-      <find>counter</find>
       <find>delGroup</find>
       <find>e failed to delete some set elements</find>
       <find>bytesTot</find>
@@ -300,6 +299,8 @@
       <find>initResources</find>
       <find>SIZE_T_MAX</find>
       <find>gperf</find>
+      <find>resource</find>
+      <find>resourceReport</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -611,12 +612,12 @@
       <workItem from="1551116851515" duration="14000" />
       <workItem from="1551116868778" duration="1723000" />
       <workItem from="1551121320318" duration="3861000" />
-      <workItem from="1551197446846" duration="6351000" />
+      <workItem from="1551197446846" duration="6534000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1235842000" />
+    <option name="totallyTimeSpent" value="1236025000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1004,8 +1005,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="233" selection-start-line="233" selection-end-line="235" selection-end-column="39" />
+        <state relative-caret-position="238">
+          <caret line="243" column="2" selection-start-line="243" selection-start-column="2" selection-end-line="243" selection-end-column="2" />
         </state>
       </provider>
     </entry>
