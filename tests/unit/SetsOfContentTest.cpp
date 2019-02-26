@@ -7,7 +7,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 void SetsOfContentTest::SelfUnitTest() {
 //
 
-    shingle_hash Shingle_A{.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3};
+    shingle_hash Shingle_A({.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3});
 //    shingle_hash Shingle_B{.first = {298273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
 //
 //    shingle_hash Shingle_C{.first = {198273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
