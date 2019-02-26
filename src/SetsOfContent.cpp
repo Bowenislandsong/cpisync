@@ -514,7 +514,7 @@ bool SetsOfContent::shingle2hash_train(cycle &cyc_info, const std::set<shingle_h
                 cyc_info.cyc = strCollect_size;
                 final_str = str;
                 auto old_mem = initRes.VmemUsed;
-                resourceMonitor(initRes, 300, SIZE_T_MAX);
+//                resourceMonitor(initRes, 300, SIZE_T_MAX);
                 (old_mem < initRes.VmemUsed) ? highwater = initRes.VmemUsed : highwater = old_mem;
             }
         }

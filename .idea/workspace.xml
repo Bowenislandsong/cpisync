@@ -18,7 +18,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/include/SetsOfContent.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/SetsOfContent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SetsOfContent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/SetsOfContent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
@@ -127,7 +128,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="9887" />
+          <entry key="cpp" value="9890" />
           <entry key="h" value="3721" />
           <entry key="txt" value="33" />
         </counts>
@@ -136,7 +137,7 @@
         <counts>
           <entry key="CMakeLists.txt" value="33" />
           <entry key="Doxygen file" value="2" />
-          <entry key="ObjectiveC" value="13606" />
+          <entry key="ObjectiveC" value="13609" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -164,11 +165,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="428">
-              <caret line="206" column="10" lean-forward="true" selection-start-line="206" selection-start-column="10" selection-end-line="206" selection-end-column="10" />
+            <state relative-caret-position="561">
+              <caret line="213" column="2" selection-start-line="213" selection-start-column="2" selection-end-line="213" selection-end-column="2" />
               <folding>
                 <element signature="e#116#133#0" expanded="true" />
               </folding>
@@ -239,11 +240,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="107" selection-start-line="9" selection-start-column="107" selection-end-line="9" selection-end-column="107" />
+            <state relative-caret-position="589">
+              <caret line="31" column="47" lean-forward="true" selection-start-line="31" selection-start-column="47" selection-end-line="31" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -252,8 +253,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>queries</find>
-      <find>prepare_querys</find>
       <find>TtoZZ</find>
       <find>fuzzy_map</find>
       <find>counter</find>
@@ -282,6 +281,8 @@
       <find>stod</find>
       <find>adds</find>
       <find>omp</find>
+      <find>initResources</find>
+      <find>SIZE_T_MAX</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -342,8 +343,8 @@
         <option value="$PROJECT_DIR$/include/PerformanceData.h" />
         <option value="$PROJECT_DIR$/include/ProcessData.h" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" />
         <option value="$PROJECT_DIR$/include/SetsOfContent.h" />
+        <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" />
       </list>
     </option>
   </component>
@@ -593,12 +594,12 @@
       <workItem from="1551116851515" duration="14000" />
       <workItem from="1551116868778" duration="1723000" />
       <workItem from="1551121320318" duration="3861000" />
-      <workItem from="1551197446846" duration="4954000" />
+      <workItem from="1551197446846" duration="5197000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1234445000" />
+    <option name="totallyTimeSpent" value="1234688000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -972,20 +973,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="107" selection-start-line="9" selection-start-column="107" selection-end-line="9" selection-end-column="107" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="206" column="10" lean-forward="true" selection-start-line="206" selection-start-column="10" selection-end-line="206" selection-end-column="10" />
+        <state relative-caret-position="561">
+          <caret line="213" column="2" selection-start-line="213" selection-start-column="2" selection-end-line="213" selection-end-column="2" />
           <folding>
             <element signature="e#116#133#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="589">
+          <caret line="31" column="47" lean-forward="true" selection-start-line="31" selection-start-column="47" selection-end-line="31" selection-end-column="47" />
         </state>
       </provider>
     </entry>
