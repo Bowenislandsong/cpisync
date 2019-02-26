@@ -203,7 +203,7 @@ static vector<shingle_hash> FuzzyOrderAssign(pair<fuzzy_shingle, pair<vector<siz
 //                shingle_hash({.lvl = shingle.first.lvl, .occurr = shingle.first.occurr, .first = std::max(
 //                        shingle.second.first[0], shingle.second.first[1]), .second = std::min(shingle.second.first[0],
 //                                                                                              shingle.second.first[1])})});
-    else
+//    else
         throw invalid_argument("Fuzzy order asssign should not be more than 2. current mode: " +
                                to_string(shingle.second.second));
 }

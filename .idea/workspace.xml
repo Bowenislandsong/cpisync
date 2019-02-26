@@ -18,10 +18,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Alicecopy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alicecopy.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bobcopy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bobcopy.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resource Monitor.0001.heap" beforeDir="false" afterPath="$PROJECT_DIR$/Resource Monitor.0001.heap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookP3CL.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookP3CL.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/SetsOfContent.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/SetsOfContent.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -132,7 +128,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="cpp" value="9887" />
-          <entry key="h" value="3719" />
+          <entry key="h" value="3721" />
           <entry key="txt" value="33" />
         </counts>
       </usages-collector>
@@ -140,7 +136,7 @@
         <counts>
           <entry key="CMakeLists.txt" value="33" />
           <entry key="Doxygen file" value="2" />
-          <entry key="ObjectiveC" value="13604" />
+          <entry key="ObjectiveC" value="13606" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -171,8 +167,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
-              <caret line="191" column="50" selection-start-line="191" selection-start-column="50" selection-end-line="191" selection-end-column="50" />
+            <state relative-caret-position="428">
+              <caret line="206" column="10" lean-forward="true" selection-start-line="206" selection-start-column="10" selection-end-line="206" selection-end-column="10" />
               <folding>
                 <element signature="e#116#133#0" expanded="true" />
               </folding>
@@ -597,12 +593,12 @@
       <workItem from="1551116851515" duration="14000" />
       <workItem from="1551116868778" duration="1723000" />
       <workItem from="1551121320318" duration="3861000" />
-      <workItem from="1551197446846" duration="4816000" />
+      <workItem from="1551197446846" duration="4954000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1234307000" />
+    <option name="totallyTimeSpent" value="1234445000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -985,8 +981,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="191" column="50" selection-start-line="191" selection-start-column="50" selection-end-line="191" selection-end-column="50" />
+        <state relative-caret-position="428">
+          <caret line="206" column="10" lean-forward="true" selection-start-line="206" selection-start-column="10" selection-end-line="206" selection-end-column="10" />
           <folding>
             <element signature="e#116#133#0" expanded="true" />
           </folding>
