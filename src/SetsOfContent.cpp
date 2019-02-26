@@ -231,9 +231,9 @@ void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level)
         if (item->second > USHRT_MAX)
             Logger::error_and_quit(
                     "Shingle occurrance is larger than USHRT_MAX, (backtracking could be infeasiable and our shingle_hash carrier is overflown)");
-//        myTree[level].insert(
-//                shingle_hash{.first = item->first.first, .second = item->first.second, .occurr = (sm_i) item->second,
-//                        .lvl = level});
+        myTree[level].insert(
+                shingle_hash{.first = item->first.first, .second = item->first.second, .occurr = (sm_i) item->second,
+                        .lvl = level});
     }
 
 }
