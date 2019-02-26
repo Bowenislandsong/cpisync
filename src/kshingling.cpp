@@ -119,7 +119,7 @@ bool K_Shingle::shingle2string(vector<pair<string,idx_t>> changed_shingleOccur, 
  * stateStack: [[occr of shingles ];[];...] Register the state of shigle set occurrences
  */
     vector<vector<idx_t>> nxtEdgeStack, stateStack; // check and can not be negative
-    initResources(initRes); // initiate Recourses tracking
+    //initResources(initRes); // initiate Recourses tracking
 
     vector<idx_t> origiState(changed_shingleOccur.size()); // compose the original state
     for (idx_t i = 0; i < changed_shingleOccur.size(); ++i) {

@@ -49,7 +49,7 @@ void SetsOfContentTest::SelfUnitTest() {
 void SetsOfContentTest::testAll() {
 
     Resources initRes;
-//    initResources(initRes);
+    initResources(initRes);
 
     string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
     int partition =4;
