@@ -190,24 +190,32 @@ static pair<vector<size_t>, sm_i> FuzzyOrder(vector<size_t> hashes, sm_i mode, b
 static vector<shingle_hash> FuzzyOrderAssign(pair<fuzzy_shingle, pair<vector<size_t>, sm_i>> shingle) {
     if (shingle.second.second == 0)
         return vector<shingle_hash>{
-                shingle_hash{.lvl = shingle.first.lvl, .occurr = shingle.first.occurr, .first = std::min(
-                        shingle.second.first[0], shingle.second.first[1]), .second = std::max(shingle.second.first[0],
-                                                                                              shingle.second.first[1])}};
+                shingle_hash({lvl : shingle.first.lvl,
+                                     occurr : shingle.first.occurr,
+                                     first : std::min(shingle.second.first[0], shingle.second.first[1]),
+                                     second : std::max(shingle.second.first[0], shingle.second.first[1])})};
+
     else if (shingle.second.second == 1)
         return vector<shingle_hash>{
-                shingle_hash{.lvl = shingle.first.lvl, .occurr = shingle.first.occurr, .first = std::max(
-                        shingle.second.first[0], shingle.second.first[1]), .second = std::min(shingle.second.first[0],
-                                                                                              shingle.second.first[1])}};
-    else if (shingle.second.second == 2) {
-        auto a = shingle_hash{.lvl = shingle.first.lvl, .occurr = shingle.first.occurr, .first = std::min(
-                shingle.second.first[0], shingle.second.first[1]), .second = std::max(shingle.second.first[0],
-                                                                                      shingle.second.first[1])};
-        auto b = shingle_hash{.lvl = shingle.first.lvl, .occurr = shingle.first.occurr, .first = std::max(
-                shingle.second.first[0], shingle.second.first[1]), .second = std::min(
-                shingle.second.first[0],
-                shingle.second.first[1])};
-        return vector<shingle_hash>{a, b};
-    } else
+                shingle_hash({lvl : shingle.first.lvl,
+                                     occurr : shingle.first.occurr,
+                                     first : std::max(shingle.second.first[0], shingle.second.first[1]),
+                                     second : std::min(shingle.second.first[0], shingle.second.first[1])})};
+
+    else if (shingle.second.second == 2)
+        return vector<shingle_hash>{shingle_hash({lvl : shingle.first.lvl,
+                                                         occurr : shingle.first.occurr,
+                                                         first : std::min(shingle.second.first[0],
+                                                                          shingle.second.first[1]),
+                                                         second : std::max(shingle.second.first[0],
+                                                                           shingle.second.first[1])}),
+                                    shingle_hash({lvl : shingle.first.lvl,
+                                                         occurr : shingle.first.occurr,
+                                                         first : std::max(shingle.second.first[0],
+                                                                          shingle.second.first[1]),
+                                                         second : std::min(shingle.second.first[0],
+                                                                           shingle.second.first[1])})};
+    else
         throw invalid_argument("Fuzzy order asssign should not be more than 2. current mode: " +
                                to_string(shingle.second.second));
 }
