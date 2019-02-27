@@ -706,7 +706,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
     if (!answer_queries(queries))
         cout << "We failed to answer all the questions, thie sync should fail" << endl;
 
-    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
+//    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
     for (auto groupcyc : cyc_concern) {
         commSync->commSend(TtoZZ(groupcyc.second), sizeof(cycle));
     }
@@ -796,13 +796,15 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
         cyc.second = ZZtoT(commSync->commRecv_ZZ(sizeof(cycle)), cycle());
     }
 //    cout << "After Cyc Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
-
+    size_t LiteralData = commSync->getRecvBytesTot() + commSync->getXmitBytesTot();
 
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
         if (tmp != "$")
             add_to_dictionary(tmp);
     }
+
+    CustomResult["Literal comm"] = commSync->getRecvBytesTot() + commSync->getXmitBytesTot() - LiteralData;
 
 //    cout << "After Term Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
