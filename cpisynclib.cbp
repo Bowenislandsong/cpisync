@@ -44,7 +44,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/Cellar/llvm/7.0.0/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
 				</Compiler>
@@ -62,7 +61,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/Cellar/llvm/7.0.0/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
 				</Compiler>
@@ -80,7 +78,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/Cellar/llvm/7.0.0/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
 				</Compiler>
@@ -98,7 +95,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/Cellar/llvm/7.0.0/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
 				</Compiler>
@@ -116,7 +112,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/Cellar/llvm/7.0.0/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
 				</Compiler>
@@ -134,7 +129,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/Cellar/llvm/7.0.0/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
 				</Compiler>
@@ -152,7 +146,6 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/Cellar/llvm/7.0.0/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
 				</Compiler>
@@ -170,7 +163,6 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/Cellar/llvm/7.0.0/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
 					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
 				</Compiler>

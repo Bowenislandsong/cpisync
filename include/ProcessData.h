@@ -7,7 +7,7 @@
 
 #if __APPLE__
 #include<mach/mach.h>
-
+#include <iomanip>
 #include <mach/vm_statistics.h>
 #include <mach/mach_types.h>
 #include <mach/mach_init.h>
@@ -43,7 +43,7 @@ struct Resources{
 
 using namespace std;
 
-#if __APPLE__
+
 
 inline size_t getHeapSize() {
     size_t mem_size = 0;
@@ -95,7 +95,6 @@ inline void resourceReport(Resources& res){
     res.VmemUsed+=getHeapSize();
     HeapProfilerStop();
 }
-#endif
 
  // VM currently Used by my process
 

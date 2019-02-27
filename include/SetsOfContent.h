@@ -31,9 +31,13 @@ using std::string;
 using namespace NTL;
 typedef unsigned short sm_i; // small index for lvl, MAX = 65,535 which is terminal string size * partition^lvl = file string size
 
+
+//// ---------------------------------- Basic Structures
+
 // describes a cycling using first and last and cycle number. Used in backtracking. We pointou the first, then the last, then cycle value./
 struct cycle {
-    size_t head, len, cyc;
+    size_t head;
+    unsigned int len, cyc;
 };
 
 static bool operator==(const cycle &a, const cycle &b) {
@@ -50,19 +54,7 @@ static ostream &operator<<(ostream &os, const cycle cyc) {
     return os;
 };
 
-static cycle ZZtoCycle(const ZZ &zz) {
-    cycle cyc;
-    BytesFromZZ((uint8_t *) &cyc, zz, sizeof(cycle));
-    return cyc;
-}
-
-
-static ZZ CycletoZZ(cycle cyc) {
-    char *my_s_bytes = reinterpret_cast<char *>(&cyc);
-    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(cycle));
-}
-
-
+// we manipulate these shingles in a tree
 /**
  * first is the first part of a shingle
  * second is the second part of the shingle
@@ -70,8 +62,8 @@ static ZZ CycletoZZ(cycle cyc) {
  * compose states the composite of second
  */
 struct shingle_hash {
-    size_t first, second, occurr;
-    sm_i lvl;
+    size_t first, second;
+    sm_i lvl, occurr;
 };
 
 
@@ -87,24 +79,11 @@ static bool operator<(const shingle_hash &a, const shingle_hash &b) {
 //Compare and help differentiate struct shingle_hash
 static bool operator==(const shingle_hash &a, const shingle_hash &b) {
     return a.first == b.first and a.second == b.second and a.occurr == b.occurr and a.lvl == b.lvl;
-};
+}
 
 static bool operator!=(const shingle_hash &a, const shingle_hash &b) {
     return !(a == b);
 };
-
-static shingle_hash ZZtoShingleHash(const ZZ &zz) {
-    shingle_hash shingle;
-    BytesFromZZ((uint8_t *) &shingle, zz, sizeof(shingle_hash));
-    return shingle;
-}
-
-
-static ZZ ShingleHashtoZZ(shingle_hash shingle) {
-    char *my_s_bytes = reinterpret_cast<char *>(&shingle);
-    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(shingle_hash));
-}
-
 
 static string to_string(const vector<size_t> a) {
     string res;
@@ -120,20 +99,49 @@ static ostream &operator<<(ostream &os, const shingle_hash shingle) {
 };
 
 
-static vector<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_size) {
+template<typename T>
+static ZZ TtoZZ(T val) {
+    char *my_s_bytes = reinterpret_cast<char *>(&val);
+    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(T));
+}
 
-    vector<size_t> mins; // min positions
+template<typename T>
+static T ZZtoT(const ZZ &zz, const T) {
+    T val;
+    BytesFromZZ((uint8_t *) &val, zz, sizeof(T));
+    return val;
+}
+
+//// ---------------------------------- inline Functions
+
+inline size_t str_to_hash(const string &str) {
+    return std::hash<std::string>{}(str);
+};
+
+inline vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size) {
+    // relying on hashMap sorting (We expect HashMap arrange keys in an increasing order)
+
+    // minimum partition distance
+    if (win_size < 1) {
+        cout
+                << "Content Partition window size is less than 1 and adjusted to 1. Consider adjusting number of partition levels"
+                << endl;
+        win_size = 1;
+    }
+
+    vector<size_t> mins;
     map<size_t, size_t> hash_occurr;
     for (size_t j = 0; j < 2 * win_size; ++j) {
         auto it = hash_occurr.find(hash_val[j]);
         if (it != hash_occurr.end())
             it->second++;
         else
-            hash_occurr[hash_val[j]] = 1;
+            hash_occurr.emplace(hash_val[j], 1);
     }
 
     for (size_t i = win_size + 1; i < hash_val.size() - win_size + 1; ++i) {
-        if (hash_val[i - 1] <= hash_occurr.begin()->first and i - ((!mins.empty()) ? mins.back() : 0) > win_size)
+        if (hash_val[i - 1] <= hash_occurr.begin()->first and i - ((!mins.empty()) ? mins.back() : 0) >
+                                                              win_size) // this define partition rule to be min or equal instead of strictly less as local min
             mins.push_back(i - 1);
         auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
         if (it_prev != hash_occurr.end())
@@ -143,11 +151,12 @@ static vector<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_s
         if (it_pos != hash_occurr.end())
             it_pos->second++;
         else
-            hash_occurr[hash_val[i + win_size]] = 1;
+            hash_occurr.emplace(hash_val[i + win_size], 1);
     }
     return mins;
 }
 
+//// -------------------------------------- Sets of Content
 
 class SetsOfContent : public SyncMethod {
 public:
@@ -170,17 +179,6 @@ public:
     string getName() override { return "Sets of Content"; }
 
     long getVirMem() override { return (long) highwater; };
-
-    //getShinglesAt
-    vector<ZZ> getShingles_ZZ() {
-        vector<ZZ> res;
-        for (auto treelvl : myTree) {
-            for (auto item:treelvl) {
-                res.push_back(ShingleHashtoZZ(item));
-            }
-        }
-        return res;
-    };
 
 
 protected:
@@ -208,10 +206,6 @@ private:
     map<size_t, string> term_concern, term_query;
     map<size_t, cycle> cyc_concern, cyc_query;
 
-    size_t str_to_hash(const string &str) {
-        return std::hash<std::string>{}(str);
-    };
-
     /**
      * Create content dependent partitions based on the input string
      * Update Dictionary
@@ -223,24 +217,14 @@ private:
      */
     vector<size_t> create_HashSet(string str, size_t win_size, size_t space = NOT_SET, size_t shingle_size = NOT_SET);
 
-    vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size);
 
     /**
      * Insert string into dictionary
      * @param str a substring
      * @return hash of the string
-     * @throw if there is duplicates, suggest using new/multiple hashfunctions
+     * @throw if there is duplicates, suggest using new/multiple hash functions
      */
     size_t add_to_dictionary(const string &str);
-
-    inline size_t min_between(const vector<size_t> &nums, size_t from, size_t to) {
-        if (nums.empty()) throw invalid_argument("min function does not take empty vector");
-        size_t min = nums[0];
-        for (size_t i = from; i <= to; ++i) {
-            if (nums[i] < min) min = nums[i];
-        }
-        return min;
-    }
 
     // extract the unique substring hashes from the shingle_hash vector
     vector<size_t> unique_substr_hash(std::set<shingle_hash> hash_set) {
@@ -274,43 +258,94 @@ private:
     shingle_hash get_nxt_edge(size_t &current_edge, shingle_hash _shingle);
 
     /**
-     * sub fucntion for "get_all_strs_from" extracting string from a group of shigle_hashes
-     * @param shingle_set shinge_hashes from a group
-     * @return the string of that group
-     */
-    string get_str_from(vector<shingle_hash> shingle_set);
-
-    /**
-     * get the full shigle_hash set from a level and spratet them by groups to feed into "get_str_from"
-     * @param level_shingle_set shingle_hashes from a level
-     * @return reconstruct string from the ground lvl
-     */
-    vector<string> get_all_strs_from(vector<shingle_hash> level_shingle_set);
-
-    /**
      *
      * @param shingle_hash_theirs
      * @param shingle_hash_mine
      * @param groupIDs
      * @return hashes of unknown
      */
-    void prepare_querys(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
+    void prepare_querys(list<DataObject *> & shingle_hash_theirs);
 
 //    void prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
 
-    void answer_queries(const map<size_t, bool> &queries, const vector<shingle_hash> &shingle_hash_mine);
+    bool answer_queries(std::set<size_t> &theirQueries);
 
     void go_through_tree();
 
     // functions for Sync Methods
 
+
+    //Get fuzzy_shingle in ZZ O(n*log^2(n))
+    vector<ZZ> getHashShingles_ZZ() {
+        std::set<ZZ> res;
+        for (auto treelvl : myTree) {
+            for (auto item:treelvl) {
+                res.emplace(TtoZZ(item));
+            }
+        }
+        return vector<ZZ>{res.begin(), res.end()};
+    };
+
     void SendSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false) override;
 
     void RecvSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false) override;
 
-    void configure(shared_ptr<SyncMethod> &setHost, long mbar);
+    void configure(shared_ptr<SyncMethod> &setHost, long mbar, size_t elem_size);
 
     bool reconstructString(DataObject *&recovered_string, const list<DataObject *> &mySetData) override;
+
+    bool setReconClient(const shared_ptr<Communicant> &commSync, long mbar, size_t elem_size,
+                        vector<DataObject *> &full_set, list<DataObject *> &selfMinusOther,
+                        list<DataObject *> &otherMinusSelf) {
+        selfMinusOther.clear();
+        otherMinusSelf.clear();
+//        cout << "Client Size: " << full_set.size();
+        shared_ptr<SyncMethod> setHost;
+        SyncMethod::SyncClient(commSync, selfMinusOther, otherMinusSelf);
+        configure(setHost, mbar, elem_size);
+        for (DataObject *dop : full_set) {
+            setHost->addElem(dop); // Add to GenSync
+        }
+        bool success = setHost->SyncClient(commSync, selfMinusOther, otherMinusSelf);
+        if (not SyncMethod::delGroup(full_set, selfMinusOther))
+            Logger::error_and_quit("We failed to delete some set elements");
+        for (auto item : otherMinusSelf)
+            full_set.push_back(item);
+
+//        cout << " with sym Diff: " << selfMinusOther.size() + otherMinusSelf.size() << " After Sync at : "
+//             << full_set.size() << endl;
+
+        return success;
+    };
+
+    bool setReconServer(const shared_ptr<Communicant> &commSync, long mbar, size_t elem_size,
+                        vector<DataObject *> &full_set, list<DataObject *> &selfMinusOther,
+                        list<DataObject *> &otherMinusSelf) {
+        selfMinusOther.clear();
+        otherMinusSelf.clear();
+//        cout << "Server Size: " << full_set.size();
+        shared_ptr<SyncMethod> setHost;
+        SyncMethod::SyncServer(commSync, selfMinusOther, otherMinusSelf);
+        configure(setHost, mbar, elem_size);
+        for (DataObject *dop : full_set) {
+            setHost->addElem(dop); // Add to GenSync
+        }
+        return setHost->SyncServer(commSync, selfMinusOther, otherMinusSelf);
+
+//        cout << " with sym Diff: " << selfMinusOther.size() + otherMinusSelf.size() << " After Sync at : "
+//             << full_set.size() << endl;
+    };
+
+    void cleanup(vector<DataObject *> &full_set, list<DataObject *> &selfMinusOther,
+                 list<DataObject *> &otherMinusSelf, bool erase_all = false) {
+        for (auto dop : selfMinusOther) delete dop;
+        if (erase_all) {
+            for (auto dop : full_set) delete dop;
+            full_set.clear();
+        }
+        selfMinusOther.clear();
+        otherMinusSelf.clear();
+    }
 };
 
 #endif //CPISYNCLIB_SETSOFCONTENT_H

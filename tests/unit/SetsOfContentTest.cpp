@@ -7,7 +7,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 void SetsOfContentTest::SelfUnitTest() {
 //
 
-    shingle_hash Shingle_A{.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3};
+//    shingle_hash Shingle_A({.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3});
 //    shingle_hash Shingle_B{.first = {298273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
 //
 //    shingle_hash Shingle_C{.first = {198273671273645, 198273671273645}, .occurr = 1990, .second = 1231243798798123};
@@ -18,7 +18,7 @@ void SetsOfContentTest::SelfUnitTest() {
 
 //    vector<size_t> tmp{298273671273648};
 //    auto t = recursion(tmp);
-    CPPUNIT_ASSERT(Shingle_A == ZZtoShingleHash(ShingleHashtoZZ(Shingle_A)));
+//    CPPUNIT_ASSERT(Shingle_A == ZZtoShingleHash(TtoZZ(Shingle_A)));
 
 //
 //
@@ -53,7 +53,7 @@ void SetsOfContentTest::testAll() {
 
     string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
     int partition =4;
-    int lvl = 8;
+    int lvl =6;
     int space = 4;
     int shingleLen = 2;
 
@@ -63,21 +63,21 @@ void SetsOfContentTest::testAll() {
 
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
+            setProtocol(GenSync::SyncProtocol::CPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(10).
             setNumPartitions(partition).
             setShingleLen(shingleLen).
             setSpace(space).
             setlvl(lvl).
-            setPort(8003).
+            setPort(8001).
             build();
 
 
 //    string bobtxt = randStringEdit(alicetxt, 10);
 //    string bobtxt = randStringEdit((*atxt).to_string(),2e3);
 
-    string bobtxt = randStringEditBurst(alicetxt, 2e3,"./tests/SampleTxt.txt");
+    string bobtxt = randStringEditBurst(alicetxt, 5e2,"./tests/SampleTxt.txt");
     if(bobtxt.size()<pow(partition,lvl))
         bobtxt += randCharacters(pow(partition,lvl)-bobtxt.size());
 
@@ -85,14 +85,14 @@ void SetsOfContentTest::testAll() {
 
     GenSync Bob = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
+            setProtocol(GenSync::SyncProtocol::CPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(10).
             setNumPartitions(partition).
             setShingleLen(shingleLen).
             setSpace(space).
             setlvl(lvl).
-            setPort(8003).
+            setPort(8001).
             build();
 
     Bob.addStr(btxt, false);
@@ -118,22 +118,23 @@ void SetsOfContentTest::testAll() {
 
     auto r_res = getRsyncStats("Alice.txt","Bob.txt",true);
     cout<<"rsync comm cost: "<<r_res.recv+r_res.xmit<<endl;
-
+    cout<<"Set of Content cost: "<<to_string(report.bytesRTot+report.bytesXTot)<<endl;
 
     cout << "CPU Time: " + to_string(report.CPUtime) << endl;
     cout << "Time: " + to_string(report.totalTime) << endl;
-    cout << "bitsTot: " + to_string(report.bytesTot) << endl;
+    cout << "bitsTot: " + to_string(report.bytesXTot) << endl;
     cout << "bitsR: " + to_string(report.bytesRTot) << endl;
 
-    cout << "Terminal Str Trans: ------------------ " << Alice.getCustomResult("Terminal comm")<<endl;
-    cout << "Set Comm: ------------------ " << report.bytesTot+report.bytesRTot-Alice.getCustomResult("Terminal comm")<<endl;
-    cout << "Number of node diff: " << Alice.getTotalSetDiffSize() << endl;
-    cout << "hash vec comm: " << Alice.getCustomResult("hash vec comm")<<endl;
+
+    cout << "Terminal Str Trans: ------------------ " << Alice.getCustomResult("Literal comm")<<endl;
+    cout << "Set Comm: ------------------ " << report.bytesXTot+report.bytesRTot-Alice.getCustomResult("Terminal comm")<<endl;
+    cout << "Number of node diff: " << Alice.getCustomResult("Partition Sym Diff") << endl;
     cout << "String Reconstruction Time: " << Alice.getCustomResult("Str Reconstruction Time")<<endl;
     cout << "String Add Time: "<< str_time<<endl;
     cout << "Rest of the Recon time: " <<recon_time<<endl;
     delete btxt;
     delete atxt;
     CPPUNIT_ASSERT(finally == bobtxt);
+    CPPUNIT_ASSERT(report.success);
 
 }

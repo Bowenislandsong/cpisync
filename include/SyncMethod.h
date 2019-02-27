@@ -24,6 +24,7 @@ public:
 
     // constructor
     SyncMethod();
+
     // destructor
     virtual ~SyncMethod();
 
@@ -39,16 +40,19 @@ public:
      * @param otherMinusSlef A result of reconciliation.  Elements that the other SyncMethod has that I do not.
      * @return true iff the connection and subsequent synchronization appear to be successful.
      */
-    virtual bool SyncClient(const shared_ptr<Communicant>& commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) {
+    virtual bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
+                            list<DataObject *> &otherMinusSelf) {
         commSync->resetCommCounters();
         return true;
     }
 
     // allow to seek out some result for testing
-    virtual bool SyncClient(const shared_ptr<Communicant>& commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf, map<string,double>& CustomResult) {
+    virtual bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
+                            list<DataObject *> &otherMinusSelf, map<string, double> &CustomResult) {
         commSync->resetCommCounters();
         return true;
     }
+
     /**
      * Waits for a client to connect from a specific communicant and computes differences between the two (without actually updating them).
      * All results are *added* to the selfMinusOther and otherMinusSelf parameters (passed by reference).
@@ -58,7 +62,8 @@ public:
      * @param otherMinusSlef A result of reconciliation.  Elements that the other SyncMethod has that I do not.
      * @return true iff the connection and subsequent synchronization appear to be successful.
      */
-    virtual bool SyncServer(const shared_ptr<Communicant>& commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) {
+    virtual bool SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
+                            list<DataObject *> &otherMinusSelf) {
         commSync->resetCommCounters();
         return true;
     }
@@ -71,18 +76,47 @@ public:
      * hash, so it is advisable not to change the datum dereference hereafter.
      * @return true iff the addition was successful
      */
-    virtual bool addElem(DataObject* datum) { elements.push_back(datum); return true; };
+    virtual bool addElem(DataObject *datum) {
+        elements.push_back(datum);
+        return true;
+    };
 
     /**
      * Delete an element from the data structure that will be performing the synchronization.
      * @param datum The element to delete.
      * @return true iff the removal was successful
      */
-    virtual bool delElem(DataObject* datum) { 
+    virtual bool delElem(DataObject *datum) {
         long int before = elements.size();
         elements.erase(std::remove(elements.begin(), elements.end(), datum), elements.end());
         return before > elements.size(); // true iff there were more elements before removal than after
     };
+
+    /**
+     * Get rid of del list from a group in O(d+nlgd+(d))
+     * @param itemGroup n num of elem
+     * @param delList d num of elem
+     * @param destroy Destructively delete all delList
+     * @return
+     */
+    inline bool delGroup(vector<DataObject *> &itemGroup, list<DataObject *> &delList) {
+
+        // d+nlgd
+        std::set<ZZ> delMap;
+        for (DataObject *item : delList)
+            delMap.insert(item->to_ZZ());
+
+        auto it = itemGroup.begin();
+        while (it != itemGroup.end()) {
+            auto delit = delMap.find((*it)->to_ZZ());
+            if (delit != delMap.end()) {
+                it = itemGroup.erase(it); // delete the current and move to the next
+                delMap.erase(delit);
+            } else it++;
+        }
+
+        return (delMap.size() == 0);
+    }
 
     /**
      * Update string from the data structure
@@ -90,7 +124,7 @@ public:
      * @param str
      * @return
      */
-    virtual bool addStr(DataObject* str, vector<DataObject*> &datum,  bool backtrack){
+    virtual bool addStr(DataObject *str, vector<DataObject *> &datum, bool backtrack) {
         originStr = str;
         isStringRecon = true;
         return true;
@@ -102,9 +136,9 @@ public:
      */
     virtual string getName() = 0;
 
-    virtual long getVirMem(){return 0;};
+    virtual long getVirMem() { return 0; };
 
-    virtual bool reconstructString(DataObject* & recovered_string, const list<DataObject *> & mySetData){
+    virtual bool reconstructString(DataObject *&recovered_string, const list<DataObject *> &mySetData) {
         return true;
     }
 
@@ -114,24 +148,23 @@ public:
         return elements.size();
     }
 
-    SYNC_TYPE getSyncType() const { return SyncID;}
+    SYNC_TYPE getSyncType() const { return SyncID; }
 
     /**
      * @return An iterator pointing to the first element in the data structure
      */
-    vector<DataObject*>::const_iterator beginElements() { return elements.begin();}
-    
+    vector<DataObject *>::const_iterator beginElements() { return elements.begin(); }
+
     /**
      * @return An iterator pointing just past the last element in the data structure
      */
-    vector<DataObject*>::const_iterator endElements() { return elements.end();}
+    vector<DataObject *>::const_iterator endElements() { return elements.end(); }
 
-    bool isStringReconMethod(){return isStringRecon;};
-
+    bool isStringReconMethod() { return isStringRecon; };
 
 
 protected:
-    
+
     /**
      * Encode and transmit synchronization parameters (e.g. synchronization scheme, probability of error ...)
      * to another communicant for the purposes of ensuring that both are using the same scheme.  If the
@@ -140,8 +173,8 @@ protected:
      * @param oneWay If set to true, no response is expected from the other communicant (the sync is one-way).
      * @throws SyncFailureException if the parameters don't match between the synchronizing parties.
      */
-    virtual void SendSyncParam(const shared_ptr<Communicant>& commSync, bool oneWay = false);
-    
+    virtual void SendSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false);
+
     /**
      * Receive synchronization parameters from another communicant and compare to the current object.
      * Return true iff they are the same (or the other communicant does not care).
@@ -149,14 +182,14 @@ protected:
      * @param oneWay If set to true, no response is expected from the other communicant (the sync is one-way).
      * @throws SyncFailureException if the parameters don't match between the synchronizing parties.
      */
-    virtual void RecvSyncParam(const shared_ptr<Communicant>& commSync, bool oneWay = false);
-    
+    virtual void RecvSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false);
+
     SYNC_TYPE SyncID; /** A number that uniquely identifies a given synchronization protocol. */
-    
+
 private:
     vector<DataObject *> elements; /** Pointers to the elements stored in the data structure. */
 
-    DataObject* originStr; /** Pointers to the string stored in the data structure. */
+    DataObject *originStr; /** Pointers to the string stored in the data structure. */
 
     bool isStringRecon = false; /**falg for if it is string reconciliation. */
 };

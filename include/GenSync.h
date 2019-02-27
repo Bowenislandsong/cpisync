@@ -122,8 +122,6 @@ public:
      */
     const DataObject* dumpString();
 
-    const size_t getTotalSetDiffSize();
-
     const void pushCustomResult(string name, double res);
 
     const double getCustomResult(string name);
@@ -327,9 +325,6 @@ private:
     // FIELDS
     /** A container for the data stored by this GenSync object. */
     list<DataObject*> myData;
-
-    /** records a actual set difference used to see string reconcilliation*/
-    size_t myDiffSize = 0, theirDiffSize = 0;
 
     map<string,double> CustomResult;
 

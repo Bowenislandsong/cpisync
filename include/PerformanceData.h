@@ -10,7 +10,6 @@
 #include "StrataEst.h"
 #include "ForkHandle.h"
 #include <fstream>
-#include <omp.h>
 #include <numeric>
 #include <thread>
 

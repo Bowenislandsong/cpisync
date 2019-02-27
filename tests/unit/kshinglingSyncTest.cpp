@@ -82,7 +82,7 @@ void kshinglingSyncTest::testAll() {
 if(recoveredAlice == Alicetxt)
     cout<<"i didnt change"<<endl;
 //    cout << "Time: " + to_string(report.totalTime) << endl;
-//    cout << "bitsTot: " + to_string(report.bytesTot) << endl;
+//    cout << "bitsTot: " + to_string(report.bytesXTot) << endl;
 //    cout << "bitsR: " + to_string(report.bytesRTot) << endl;
 //    cout << "Btyes: "<< report.bytes<<endl;
 //    if(recoveredAlice != Bobtxt) cout<< "enable stgring recon in GenSync"<<endl;
@@ -130,7 +130,7 @@ void kshinglingSyncTest::testIdividualCPI() {
 //    cout<<"Add Time: "<<to_string(double(t2-t1)/CLOCKS_PER_SEC)<<endl;
 //    cout<<"Sync Time: "<<to_string(double(t3-t2)/CLOCKS_PER_SEC)<<endl;
 //    cout << "Comm:" + to_string(res.bytes)<<endl;
-//    cout << "Comm Tot:" + to_string(res.bytesTot)<<endl;
+//    cout << "Comm Tot:" + to_string(res.bytesXTot)<<endl;
 //    cout << "Time:" + to_string(res.totalTime)<<endl;
 
 }

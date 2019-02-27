@@ -85,7 +85,7 @@ void PerformanceData::kshingle3D(GenSync::SyncProtocol setReconProto, vector<int
 //                                             Alice.dumpString()->to_string()); // str Recon is deterministic, if not success , set recon is the problem
                 forkHandleReport report = forkHandle(Alice, Bob, false);
 
-                plot.add({to_string(str_size), to_string(edit_dist), to_string(report.bytesTot),
+                plot.add({to_string(str_size), to_string(edit_dist), to_string(report.bytesXTot),
                           to_string(report.CPUtime), to_string(str_time),
                           to_string(Bob.getVirMem(0)), to_string(success_SetRecon), to_string(success_StrRecon)});
 
@@ -150,27 +150,34 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
 
     string last_passed_before_exception;
-    vector<string> catag{"", "", "Comm (bytes)", "hash vec comm", "Terminal comm", "Actual Sym Diff", "Time Tree(s)",
-                         "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)",
-                         "Str Recon True", "Tree Heap SIze", "High Water Heap", "Rsync time", "Rsync Comm"};
+    vector<string> catag{"", "", "Total Comm (bytes)", "Literal comm", "Partition Sym Diff",
+                         "Total Num Partitions", "Time Tree(s)",
+                         "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)", "Set Recon Success",
+                         "Str Recon Success", "Tree Heap SIze", "High Water Heap", "Rsync Comm"};
     PlotRegister plot;
     if (mode == 1) {
         catag[0] = "Sting Size";
         catag[1] = "Edit Dist ";
-        plot.create("Sets of Content " + protoName + " " + str_type + "Error " + to_string(edit_distRange.front()), catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "P" + to_string(partitionRange.front())+"CL", catag);
     } else if (mode == 2) {
         catag[0] = "Level";
         catag[1] = "Partition";
-        plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()), catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "STR" + to_string(str_sizeRange.front()) + "ED" +
+                    to_string(edit_distRange.front()) + "LP", catag);
     } else if (mode == 3) {
         catag[0] = "TerShingle Length";
         catag[1] = "Space";
-        plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()) + "TS",
-                    catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()) + "ED" +
+                    to_string(edit_distRange.front()) + "TS", catag);
+    } else if (mode ==4){
+        catag[0] = "Str Size";
+        catag[1] = "lvl";
+        plot.create("Sets of Content " + protoName + " " + str_type + "ED " + to_string(edit_distRange.front()) + "P" +
+                            to_string(partitionRange.front()) + "SL", catag);
     }
 
     //TODO: Separate Comm, and Time, Separate Fail rate.
-    for (int str_size : str_sizeRange) {
+    for (int i = 0; i<str_sizeRange.size(); ++i) {
 //        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;
         for (int edit_dist : edit_distRange) {
 
@@ -189,19 +196,10 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     Resources initRes;
 //                            initResources(initRes);
-
-                                    // choosing parameters
-                                    double tmp_min = 1;
-                                    auto par_c = {5,7,9,11,13,15,17,19,21,23,25};
-                                    for(auto c :par_c) {
-                                        double tmp  = log10(str_size) / log10(c);
-                                        if(tmp-floor(tmp)<tmp_min and tmp >3 and tmp < 10) {
-                                            tmp_min = tmp-floor(tmp);
-                                            lvl = floor(tmp)-1;
-                                            par = c;
-                                        }
+                                    if(mode==1){
+                                        if (levelRange.size() != str_sizeRange.size()) throw invalid_argument("In mode 1, String size range and lvl range should have the same size");
+                                        lvl = levelRange[i];
                                     }
-                                    cout<<par<<"and"<<lvl<<endl;
 
                                     GenSync Alice = GenSync::Builder().
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -218,7 +216,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     last_passed_before_exception = "Alice GenSync"; // success Tag
 
 
-                                    DataObject *Alicetxt = new DataObject(stringInput(str_size, src));
+                                    DataObject *Alicetxt = new DataObject(stringInput(str_sizeRange[i], src));
 
                                     last_passed_before_exception = "Alice Create String"; // success Tag
 
@@ -242,8 +240,8 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                             build();
 
                                     last_passed_before_exception = "Bob GenSync"; // success Tag
-                                    string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(),edit_dist,src);
-                                                                              //(int) (str_size / edit_dist));
+                                    string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(), edit_dist, src);
+                                    //(int) (str_size / edit_dist));
                                     if (bobtmpstring.size() < pow(par, lvl))
                                         bobtmpstring += randCharacters(pow(par, lvl) - bobtmpstring.size());
 
@@ -254,17 +252,17 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     last_passed_before_exception = "Bob Add String"; // success Tag
 
-                                    forkHandleReport report = forkHandle(Alice, Bob, false);
+                                    forkHandleReport report = forkHandle(Alice, Bob,false);
 
                                     last_passed_before_exception = "String Recon"; // success Tag
 
                                     bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
                                     // rsync recon
-                                    writeStrToFile("Alice.txt", Alicetxt->to_string());
-                                    writeStrToFile("Bob.txt", Bobtxt->to_string());
+                                    writeStrToFile("Alicecopy.txt", Alicetxt->to_string());
+                                    writeStrToFile("Bobcopy.txt", Bobtxt->to_string());
 
-                                    auto r_res = getRsyncStats("Alice.txt", "Bob.txt");
+                                    auto r_res = getRsyncStats("Alicecopy.txt", "Bobcopy.txt");
 
 
                                     if (!success_StrRecon) // success Tag
@@ -273,15 +271,17 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                                 + "Bob Str size: " + to_string(Bobtxt->to_string().size());
 
                                     report_vec = {"", "",
-                                                  to_string(report.bytesTot + report.bytesRTot),
-                                                  to_string(Alice.getCustomResult("hash vec comm")),
-                                                  to_string(Alice.getCustomResult("Terminal comm")),
-                                                  to_string(Alice.getTotalSetDiffSize()), to_string(tree_time),
+                                                  to_string(report.bytesXTot + report.bytesRTot),
+                                                  to_string(Alice.getCustomResult("Literal comm")),
+                                                  to_string(Alice.getCustomResult("Partition Sym Diff")),
+                                                  to_string(Alice.getCustomResult("Total Num Partitions")),
+                                                  to_string(tree_time),
                                                   to_string(report.totalTime),
                                                   to_string(Alice.getCustomResult("Str Reconstruction Time")),
-                                                  to_string(success_StrRecon), to_string(initRes.VmemUsed),
+                                                  to_string(report.success),
+                                                  to_string(success_StrRecon),
+                                                  to_string(initRes.VmemUsed),
                                                   to_string(Alice.getVirMem(0)),
-                                                  to_string(r_res.time),
                                                   to_string(r_res.xmit + r_res.recv)};
 
                                     delete Alicetxt;
@@ -294,9 +294,9 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                 }
                                 if (mode == 1) {
-                                    report_vec[0] = to_string(str_size);
+                                    report_vec[0] = to_string(str_sizeRange[i]);
 //                                    report_vec[1] = to_string((double) 1 / edit_dist);
-                                    report_vec[1] = to_string( edit_dist);
+                                    report_vec[1] = to_string(edit_dist);
                                     plot.add(report_vec);
                                 } else if (mode == 2) {
                                     report_vec[0] = to_string(lvl);
@@ -306,6 +306,10 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     report_vec[0] = to_string(t);
                                     report_vec[1] = to_string(s);
                                     plot.add(report_vec);
+                                } else if (mode == 4){
+                                    report_vec[0] = to_string(str_sizeRange[i]);
+                                    report_vec[1] = to_string(lvl);
+                                    plot.add(report_vec);
                                 }
                                 plot.update();
                             }
@@ -314,7 +318,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                     }
                 }
-            }
+                if(mode == 1) break;}
         }
     }
 
@@ -327,10 +331,7 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
     PlotRegister plot;
     plot.create("Strata Est", {"Set Size", "Set Diff", "Est"});
 
-//#if __APPLE__
-//    confidence /=omp_get_max_threads();
-//#pragma omp parallel num_threads(omp_get_max_threads())
-//#endif
+
     for (int set_size = set_sizeRange.first; set_size <= set_sizeRange.second; set_size += set_sizeinterval) {
         (set_size < set_sizeRange.first + (set_sizeRange.second - set_sizeRange.first) / 2) ? confidence
                                                                                             : confidence = 5;
@@ -344,16 +345,12 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
 //            if (set_size>set_sizeRange.second/2)confidence = 100;
 //            printMemUsage();
             //printMemUsage();
-//#if __APPLE__
-//#pragma omp critical
-//#endif
+
             for (int conf = 0; conf < confidence; ++conf) {
 
                 StrataEst Alice = StrataEst(sizeof(DataObject));
                 StrataEst Bob = StrataEst(sizeof(DataObject));
-//#if __APPLE__
-//#pragma omp parallel firstprivate(Alice,Bob)
-//#endif
+
                 for (int j = 0; j < set_size; ++j) {
                     auto tmp = randZZ();
                     if (j < set_size - ceil(set_diff / 2)) Alice.insert(new DataObject(tmp));
@@ -365,9 +362,7 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
             //printMemUsage();
 
         }
-//#if __APPLE__
-//#pragma omp critical
-//#endif
+
         plot.update();
     }
 }
