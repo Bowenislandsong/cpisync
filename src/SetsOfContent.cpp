@@ -17,7 +17,6 @@ SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t par
 
 SetsOfContent::~SetsOfContent() {
     for (DataObject *dop : setPointers) delete dop;
-    for (DataObject *dop : hashPointers) delete dop;
 }
 
 vector<size_t> SetsOfContent::create_HashSet(string str, size_t win_size, size_t space, size_t shingle_size) {
@@ -150,26 +149,21 @@ void SetsOfContent::go_through_tree() {
 
 
 // what i am missing, and what they would be sending to me
-void SetsOfContent::prepare_querys(std::set<size_t> &myQueries) {
+void SetsOfContent::prepare_querys(list<DataObject *> &otherMinusSelf) {
 
     term_query.clear();// should be empty anyway
     cyc_query.clear();
 
-    for (auto rit = myTree.rbegin(); rit != myTree.rend(); ++rit) {
-        for (auto shingle : *rit) {
+    std::set<size_t> dup;// void duplicate (when a partition stay the same from upper level)
 
-            auto it = myQueries.find(shingle.second);
-            if (it != myQueries.end()) {
-                myQueries.erase(it);
-
-                if (myTree.size() - 1 == shingle.lvl) {
-                    if (!term_query[shingle.second].empty())
-                        cout << "we already have this term for some reason, check it!" << endl;
-//                    term_query[shingle.second] = "";
-                } else {
-                    cyc_query[shingle.second] = cycle{.head=0, .len=0, .cyc=0};
-                }
-            }
+    for (DataObject *shingle_zz: otherMinusSelf) {
+        shingle_hash shingle = ZZtoT(shingle_zz->to_ZZ(),shingle_hash());
+        if(dup.emplace(shingle.second).second) cyc_query.erase(shingle.second); // if duplicated, we want the lower level
+        if (Dictionary.find(shingle.second) == Dictionary.end()) { // if it is not found anywhere
+            if (shingle.lvl < Levels - 1)
+                cyc_query.emplace(shingle.second, cycle{.head=0, .len=0, .cyc=0});
+            else
+                term_query.emplace(shingle.second, "");
         }
     }
 //    for(auto lvl : theirTree) for (auto shingle : lvl) cout<< shingle<<endl; // TODO: delete this print tree function
@@ -177,17 +171,16 @@ void SetsOfContent::prepare_querys(std::set<size_t> &myQueries) {
 }
 
 
-void SetsOfContent::answer_queries(std::set<size_t> &theirQueries) {
+bool SetsOfContent::answer_queries(std::set<size_t> &theirQueries) {
     cyc_concern.clear();
     term_concern.clear();
 
-    for (auto rit = myTree.rbegin(); rit != myTree.rend(); ++rit) {
+    for (auto rit = myTree.rbegin(); rit != myTree.rend(); ++rit) { // search the tree from bottom up
         for (auto shingle : *rit) {
             auto it = theirQueries.find(shingle.second);
             if (it != theirQueries.end()) {
-                theirQueries.erase(it);
-                if (myTree.size() - 1 == shingle.lvl)
-                    term_concern[shingle.second] = Dictionary[shingle.second];
+                if (Levels - 1 == shingle.lvl)
+                    term_concern.emplace(shingle.second,Dictionary[shingle.second]);
                 else {
                     vector<size_t> tmp_vec = Cyc_dict[shingle.second];
                     cycle tmp = cycle{.head = tmp_vec.front(), .len = (unsigned int) tmp_vec.size(), .cyc=0};
@@ -197,9 +190,11 @@ void SetsOfContent::answer_queries(std::set<size_t> &theirQueries) {
                     }
                     cyc_concern[shingle.second] = tmp;
                 }
+                theirQueries.erase(it); // we solved it, then we get rid of it.
             }
         }
     }
+    return theirQueries.empty();
 }
 
 void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level) {
@@ -588,8 +583,8 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
     if (myString.empty()) return false;
 
     if (myString.size() / pow(Partition, Levels) < 1)
-        invalid_argument( "Terminal String size could end up less than 1, limited at" + to_string(TermStrSize) +
-                ", please consider lessen the levels or number of partitions");
+        invalid_argument("Terminal String size could end up less than 1, limited at" + to_string(TermStrSize) +
+                         ", please consider lessen the levels or number of partitions");
 
     if (Levels == NOT_SET) throw invalid_argument("Consider set a Level value bigger than 0");
 
@@ -613,11 +608,10 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 //    //TODO: delete above
 
     for (DataObject *dop : setPointers) delete dop;
-    for (DataObject *dop : hashPointers) delete dop;
-    for (auto item : getALLFuzzyShingleZZ()) {
+    setPointers.clear();
+    for (auto item : getHashShingles_ZZ()) {
         setPointers.push_back(new DataObject(item));
-    }  //get individual fuzzy_shingle
-    for (auto item : getALLHashZZ()) { hashPointers.push_back(new DataObject(item)); }
+    }
 
     datum = setPointers;
     return true;
@@ -664,10 +658,12 @@ void SetsOfContent::RecvSyncParam(const shared_ptr<Communicant> &commSync, bool 
 
 bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
                                list<DataObject *> &otherMinusSelf) {
-    bool success = true;
+
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncServer");
 
     commSync->commListen();
+    RecvSyncParam(commSync);
+
     long mbar;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
         StrataEst est = StrataEst(sizeof(shingle_hash));
@@ -675,86 +671,41 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
         for (auto item : setPointers) {
             est.insert(item);
         }
+        // since main Param are the same, Strata Est parameters would also be the same.
+        mbar = (est -= commSync->commRecv_Strata()).estimate();
 
-        // since Kshingling are the same, Strata Est parameters would also be the same.
-        auto theirStarata = commSync->commRecv_Strata();
-        mbar = (est -= theirStarata).estimate();
         commSync->commSend(mbar); // Dangerous cast
     } else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol) {
-        mbar = 1e4;// elaborate Mbar
-
+        mbar = pow(2, 10); // initial prob CPIsync
     }
 
-    RecvSyncParam(commSync);
-    // sync shingle xor sum
-    if (!setReconServer(commSync, mbar, sizeof(fuzzy_shingle), setPointers, selfMinusOther, otherMinusSelf))
-        success = false;
-    cleanup(setPointers, selfMinusOther, otherMinusSelf);
+    // ------------------------- Sync hash shingles
 
-    // sync hash
-    if (!setReconServer(commSync, mbar, sizeof(size_t), hashPointers, selfMinusOther, otherMinusSelf))
-        success = false;
+    bool success = false;
+    size_t top_mbar = pow(2 * Partition, Levels) * 2; // Upper bound on the number of symmetrical difference
+    while (!success and mbar < top_mbar) { // if set recon failed, This can be caused by error rate and small mbar
+        success = setReconServer(commSync, mbar, sizeof(shingle_hash), setPointers, selfMinusOther, otherMinusSelf);
+        success = ((SYNC_SUCCESS == commSync->commRecv_int()) and success);
+        success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
+        if (success) break;
 
-    std::set<size_t> theirQueries;
-    for (DataObject *item : selfMinusOther)
-        theirQueries.insert(ZZtoSize_t(item->to_ZZ()));
+        Logger::gLog(Logger::METHOD,
+                     "SetsOfContent::SyncServer - mbar doubled from " + to_string(mbar) + " to " +
+                     to_string(2 * (mbar + 1)));
+        mbar = 2 * (mbar + 1);
+    }
 
-    cleanup(hashPointers, selfMinusOther, otherMinusSelf);
+    // -------------------- get questions
+    size_t query_size = commSync->commRecv_size_t();
+    std::set<size_t> queries;
+    for (size_t i = 0; i < query_size; ++i) {// get queries
+        queries.emplace(commSync->commRecv_size_t());
+    }
 
-    vector<DataObject *> fuzzyPts;
-    unsigned int counter = 0;
-    if (fuzzy_lookup.size() > UINT_MAX)
-        Logger::error_and_quit(
-                "Server: Fuzzy Order (Number of tree nodes) exceed UINT_MAX, CHANGE CODE to long or size_t"); // in our design, the tree size should not be that big
-    for (auto fuzzy : fuzzy_lookup)
-        fuzzyPts.push_back(new DataObject(
-                TtoZZ(fuzzyorder{.order = counter++, .mode =(sm_i)(fuzzy.first.duplicate==1 ? 2 : (fuzzy.second.first == std::min(fuzzy.second.first,fuzzy.second.second)?0:1))})));
+    if (!answer_queries(queries))
+        cout<<"We failed to asnwer all the questions, thie sync should fail"<<endl;
 
-    if (!setReconServer(commSync, mbar, sizeof(fuzzyorder), fuzzyPts, selfMinusOther, otherMinusSelf))
-        success = false;
-
-
-    answer_queries(theirQueries);
-
-    cleanup(fuzzyPts, selfMinusOther, otherMinusSelf, true);
-
-//    size_t top_str_size = SIZE_T_MAX;
-//    while (!success and mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
-//        success = setHost->SyncServer(commSync, selfMinusOther, otherMinusSelf);
-//        success = ((SYNC_SUCCESS == commSync->commRecv_int()) and success);
-//        success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
-//        if (success) break;
-//
-//        top_str_size = myString.size();
-//        commSync->commSend(myString.size());
-//        Logger::gLog(Logger::METHOD,
-//                     "SetsOfContent::SyncServer - mbar doubled from " + to_string(mbar) + " to " +
-//                     to_string(2 * (mbar + 1)));
-//        mbar = 2 * (mbar + 1);
-//        configure(setHost, mbar);
-//
-//        for (DataObject *dop : setPointers) {
-//            setHost->addElem(dop); // Add to GenSync
-//        }
-//        selfMinusOther.clear();
-//        otherMinusSelf.clear();
-//    }
-
-
-//
-////    for (auto shingle : others) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
-//    for (auto shingle : selfMinusOther) mine_hash.push_back(ZZtoFuzzyShingle(shingle->to_ZZ()));
-//
-////    cout<< "Server - Term concern size : "<< term_concern.size()<<endl;
-//
-//    size_t query_size = commSync->commRecv_size_t();
-//    map<size_t, bool> queries;
-//    for (size_t i = 0; i < query_size; ++i) {// get cycles queries
-//        queries[commSync->commRecv_size_t()] = true;
-//    }
-//    answer_queries(queries, mine_hash);
-
-//    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
+    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
     for (auto groupcyc : cyc_concern) {
         commSync->commSend(TtoZZ(groupcyc.second), sizeof(cycle));
     }
@@ -768,17 +719,19 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
 
 //    commSync->commSend(SYNC_SUCCESS);
 //    cout<<"Server Close"<<endl;
-    Logger::gLog(Logger::METHOD, "SetOfCeontent Done");
+    Logger::gLog(Logger::METHOD, "Server Set Of Content Done");
     commSync->commClose();
     return success;
 }
 
 bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
                                list<DataObject *> &otherMinusSelf, map<string, double> &CustomResult) {
-    bool success = true;
+
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncClient");
 
     commSync->commConnect();
+    SendSyncParam(commSync);
+
     long mbar;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
         StrataEst est = StrataEst(sizeof(shingle_hash));
@@ -788,163 +741,72 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
         }
         commSync->commSend(est.getStrata(), false);
 
-        mbar = commSync->commRecv_long(); // cast long to long long
+        mbar = commSync->commRecv_long();
 
     } else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol) {
-        mbar = 1e4;// elaborate Mbar
+        mbar = pow(2, 10); // initial prob CPIsync
     }
 
 
-    SendSyncParam(commSync);
-    // ------------------------- Sync Fuzzy Shingle
-    // sync shingle xor sum
-    if (!setReconClient(commSync, mbar, sizeof(fuzzy_shingle), setPointers, selfMinusOther, otherMinusSelf))
-        success = false;
 
-//    cout << "We used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
-    cleanup(setPointers, selfMinusOther, otherMinusSelf);
+    // ------------------------- Sync hash shingles
 
-    // ------------------------- Sync Individual Hash
-    auto myPartitions = hashPointers.size();
-    // sync hash
-    if (!setReconClient(commSync, mbar, sizeof(size_t), hashPointers, selfMinusOther, otherMinusSelf))
-        success = false;
+
+
+    bool success = false;
+    size_t top_mbar = pow(2 * Partition, Levels) * 2; // Upper bound on the number of symmetrical difference
+    while (!success and mbar < top_mbar) { // if set recon failed, This can be caused by error rate and small mbar
+        success = setReconClient(commSync, mbar, sizeof(shingle_hash), setPointers, selfMinusOther, otherMinusSelf);
+        success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
+        success = (commSync->commRecv_int() == SYNC_SUCCESS) and success;
+        if (success) break;
+
+        Logger::gLog(Logger::METHOD,
+                     "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " +
+                     to_string(2 * (mbar + 1)));
+        cout << "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1))
+             << endl;
+        mbar = pow(2, 10);
+    }
 
     CustomResult["Partition Sym Diff"] = (selfMinusOther.size() +
                                           otherMinusSelf.size()); // recorder # symmetrical partition difference
-    CustomResult["Total Num Partitions"] = hashPointers.size() + myPartitions;
+    cout << "After Set Recon, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
-    std::set<size_t> myQueries;
-    for (DataObject *item : otherMinusSelf)
-        myQueries.insert(ZZtoSize_t(item->to_ZZ()));
+    prepare_querys(otherMinusSelf);
 
-    cleanup(hashPointers, selfMinusOther, otherMinusSelf);
-
-    // Collect fuzzy shingles in use and their composite
-    map<fuzzy_shingle, pair<vector<size_t>, sm_i>> fuzzy_map; // Place them in fuzzy shingle order, smaller component, bigger component, and placement (0: small first, 1: small second, 3: both exist)
-    std::set<size_t> all_hashes{0}; // we need to include 0 as a hash value
-    auto a = all_hashes.size();
-    for (auto pts : hashPointers) all_hashes.insert(ZZtoSize_t(pts->to_ZZ()));
-    for (auto pt :setPointers) {
-        fuzzy_shingle fshingle = ZZtoFuzzyShingle(pt->to_ZZ());
-
-        auto it = fuzzy_lookup.find(fshingle);
-        if (it != fuzzy_lookup.end()) {// locally available from fuzzy lookup table
-            fuzzy_map[fshingle] = FuzzyOrder({it->second.first, it->second.second}, 3, fshingle.duplicate ==1);
-        } else {//else find its composition from all_hashes
-            if(fshingle.duplicate ==2) {
-                fuzzy_map[fshingle] = FuzzyOrder({fshingle.sum, fshingle.sum}, 3, false);
-                continue;
-            }
-            for (size_t hash : all_hashes) {
-
-                auto tmp_it = all_hashes.find(fshingle.sum ^ hash);
-                if (tmp_it != all_hashes.end()) {
-                    fuzzy_map[fshingle] = FuzzyOrder({hash, (*tmp_it)}, 3, fshingle.duplicate ==1);
-//                    cout<<"We found "<<hash<< " and "<<(*tmp_it)<< " for "<<fshingle.sum<<endl;
-                    break;
-                }
-            }
-        }
+    // -------------------- ask questions
+    commSync->commSend(cyc_query.size() + term_query.size());
+    for (auto cyc:cyc_query) {// ask about cycles
+        commSync->commSend(cyc.first);
+    }
+    for (auto term:term_query) {// ask about cycles
+        commSync->commSend(term.first);
     }
 
-    // ----------------------------- Sync Fuzzy Order
-    vector<DataObject *> fuzzyPts;
-    unsigned int counter = 0;
-    if (fuzzy_map.size() > UINT_MAX)
-        Logger::error_and_quit(
-                "Client: Fuzzy Order (Number of tree nodes) exceed UINT_MAX, CHANGE CODE to long or size_t"); // in our design, the tree size should not be that big
+    cout << "After Query, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
-    // figure out the composition for every known shingles
-    for (auto fuzzy : fuzzy_map)
-        fuzzyPts.push_back(new DataObject(TtoZZ(fuzzyorder{.order = counter++, .mode = (sm_i) fuzzy.second.second})));
-    // set recon
-    if (!setReconClient(commSync, mbar, sizeof(fuzzyorder), fuzzyPts, selfMinusOther, otherMinusSelf))
-        success = false;
-
-    vector<sm_i> newOrder(fuzzyPts.size());
-    for (auto pts:fuzzyPts) {
-        fuzzyorder tmp = ZZtoFuzzyorder(pts->to_ZZ());
-        newOrder[tmp.order] = tmp.mode;
-    }
-
-    // reform the tree
-    myTree.clear();
-    myTree.resize(Levels);
-    size_t newOrder_i = 0;
-    for (auto &Fuzzyshingle_pair : fuzzy_map) {
-        Fuzzyshingle_pair.second.second = newOrder[newOrder_i++];
-        for (shingle_hash shingle : FuzzyOrderAssign(Fuzzyshingle_pair))
-            myTree[shingle.lvl].insert(shingle);
-    }
-
-
-    prepare_querys(myQueries);
-
-    cleanup(fuzzyPts, selfMinusOther, otherMinusSelf, true);
-
-
-//    vector<shingle_hash> theirs_hash, mine_hash;
-//    size_t top_str_size = SIZE_T_MAX;
-//    while (!success and mbar < top_str_size) { // if set recon failed, This can be caused by error rate and small mbar
-//        success = setHost->SyncClient(commSync, selfMinusOther, otherMinusSelf);
-//        success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
-//        success = (commSync->commRecv_int() == SYNC_SUCCESS) and success;
-//        if (success) break;
-//
-//        top_str_size = commSync->commRecv_size_t();
-//        Logger::gLog(Logger::METHOD,
-//                     "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " +
-//                     to_string(2 * (mbar + 1)));
-//        cout << "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1))
-//             << endl;
-//        mbar = 2 * (mbar + 1);
-//        configure(setHost, mbar);
-//
-//        for (DataObject *dop : setPointers) {
-//            setHost->addElem(dop); // Add to GenSync
-//        }
-//        selfMinusOther.clear();
-//        otherMinusSelf.clear();
-//    }
-
-//    for (auto shingle : otherMinusSelf) theirs_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
-//    for (auto shingle : selfMinusOther) mine_hash.push_back(ZZtoShingleHash(shingle->to_ZZ()));
-//
-//    prepare_querys(theirs_hash, mine_hash);
-////    cout<< "cyc query size : "<< cyc_query.size()<<endl;
-////    cout<< "Term query size : "<< term_query.size()<<endl;
-//
-//// ask questions
-//    commSync->commSend(cyc_query.size() + term_query.size());
-//    for (auto cyc:cyc_query) {// ask about cycles
-//        commSync->commSend(cyc.first);
-//    }
-//
-//    for (auto term:term_query) {// ask about cycles
-//        commSync->commSend(term.first);
-//    }
-//    CustomResult["hash vec comm"] = (double)(term_query.size()+cyc_query.size())*sizeof(size_t); // record bytes
-//// get answers from server
-//    cout << "We queried " << cyc_query.size() << " cycles and " << term_query.size() << " hashes" << endl;
+// --------------------- get answers from server
+    cout << "We queried " << cyc_query.size() << " cycles and " << term_query.size() << " hashes" << endl;
 
 
     for (auto &cyc:cyc_query) {
-        cyc.second = ZZtoCycle(commSync->commRecv_ZZ(sizeof(cycle)));
+        cyc.second = ZZtoT(commSync->commRecv_ZZ(sizeof(cycle)),cycle());
     }
+    cout << "After Cyc Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
 
-    size_t term_counter = 0;
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
-        term_counter += tmp.size();
         if (tmp != "$")
             add_to_dictionary(tmp);
     }
-    CustomResult["Literal comm"] = (double) term_counter;
-//    cout<<"Client Close"<<endl;
-    Logger::gLog(Logger::METHOD, "Set Of Content Done");
 
+    cout << "After Term Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
+
+
+//    cout<<"Client Close"<<endl;
+    Logger::gLog(Logger::METHOD, "Client Set Of Content Done");
     commSync->commClose();
     return success;
 }
@@ -960,13 +822,13 @@ void SetsOfContent::configure(shared_ptr<SyncMethod> &setHost, long mbar, size_t
 }
 
 bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<DataObject *> &mySetData) {
-//    myTree.clear();
-//    myTree.resize(Levels);
-//    for(auto s_zz : mySetData){
-//        auto shingle = ZZtoShingleHash(s_zz->to_ZZ());
-//        myTree[shingle.lvl].insert(shingle);
-//    }
-//
+    myTree.clear();
+    myTree.resize(Levels);
+    for (auto s_zz : mySetData) {
+        shingle_hash shingle = ZZtoT(s_zz->to_ZZ(),shingle_hash());
+        myTree[shingle.lvl].insert(shingle);
+    }
+
     myString = retriveString();
     recovered_string = new DataObject(myString);
     return true;

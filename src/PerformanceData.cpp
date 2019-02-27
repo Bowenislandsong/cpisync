@@ -252,7 +252,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     last_passed_before_exception = "Bob Add String"; // success Tag
 
-                                    forkHandleReport report = forkHandle(Alice, Bob);
+                                    forkHandleReport report = forkHandle(Alice, Bob,false);
 
                                     last_passed_before_exception = "String Recon"; // success Tag
 

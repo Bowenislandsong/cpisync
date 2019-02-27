@@ -31,6 +31,9 @@ using std::string;
 using namespace NTL;
 typedef unsigned short sm_i; // small index for lvl, MAX = 65,535 which is terminal string size * partition^lvl = file string size
 
+
+//// ---------------------------------- Basic Structures
+
 // describes a cycling using first and last and cycle number. Used in backtracking. We pointou the first, then the last, then cycle value./
 struct cycle {
     size_t head;
@@ -50,12 +53,6 @@ static ostream &operator<<(ostream &os, const cycle cyc) {
           to_string(cyc.cyc);
     return os;
 };
-
-static cycle ZZtoCycle(const ZZ &zz) {
-    cycle cyc;
-    BytesFromZZ((uint8_t *) &cyc, zz, sizeof(cycle));
-    return cyc;
-}
 
 // we manipulate these shingles in a tree
 /**
@@ -88,12 +85,6 @@ static bool operator!=(const shingle_hash &a, const shingle_hash &b) {
     return !(a == b);
 };
 
-static shingle_hash ZZtoShingleHash(const ZZ &zz) {
-    shingle_hash shingle;
-    BytesFromZZ((uint8_t *) &shingle, zz, sizeof(shingle_hash));
-    return shingle;
-}
-
 static string to_string(const vector<size_t> a) {
     string res;
     for (size_t t : a) res += to_string(t) + ":";
@@ -108,126 +99,24 @@ static ostream &operator<<(ostream &os, const shingle_hash shingle) {
 };
 
 
-//// ---------------------------------- Fuzzy shingle trans
-// we transmit these shingles
-struct fuzzy_shingle {
-    size_t sum;
-    sm_i lvl, occurr, duplicate;
-}; // duplicate 0: no duplicate, duplicate 1: Duplicated, duplicate 2: same shingle -> sum =0
-
-// xor first and second may cause duplicated shingles, we register their duplications
-static fuzzy_shingle shingle2fuzz(shingle_hash shingle, sm_i dup = 0) {
-    if (shingle.first == shingle.second)
-        return (fuzzy_shingle{.sum = shingle.first, .lvl=shingle.lvl, .occurr=(sm_i) shingle.occurr, .duplicate = 2});
-    else
-        return (fuzzy_shingle{.sum = shingle.first ^
-                                     shingle.second, .lvl=shingle.lvl, .occurr=(sm_i) shingle.occurr, .duplicate = dup});
-};
-
-static fuzzy_shingle ZZtoFuzzyShingle(const ZZ &zz) {
-    fuzzy_shingle shingle;
-    BytesFromZZ((uint8_t *) &shingle, zz, sizeof(fuzzy_shingle));
-    return shingle;
-}
-
-static ZZ FuzzyShingletoZZ(fuzzy_shingle shingle) {
-    char *my_s_bytes = reinterpret_cast<char *>(&shingle);
-    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(fuzzy_shingle));
-}
-
-static bool operator<(const fuzzy_shingle &a, const fuzzy_shingle &b) {
-    return (a.sum < b.sum) or
-           (a.sum == b.sum and a.lvl < b.lvl) or
-           (a.sum == b.sum and a.lvl == b.lvl and a.occurr < b.occurr) or
-           (a.sum == b.sum and a.lvl == b.lvl and a.occurr < b.occurr and a.duplicate < b.duplicate);
-};
-
-
-//Compare and help differentiate struct shingle_hash
-static bool operator==(const fuzzy_shingle &a, const fuzzy_shingle &b) {
-    return a.sum == b.sum and a.duplicate == b.duplicate and a.occurr == b.occurr and a.lvl == b.lvl;
-};
-
-static bool operator!=(const fuzzy_shingle &a, const fuzzy_shingle &b) {
-    return !(a == b);
-};
-
-static size_t ZZtoSize_t(const ZZ &zz) {
-    size_t hash_val;
-    BytesFromZZ((uint8_t *) &hash_val, zz, sizeof(size_t));
-    return hash_val;
-}
-
-static pair<vector<size_t>, sm_i> FuzzyOrder(vector<size_t> hashes, sm_i mode, bool duplicate) {
-    // mode 0: Small First (or first and second are same)
-    // mode 1: Small Second
-    // mode 2: Duplicated (diff first and second)
-    // mode 3: Define based on input
-    if (hashes.size() != 2) throw invalid_argument("We expect 2 hashes in Fuzzy Order");
-    if (mode > 3)
-        throw invalid_argument("Fuzzy Order has mode should not be more than 3, current mode: " + to_string(mode));
-    vector<size_t> res(2);
-    if (mode == 0) {
-        res[0] = std::min(hashes[0], hashes[1]);
-        res[1] = std::max(hashes[0], hashes[1]);
-    } else if (mode == 1) {
-        res[0] = std::max(hashes[0], hashes[1]);
-        res[1] = std::min(hashes[0], hashes[1]);
-    } else if (mode == 2) {
-        res[0] = hashes[0];
-        res[1] = hashes[1];
-    } else if (mode == 3) {
-        res[0] = hashes[0];
-        res[1] = hashes[1];
-        (hashes[0] == std::min(hashes[0], hashes[1])) ? mode = 0 : mode = 1;
-    }
-    if (duplicate)
-        mode = 2;
-
-    return {res, mode};
-}
-
-static vector<shingle_hash> FuzzyOrderAssign(pair<fuzzy_shingle, pair<vector<size_t>, sm_i>> shingle) {
-    if (shingle.second.second == 0)
-        return vector<shingle_hash>({shingle_hash({.lvl = shingle.first.lvl, .occurr = shingle.first.occurr, .first = std::min(
-                shingle.second.first[0], shingle.second.first[1]), .second = std::max(shingle.second.first[0],
-                                                                                      shingle.second.first[1])})});
-    else if (shingle.second.second == 1)
-        return vector<shingle_hash>{shingle_hash{.lvl = shingle.first.lvl, .occurr = shingle.first.occurr, .first = std::max(
-                shingle.second.first[0], shingle.second.first[1]), .second = std::min(shingle.second.first[0],
-                                                                                      shingle.second.first[1])}};
-    else if (shingle.second.second == 2)
-        return vector<shingle_hash>({shingle_hash({.lvl = shingle.first.lvl, .occurr = shingle.first.occurr, .first = std::min(
-                shingle.second.first[0], shingle.second.first[1]), .second = std::max(shingle.second.first[0],
-                                                                                      shingle.second.first[1])}),
-                shingle_hash({.lvl = shingle.first.lvl, .occurr = shingle.first.occurr, .first = std::max(
-                        shingle.second.first[0], shingle.second.first[1]), .second = std::min(shingle.second.first[0],
-                                                                                              shingle.second.first[1])})});
-    else
-        throw invalid_argument("Fuzzy order asssign should not be more than 2. current mode: " +
-                               to_string(shingle.second.second));
-}
-
-struct fuzzyorder {
-    unsigned int order; // lexicographic order of xor sum
-    sm_i mode;
-};
-// mode 0: Small First
-// mode 1: Small Second
-// mode 2: Duplicated (diff first and second)
-
-static fuzzyorder ZZtoFuzzyorder(const ZZ &zz) {
-    fuzzyorder val;
-    BytesFromZZ((uint8_t *) &val, zz, sizeof(fuzzyorder));
-    return val;
-}
-
 template<typename T>
 static ZZ TtoZZ(T val) {
     char *my_s_bytes = reinterpret_cast<char *>(&val);
     return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(T));
 }
-//// ---------------------------------- Fuzzy shingle trans
+
+template<typename T>
+static T ZZtoT(const ZZ &zz, const T) {
+    T val;
+    BytesFromZZ((uint8_t *) &val, zz, sizeof(T));
+    return val;
+}
+
+//// ---------------------------------- inline Functions
+
+inline size_t str_to_hash(const string &str) {
+    return std::hash<std::string>{}(str);
+};
 
 inline vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size) {
     // relying on hashMap sorting (We expect HashMap arrange keys in an increasing order)
@@ -267,6 +156,7 @@ inline vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size) {
     return mins;
 }
 
+//// -------------------------------------- Sets of Content
 
 class SetsOfContent : public SyncMethod {
 public:
@@ -303,7 +193,7 @@ private:
 
     GenSync::SyncProtocol baseSyncProtocol;
 
-    vector<DataObject *> setPointers, hashPointers; // garbage collector
+    vector<DataObject *> setPointers; // garbage collector
 
     vector<std::set<shingle_hash>> myTree; // the hash shingle tree   // RECONCILLING TARGET
 
@@ -312,15 +202,9 @@ private:
     // origin, cycle information to reform this string rep
     map<size_t, vector<size_t>> Cyc_dict, hashcontent_dict; // has to be unique
 
-    map<fuzzy_shingle, shingle_hash> fuzzy_lookup;
-
     //requests
     map<size_t, string> term_concern, term_query;
     map<size_t, cycle> cyc_concern, cyc_query;
-
-    size_t str_to_hash(const string &str) {
-        return std::hash<std::string>{}(str);
-    };
 
     /**
      * Create content dependent partitions based on the input string
@@ -338,18 +222,9 @@ private:
      * Insert string into dictionary
      * @param str a substring
      * @return hash of the string
-     * @throw if there is duplicates, suggest using new/multiple hashfunctions
+     * @throw if there is duplicates, suggest using new/multiple hash functions
      */
     size_t add_to_dictionary(const string &str);
-
-    inline size_t min_between(const vector<size_t> &nums, size_t from, size_t to) {
-        if (nums.empty()) throw invalid_argument("min function does not take empty vector");
-        size_t min = nums[0];
-        for (size_t i = from; i <= to; ++i) {
-            if (nums[i] < min) min = nums[i];
-        }
-        return min;
-    }
 
     // extract the unique substring hashes from the shingle_hash vector
     vector<size_t> unique_substr_hash(std::set<shingle_hash> hash_set) {
@@ -383,31 +258,17 @@ private:
     shingle_hash get_nxt_edge(size_t &current_edge, shingle_hash _shingle);
 
     /**
-     * sub fucntion for "get_all_strs_from" extracting string from a group of shigle_hashes
-     * @param shingle_set shinge_hashes from a group
-     * @return the string of that group
-     */
-    string get_str_from(vector<shingle_hash> shingle_set);
-
-    /**
-     * get the full shigle_hash set from a level and spratet them by groups to feed into "get_str_from"
-     * @param level_shingle_set shingle_hashes from a level
-     * @return reconstruct string from the ground lvl
-     */
-    vector<string> get_all_strs_from(vector<shingle_hash> level_shingle_set);
-
-    /**
      *
      * @param shingle_hash_theirs
      * @param shingle_hash_mine
      * @param groupIDs
      * @return hashes of unknown
      */
-    void prepare_querys(std::set<size_t> &myQueries);
+    void prepare_querys(list<DataObject *> & shingle_hash_theirs);
 
 //    void prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
 
-    void answer_queries(std::set<size_t> &theirQueries);
+    bool answer_queries(std::set<size_t> &theirQueries);
 
     void go_through_tree();
 
@@ -415,32 +276,11 @@ private:
 
 
     //Get fuzzy_shingle in ZZ O(n*log^2(n))
-    vector<ZZ> getALLFuzzyShingleZZ() {
+    vector<ZZ> getHashShingles_ZZ() {
         std::set<ZZ> res;
         for (auto treelvl : myTree) {
             for (auto item:treelvl) {
-                ZZ tmp = FuzzyShingletoZZ(shingle2fuzz(item));
-                auto it = res.find(tmp);
-                if (it == res.end()) {
-                    res.insert(tmp);
-                    fuzzy_lookup[shingle2fuzz(item)] = item;
-                } else {
-                    res.insert(FuzzyShingletoZZ(shingle2fuzz(item, 1)));
-                    fuzzy_lookup[shingle2fuzz(item, 1)] = item;
-                    fuzzy_lookup.erase(shingle2fuzz(item));
-                    res.erase(it);
-                }
-            }
-        }
-        return vector<ZZ>{res.begin(), res.end()};
-    };
-
-    // Get all individual hashes
-    vector<ZZ> getALLHashZZ() {
-        std::set<ZZ> res;
-        for (auto treelvl : myTree) {
-            for (auto item:treelvl) {
-                res.insert(TtoZZ(item.second));
+                res.emplace(TtoZZ(item));
             }
         }
         return vector<ZZ>{res.begin(), res.end()};
@@ -490,16 +330,10 @@ private:
         for (DataObject *dop : full_set) {
             setHost->addElem(dop); // Add to GenSync
         }
-        bool success = setHost->SyncServer(commSync, selfMinusOther, otherMinusSelf);
-        if (not SyncMethod::delGroup(full_set, selfMinusOther))
-            Logger::error_and_quit("We failed to delete some set elements");
-        for (auto item : otherMinusSelf)
-            full_set.push_back(item);
+        return setHost->SyncServer(commSync, selfMinusOther, otherMinusSelf);
 
 //        cout << " with sym Diff: " << selfMinusOther.size() + otherMinusSelf.size() << " After Sync at : "
 //             << full_set.size() << endl;
-
-        return success;
     };
 
     void cleanup(vector<DataObject *> &full_set, list<DataObject *> &selfMinusOther,
