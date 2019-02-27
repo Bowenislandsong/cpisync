@@ -166,7 +166,7 @@ void CommSocket::commSend(const char* toSend, const int len) {
             + base64_encode(toSend, len));
 
     if (my_fd == -1)
-        Logger::error_and_quit("Not connected to a socket!");
+        Logger::error_and_quit("Not connected to a socket! - Send");
 
     long numBytes = (len == 0 ? strlen(toSend) + 1 : len);  // the size of the string to be sent, including "\0"
     long numSent;
@@ -198,14 +198,14 @@ void CommSocket::commSend(const char* toSend, const int len) {
 }
 
 string CommSocket::commRecv(unsigned long numBytes) {
-       if (my_fd == -1)
-        Logger::error_and_quit("Not connected to a socket!");
+    if (my_fd == -1)
+        Logger::error_and_quit("Not connected to a socket! - Recv");
 
     long numRecv = 0;  // number of bytes received in this call
     auto tmpBuf = new char[numBytes];  // buffer into which received bytes are placed
 
     // wait until the buffer has been filled
-    if ((numRecv = recv(my_fd, tmpBuf, numBytes * sizeof (char), MSG_WAITALL)) < 0)
+    if ((numRecv = recv(my_fd, tmpBuf, numBytes * sizeof(char), MSG_WAITALL)) < 0)
         Logger::error_and_quit("Error receiving data on the socket!");
     if (numRecv != numBytes)
         Logger::error_and_quit("Received less or more than the prescribed number of characters in commRecv.");
@@ -215,8 +215,8 @@ string CommSocket::commRecv(unsigned long numBytes) {
     // clean up
     string result(tmpBuf, numRecv);
     delete[] tmpBuf;
-        Logger::gLog(Logger::COMM_DETAILS, "<RAW RECV> " + toStr(numRecv) + string(" bytes received (base64): ")
-            + base64_encode(result, numRecv));
+    Logger::gLog(Logger::COMM_DETAILS, "<RAW RECV> " + toStr(numRecv) + string(" bytes received (base64): ")
+                                       + base64_encode(result, numRecv));
 
     return result;
 }

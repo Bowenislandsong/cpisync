@@ -1,0 +1,63 @@
+//
+// Created by Bowen on 10/3/18.
+//
+#include "AdjMtxTest.h"
+CPPUNIT_TEST_SUITE_REGISTRATION(AdjMtxTest);
+
+AdjMtxTest::AdjMtxTest(){}
+AdjMtxTest::~AdjMtxTest(){}
+
+void AdjMtxTest::creatGraph(){
+    int GraphSize = 5;
+    AdjMtx mtx = AdjMtx();
+    vector<string> Vertices;
+    for (int i = 0; i < GraphSize; ++i) {
+        Vertices.push_back(randAsciiStr(7));
+    }
+    mtx.create(Vertices);
+    CPPUNIT_ASSERT(mtx.getNumVex()==5);
+
+}
+
+void AdjMtxTest::editGraph(){
+    int GraphSize = 5;
+    AdjMtx mtx = AdjMtx();
+    for (int i = 0; i < GraphSize; ++i) {
+        mtx.addNewVex(randAsciiStr(2));
+    }
+
+    auto V = mtx.getGraphVex();
+
+    auto addi = V[0];
+    auto addj = V[mtx.getNumVex()-1]; //last one
+    mtx.addWeigth(addi,addj,2);
+    mtx.delWeigth(addi,addj,1);
+    auto deli = V[mtx.getNumVex()-1];
+    auto delj = V[mtx.getNumVex()-1]; //last one
+    mtx.delWeigth(deli,deli,1);
+    mtx.setWeight(V[mtx.getNumVex()-1],V[0],5);
+    mtx.setWeight(V[0],V[0],5);
+}
+
+void AdjMtxTest::allTest() {
+    int GraphSize = 50;
+    AdjMtx mtx = AdjMtx();
+    for (int i = 0; i < GraphSize; ++i) {
+        mtx.addNewVex(randAsciiStr(5));
+    }
+    auto V = mtx.getGraphVex();
+
+    auto addi = V[0];
+    auto addj = V[mtx.getNumVex()-1]; //last one
+    mtx.addWeigth(addi,addj,2);
+    mtx.delWeigth(addi,addj,1);
+    auto deli = V[mtx.getNumVex()-1];
+    auto delj = V[mtx.getNumVex()-1]; //last one
+    mtx.delWeigth(deli,deli,1);
+    mtx.setWeight(V[mtx.getNumVex()-1],V[0],5);
+    mtx.setWeight(V[0],V[0],5);
+    //mtx.printGraph();
+
+}
+
+

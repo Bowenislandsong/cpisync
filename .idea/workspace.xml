@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
+    <generated>
+      <config projectName="cpisynclib" targetName="SystemLongTest" />
+      <config projectName="cpisynclib" targetName="cpisynclib" />
+      <config projectName="cpisynclib" targetName="Performance" />
+      <config projectName="cpisynclib" targetName="UnitTest" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alicecopy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alicecopy.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bobcopy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bobcopy.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookP3CL.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookP3CL.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/SetsOfContent.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/SetsOfContent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SetsOfContent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/SetsOfContent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
+    <ignored path="$PROJECT_DIR$/CMakeFiles/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1919019994">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="103" />
+          <entry key="project.open.time.0" value="5" />
+          <entry key="project.open.time.1" value="42" />
+          <entry key="project.open.time.10" value="3" />
+          <entry key="project.open.time.2" value="5" />
+          <entry key="project.open.time.3" value="1" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.5" value="8" />
+          <entry key="project.open.time.6" value="8" />
+          <entry key="project.open.time.7" value="23" />
+          <entry key="project.open.time.8" value="8" />
+          <entry key="project.open.time.9" value="7" />
+          <entry key="project.opened" value="111" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="LICENSE" value="1" />
+          <entry key="Makefile" value="1" />
+          <entry key="Performance" value="2" />
+          <entry key="__functional_base" value="26" />
+          <entry key="__split_buffer" value="3" />
+          <entry key="__string" value="1" />
+          <entry key="__tree" value="3" />
+          <entry key="algorithm" value="6" />
+          <entry key="cpp" value="407" />
+          <entry key="functional" value="21" />
+          <entry key="h" value="441" />
+          <entry key="heap" value="17" />
+          <entry key="iostream" value="1" />
+          <entry key="iterator" value="9" />
+          <entry key="list" value="1" />
+          <entry key="map" value="1" />
+          <entry key="memory" value="17" />
+          <entry key="new" value="17" />
+          <entry key="project" value="1" />
+          <entry key="py" value="1" />
+          <entry key="set" value="2" />
+          <entry key="sstream" value="10" />
+          <entry key="string" value="4" />
+          <entry key="thread" value="1" />
+          <entry key="txt" value="479" />
+          <entry key="type_traits" value="4" />
+          <entry key="vector" value="19" />
+          <entry key="xml" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="CMakeCache.txt" value="2" />
+          <entry key="CMakeLists.txt" value="9" />
+          <entry key="ObjectiveC" value="994" />
+          <entry key="PLAIN_TEXT" value="490" />
+          <entry key="Python" value="1" />
+          <entry key="XML" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="cpp" value="61065" />
+          <entry key="h" value="25054" />
+          <entry key="mm" value="18" />
+          <entry key="txt" value="162" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="CMakeLists.txt" value="114" />
+          <entry key="Doxygen file" value="45" />
+          <entry key="ObjectiveC" value="86092" />
+          <entry key="PLAIN_TEXT" value="48" />
+        </counts>
+      </usages-collector>
+    </session>
+    <session id="642130883">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="21" />
+          <entry key="project.open.time.0" value="3" />
+          <entry key="project.open.time.1" value="5" />
+          <entry key="project.open.time.12" value="1" />
+          <entry key="project.open.time.19" value="3" />
+          <entry key="project.open.time.23" value="1" />
+          <entry key="project.open.time.25" value="1" />
+          <entry key="project.open.time.29" value="2" />
+          <entry key="project.open.time.3" value="2" />
+          <entry key="project.open.time.4" value="5" />
+          <entry key="project.open.time.7" value="1" />
+          <entry key="project.open.time.8" value="1" />
+          <entry key="project.opened" value="25" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="cpp" value="9890" />
+          <entry key="h" value="3721" />
+          <entry key="txt" value="94" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="CMakeLists.txt" value="94" />
+          <entry key="Doxygen file" value="2" />
+          <entry key="ObjectiveC" value="13609" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="__string" value="3" />
+          <entry key="cpp" value="60" />
+          <entry key="h" value="84" />
+          <entry key="iterator" value="2" />
+          <entry key="memory" value="1" />
+          <entry key="string" value="1" />
+          <entry key="tuple" value="3" />
+          <entry key="txt" value="24" />
+          <entry key="type_traits" value="1" />
+          <entry key="vector" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="CMakeLists.txt" value="3" />
+          <entry key="ObjectiveC" value="157" />
+          <entry key="PLAIN_TEXT" value="21" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="195" column="25" selection-start-line="195" selection-start-column="25" selection-end-line="195" selection-end-column="25" />
+              <folding>
+                <element signature="e#116#133#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="780" column="61" selection-start-line="780" selection-start-column="61" selection-end-line="780" selection-end-column="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="620">
+              <caret line="276" column="83" selection-start-line="276" selection-start-column="83" selection-end-line="276" selection-end-column="103" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="178">
+              <caret line="81" column="42" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="542">
+              <caret line="129" column="117" selection-start-line="129" selection-start-column="117" selection-end-line="129" selection-end-column="117" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>ContentDeptPartition</find>
+      <find>cycle</find>
+      <find>getTotalSetDiffSize</find>
+      <find>Partition Sym Diff</find>
+      <find>Set Recon comm</find>
+      <find>CustomResult</find>
+      <find>String size would end up less t</find>
+      <find>getname</find>
+      <find>setPointers</find>
+      <find>shingle2fuzz</find>
+      <find>fuzzy_lookup</find>
+      <find>syncSuccess</find>
+      <find>addstr</find>
+      <find>stod</find>
+      <find>adds</find>
+      <find>omp</find>
+      <find>initResources</find>
+      <find>SIZE_T_MAX</find>
+      <find>gperf</find>
+      <find>resource</find>
+      <find>resourceReport</find>
+      <find>get_all_strs_from</find>
+      <find>get_str_from</find>
+      <find>min_between</find>
+      <find>hashcontent_dict</find>
+      <find>prepare_querys</find>
+      <find>tozz</find>
+      <find>mbar = pow(2,10)</find>
+      <find>pow(2,10)</find>
+      <find>pow</find>
+    </findStrings>
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/tests/unit/SetsOfStringsTest.cpp" />
+        <option value="$PROJECT_DIR$/include/CPI.h" />
+        <option value="$PROJECT_DIR$/include/InterCPISync.h" />
+        <option value="$PROJECT_DIR$/include/ConstantsAndTypes.h" />
+        <option value="$PROJECT_DIR$/include/Communicant.h" />
+        <option value="$PROJECT_DIR$/include/FullSync.h" />
+        <option value="$PROJECT_DIR$/tests/unit/CommunicantTest.cpp" />
+        <option value="$PROJECT_DIR$/src/StrataEst.cpp" />
+        <option value="$PROJECT_DIR$/src/FullSync.cpp" />
+        <option value="$PROJECT_DIR$/include/StrataEst.h" />
+        <option value="$PROJECT_DIR$/include/SetsOfStrings.h" />
+        <option value="$PROJECT_DIR$/src/IBLT.cpp" />
+        <option value="$PROJECT_DIR$/src/CommSocket.cpp" />
+        <option value="$PROJECT_DIR$/src/CPISync.cpp" />
+        <option value="$PROJECT_DIR$/src/InterCPISync.cpp" />
+        <option value="$PROJECT_DIR$/src/IBLTSync_SetDiff.cpp" />
+        <option value="$PROJECT_DIR$/include/IBLTSync_SetDiff.h" />
+        <option value="$PROJECT_DIR$/tests/unit/kshinglingSyncTest.h" />
+        <option value="$PROJECT_DIR$/tests/unit/kshinglingSyncTest.cpp" />
+        <option value="$PROJECT_DIR$/src/Communicant.cpp" />
+        <option value="$PROJECT_DIR$/tests/unit/AdjMtxTest.cpp" />
+        <option value="$PROJECT_DIR$/tests/unit/UniqueDecodeTest.cpp" />
+        <option value="$PROJECT_DIR$/Sets of Content IBLTSyncSetDiff RandText2mStr20kED.txt" />
+        <option value="$PROJECT_DIR$/include/AdjMtx.h" />
+        <option value="$PROJECT_DIR$/src/AdjMtx.cpp" />
+        <option value="$PROJECT_DIR$/include/UniqueDecode.h" />
+        <option value="$PROJECT_DIR$/src/UniqueDecode.cpp" />
+        <option value="$PROJECT_DIR$/tests/unit/kshinglingTest.cpp" />
+        <option value="$PROJECT_DIR$/include/kshingling.h" />
+        <option value="$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.h" />
+        <option value="$PROJECT_DIR$/src/kshinglingSync.cpp" />
+        <option value="$PROJECT_DIR$/include/kshinglingSync.h" />
+        <option value="$PROJECT_DIR$/src/probCPISync.cpp" />
+        <option value="$PROJECT_DIR$/cascading Mismatch.txt" />
+        <option value="$PROJECT_DIR$/tests/perf/kshinglingSyncPerfTest.cpp" />
+        <option value="$PROJECT_DIR$/tests/unit/AuxiliaryTest.cpp" />
+        <option value="$PROJECT_DIR$/include/SyncMethod.h" />
+        <option value="$PROJECT_DIR$/Sets of Content CPISync RandBookStr 2000000.txt" />
+        <option value="$PROJECT_DIR$/include/GenSync.h" />
+        <option value="$PROJECT_DIR$/include/ForkHandle.h" />
+        <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.h" />
+        <option value="$PROJECT_DIR$/src/GenSync.cpp" />
+        <option value="$PROJECT_DIR$/include/Auxiliary.h" />
+        <option value="$PROJECT_DIR$/include/PerformanceData.h" />
+        <option value="$PROJECT_DIR$/include/ProcessData.h" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/PerformanceData.cpp" />
+        <option value="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" />
+        <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" />
+        <option value="$PROJECT_DIR$/include/SetsOfContent.h" />
+        <option value="$PROJECT_DIR$/src/SetsOfContent.cpp" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="OCFindUsagesOptions" text="false" ivars="false" properties="false" derivedClasses="false" />
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="width" value="557" />
+    <option name="height" value="1440" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="cpisynclib" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cpisync" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cpisynclib" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cpisync" type="462c0819:PsiDirectoryNode" />
+              <item name="include" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cpisynclib" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cpisync" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cpisynclib" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cpisync" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+              <item name="perf" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cpisynclib" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cpisync" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+              <item name="unit" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.Performance">
+    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Performance" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cpisynclib" TARGET_NAME="Performance" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cpisynclib" RUN_TARGET_NAME="Performance">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SystemLongTest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cpisynclib" TARGET_NAME="SystemLongTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cpisynclib" RUN_TARGET_NAME="SystemLongTest">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UnitTest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cpisynclib" TARGET_NAME="UnitTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cpisynclib" RUN_TARGET_NAME="UnitTest">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="cpisynclib" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cpisynclib" TARGET_NAME="cpisynclib" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Build All" />
+      <item itemvalue="Application.cpisynclib" />
+      <item itemvalue="Application.Performance" />
+      <item itemvalue="Application.SystemLongTest" />
+      <item itemvalue="Application.UnitTest" />
+    </list>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="" />
+      <created>1543501047879</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1543501047879</updated>
+      <workItem from="1543501049206" duration="185000" />
+      <workItem from="1543501238006" duration="18000" />
+      <workItem from="1543501321917" duration="170000" />
+      <workItem from="1543501495229" duration="9270000" />
+      <workItem from="1543517285902" duration="6740000" />
+      <workItem from="1543528078941" duration="17119000" />
+      <workItem from="1543550488511" duration="1295000" />
+      <workItem from="1543590832967" duration="2064000" />
+      <workItem from="1543622168552" duration="13975000" />
+      <workItem from="1543676790962" duration="25511000" />
+      <workItem from="1543852003834" duration="4379000" />
+      <workItem from="1543866866128" duration="6106000" />
+      <workItem from="1543960558921" duration="13257000" />
+      <workItem from="1544021778315" duration="7362000" />
+      <workItem from="1544050453003" duration="187000" />
+      <workItem from="1544050648876" duration="16439000" />
+      <workItem from="1544144170133" duration="7382000" />
+      <workItem from="1544199261123" duration="93605000" />
+      <workItem from="1544408721732" duration="19000" />
+      <workItem from="1544412026510" duration="1844000" />
+      <workItem from="1544458622945" duration="793000" />
+      <workItem from="1544561767802" duration="57475000" />
+      <workItem from="1544737566635" duration="12324000" />
+      <workItem from="1544800369632" duration="12675000" />
+      <workItem from="1544834150731" duration="3586000" />
+      <workItem from="1544837772487" duration="26801000" />
+      <workItem from="1544890460256" duration="21983000" />
+      <workItem from="1544921522634" duration="1948000" />
+      <workItem from="1544967649905" duration="1828000" />
+      <workItem from="1544970833274" duration="10889000" />
+      <workItem from="1544982493813" duration="19282000" />
+      <workItem from="1545002386279" duration="15950000" />
+      <workItem from="1545060166819" duration="5085000" />
+      <workItem from="1545070111297" duration="271000" />
+      <workItem from="1545070662637" duration="641000" />
+      <workItem from="1545087145121" duration="71000" />
+      <workItem from="1545233797490" duration="615000" />
+      <workItem from="1545240138421" duration="2768000" />
+      <workItem from="1545760311801" duration="3564000" />
+      <workItem from="1545771769597" duration="1527000" />
+      <workItem from="1545838423196" duration="6319000" />
+      <workItem from="1545855010379" duration="5084000" />
+      <workItem from="1545869405000" duration="1000" />
+      <workItem from="1545869421426" duration="8118000" />
+      <workItem from="1545918343961" duration="56000" />
+      <workItem from="1545920256844" duration="5174000" />
+      <workItem from="1545948138395" duration="11335000" />
+      <workItem from="1545967726717" duration="81000" />
+      <workItem from="1546003727670" duration="13537000" />
+      <workItem from="1546037703886" duration="11672000" />
+      <workItem from="1546084773994" duration="12583000" />
+      <workItem from="1546262289638" duration="2242000" />
+      <workItem from="1546376304539" duration="5426000" />
+      <workItem from="1546558692375" duration="1998000" />
+      <workItem from="1546623152950" duration="218000" />
+      <workItem from="1546623682019" duration="8343000" />
+      <workItem from="1546639753660" duration="11599000" />
+      <workItem from="1546712703193" duration="21348000" />
+      <workItem from="1546888513007" duration="227000" />
+      <workItem from="1546911016584" duration="17344000" />
+      <workItem from="1547047961257" duration="24804000" />
+      <workItem from="1547135682724" duration="19843000" />
+      <workItem from="1547172225744" duration="2881000" />
+      <workItem from="1547175325961" duration="2170000" />
+      <workItem from="1547177860319" duration="3000" />
+      <workItem from="1547226228977" duration="33000" />
+      <workItem from="1547226274047" duration="58436000" />
+      <workItem from="1547499108266" duration="16700000" />
+      <workItem from="1547580326912" duration="5134000" />
+      <workItem from="1547587535451" duration="3799000" />
+      <workItem from="1547601388582" duration="9613000" />
+      <workItem from="1547652183941" duration="5000" />
+      <workItem from="1547652204168" duration="16899000" />
+      <workItem from="1547691922150" duration="461000" />
+      <workItem from="1547692406375" duration="5000" />
+      <workItem from="1547692435362" duration="3718000" />
+      <workItem from="1547736116616" duration="3890000" />
+      <workItem from="1547754145663" duration="20203000" />
+      <workItem from="1547825189429" duration="188000" />
+      <workItem from="1547866775968" duration="8302000" />
+      <workItem from="1547939343391" duration="16211000" />
+      <workItem from="1547991661213" duration="4946000" />
+      <workItem from="1548017331105" duration="1133000" />
+      <workItem from="1548036248698" duration="1795000" />
+      <workItem from="1548045308270" duration="430000" />
+      <workItem from="1548085808076" duration="458000" />
+      <workItem from="1548088464646" duration="21547000" />
+      <workItem from="1548112520769" duration="5447000" />
+      <workItem from="1548127336936" duration="3985000" />
+      <workItem from="1548131942937" duration="6000" />
+      <workItem from="1548172292673" duration="1735000" />
+      <workItem from="1548188288668" duration="7415000" />
+      <workItem from="1548259896270" duration="3523000" />
+      <workItem from="1548371468587" duration="1117000" />
+      <workItem from="1548372839078" duration="14866000" />
+      <workItem from="1548642957931" duration="7200000" />
+      <workItem from="1548694196563" duration="11214000" />
+      <workItem from="1548714078570" duration="2181000" />
+      <workItem from="1548778557879" duration="48000" />
+      <workItem from="1548778629364" duration="85000" />
+      <workItem from="1548778750509" duration="4558000" />
+      <workItem from="1548794496284" duration="17208000" />
+      <workItem from="1548863958611" duration="10348000" />
+      <workItem from="1549154697672" duration="5867000" />
+      <workItem from="1549200215229" duration="9992000" />
+      <workItem from="1549331176274" duration="5736000" />
+      <workItem from="1549652470568" duration="45055000" />
+      <workItem from="1549837871540" duration="295000" />
+      <workItem from="1549847986226" duration="4600000" />
+      <workItem from="1549932031651" duration="11668000" />
+      <workItem from="1550073905429" duration="10671000" />
+      <workItem from="1550098805275" duration="15937000" />
+      <workItem from="1550199041743" duration="5684000" />
+      <workItem from="1550245782705" duration="449000" />
+      <workItem from="1550257199240" duration="2400000" />
+      <workItem from="1550427385798" duration="17990000" />
+      <workItem from="1550507270443" duration="28620000" />
+      <workItem from="1550605119656" duration="3964000" />
+      <workItem from="1550628769272" duration="5911000" />
+      <workItem from="1550768976045" duration="4453000" />
+      <workItem from="1550794760717" duration="1840000" />
+      <workItem from="1550796998669" duration="10912000" />
+      <workItem from="1550848464666" duration="19105000" />
+      <workItem from="1550880664796" duration="96000" />
+      <workItem from="1550880795901" duration="20056000" />
+      <workItem from="1550938269776" duration="54778000" />
+      <workItem from="1551061534276" duration="7826000" />
+      <workItem from="1551070857772" duration="5186000" />
+      <workItem from="1551116851515" duration="14000" />
+      <workItem from="1551116868778" duration="1723000" />
+      <workItem from="1551121320318" duration="3861000" />
+      <workItem from="1551197446846" duration="6828000" />
+      <workItem from="1551232070185" duration="2569000" />
+      <workItem from="1551282454551" duration="11209000" />
+      <workItem from="1551294971244" duration="2046000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1252143000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21959943" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32771084" />
+      <window_info anchor="bottom" x="902" y="407" width="1375" height="861" id="Run" order="2" sideWeight="0.49945176" weight="0.6240964" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="5" weight="0.32891566" />
+      <window_info anchor="bottom" id="Database Changes" order="6" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32891566" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50106496" side_tool="true" weight="0.35940593" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32891566" />
+      <window_info anchor="bottom" id="CMake" order="10" weight="0.32771084" />
+      <window_info anchor="bottom" id="Debug" order="11" sideWeight="0.49893504" weight="0.37810218" />
+      <window_info active="true" anchor="bottom" x="404" y="312" width="1440" height="829" id="Messages" order="12" sideWeight="0.49945176" visible="true" weight="0.28674698" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21167593" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32871288" />
+      <window_info active="true" anchor="bottom" x="902" y="407" width="1375" height="861" id="Run" order="2" sideWeight="0.49945176" visible="true" weight="0.19277108" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="5" weight="0.32970297" />
+      <window_info anchor="bottom" id="Database Changes" order="6" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32970297" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50106496" side_tool="true" weight="0.35940593" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32970297" />
+      <window_info anchor="bottom" id="CMake" order="10" weight="0.32871288" />
+      <window_info anchor="bottom" id="Debug" order="11" sideWeight="0.49893504" weight="0.32048193" />
+      <window_info anchor="bottom" x="404" y="312" width="1440" height="829" id="Messages" order="12" sideWeight="0.49945176" weight="0.310219" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/tests/unit/kshinglingSyncTest.cpp</url>
+          <line>39</line>
+          <option name="timeStamp" value="456" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp</url>
+          <line>137</line>
+          <option name="timeStamp" value="492" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/PerformanceData.cpp</url>
+          <line>252</line>
+          <option name="timeStamp" value="494" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+    </breakpoint-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="breakpointCondition">
+      <expression>
+        <expression-string>get_string_cycles</expression-string>
+        <language-id>ObjectiveC</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>malloc_error_break</expression-string>
+        <language-id>ObjectiveC</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Sets of Content InteractiveCPISync RandBooklvl 3.txt" />
+    <entry file="file://$PROJECT_DIR$/Sets of Content InteractiveCPISync RandBooklvl 4.txt" />
+    <entry file="file://$PROJECT_DIR$/Sets of Content InteractiveCPISync RandBookError 10.txt" />
+    <entry file="file://$PROJECT_DIR$/tests/unit/AuxiliaryTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="71" column="85" selection-start-line="71" selection-start-column="85" selection-end-line="71" selection-end-column="85" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/IBLT.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="463">
+          <caret line="39" column="26" lean-forward="true" selection-start-line="39" selection-start-column="26" selection-end-line="39" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/llvm/7.0.0/include/c++/v1/type_traits">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="411" column="49" selection-start-line="411" selection-start-column="49" selection-end-line="411" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/IBLTSync_SetDiff.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="115" column="23" selection-start-line="115" selection-start-column="23" selection-end-line="115" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/IBLTSync_SetDiff.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="21" column="14" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/IBLT.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/HashSync.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file:///usr/local/Cellar/llvm/7.0.0/include/c++/v1/iterator">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="1560" selection-start-line="1560" selection-end-line="1560" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/llvm/7.0.0/include/c++/v1/__tree">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="178">
+          <caret line="144" selection-start-line="144" selection-end-line="144" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/llvm/7.0.0/include/c++/v1/__functional_base">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="54" column="20" selection-start-line="54" selection-start-column="20" selection-end-line="54" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/llvm/7.0.0/include/c++/v1/__split_buffer">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="265" column="19" selection-start-line="265" selection-start-column="19" selection-end-line="265" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/CPISync.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="104" column="22" selection-start-line="104" selection-start-column="22" selection-end-line="104" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SyncMethod.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CPISync.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="328" column="14" selection-start-line="328" selection-start-column="14" selection-end-line="328" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/include/NTL/tools.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="473" selection-start-line="473" selection-end-line="473" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CPI.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="281" column="70" selection-start-line="281" selection-start-column="70" selection-end-line="281" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/unit/kshinglingSyncTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="39" selection-start-line="39" selection-end-line="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/InterCPISync.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="20" column="14" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/InterCPISync.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="33" column="6" selection-start-line="33" selection-start-column="6" selection-end-line="33" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sets of Content InteractiveCPISync RandBookError 1000.txt" />
+    <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookError 1000.txt" />
+    <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookStr 2000000.txt" />
+    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="23" column="27" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED100LP.txt" />
+    <entry file="file://$PROJECT_DIR$/src/Communicant.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="26" column="20" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/GenSync.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-153">
+          <caret line="46" selection-start-line="46" selection-end-line="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.project">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED1000LP.txt" />
+    <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookP3L7.txt" />
+    <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookED 1000P3SL.txt" />
+    <entry file="file:///usr/local/include/NTL/ZZ.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DataObject.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="42" selection-start-line="42" selection-end-line="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Auxiliary.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="521" column="27" selection-start-line="521" selection-start-column="27" selection-end-line="521" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/ForkHandle.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="75" selection-start-line="75" selection-end-line="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/PerformanceData.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1155">
+          <caret line="77" selection-start-line="77" selection-end-line="77" />
+          <folding>
+            <element signature="e#114#134#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/ProcessData.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="49" column="30" selection-start-line="49" selection-start-column="30" selection-end-line="49" selection-end-column="30" />
+          <folding>
+            <element signature="e#121#142#0" expanded="true" />
+            <element signature="e#416#514#0" expanded="true" />
+            <element signature="e#3855#4515#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GenSync.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="255" selection-start-line="255" selection-end-line="255" />
+          <folding>
+            <element signature="e#127#146#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/kshingling.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="35" column="15" selection-start-line="35" selection-start-column="15" selection-end-line="35" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/DataObject.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="25" column="6" selection-start-line="25" selection-start-column="6" selection-end-line="25" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/SyncMethod.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="101" column="16" selection-start-line="101" selection-start-column="16" selection-end-line="101" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sets of Content InteractiveCPISync RandBookP3CL.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="16" lean-forward="true" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookP3CL.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="94" selection-start-line="1" selection-start-column="73" selection-end-line="1" selection-end-column="94" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="620">
+          <caret line="276" column="83" selection-start-line="276" selection-start-column="83" selection-end-line="276" selection-end-column="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="542">
+          <caret line="129" column="117" selection-start-line="129" selection-start-column="117" selection-end-line="129" selection-end-column="117" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="178">
+          <caret line="81" column="42" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="195" column="25" selection-start-line="195" selection-start-column="25" selection-end-line="195" selection-end-column="25" />
+          <folding>
+            <element signature="e#116#133#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="780" column="61" selection-start-line="780" selection-start-column="61" selection-end-line="780" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
