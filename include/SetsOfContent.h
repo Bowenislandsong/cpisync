@@ -286,6 +286,12 @@ private:
         return vector<ZZ>{res.begin(), res.end()};
     };
 
+    size_t getNumofTreeNodes(){
+        size_t num_treenodes = 0;
+        for (auto lvl : myTree) num_treenodes+=lvl.size();
+        return num_treenodes;
+    }
+
     void SendSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false) override;
 
     void RecvSyncParam(const shared_ptr<Communicant> &commSync, bool oneWay = false) override;
@@ -335,17 +341,6 @@ private:
 //        cout << " with sym Diff: " << selfMinusOther.size() + otherMinusSelf.size() << " After Sync at : "
 //             << full_set.size() << endl;
     };
-
-    void cleanup(vector<DataObject *> &full_set, list<DataObject *> &selfMinusOther,
-                 list<DataObject *> &otherMinusSelf, bool erase_all = false) {
-        for (auto dop : selfMinusOther) delete dop;
-        if (erase_all) {
-            for (auto dop : full_set) delete dop;
-            full_set.clear();
-        }
-        selfMinusOther.clear();
-        otherMinusSelf.clear();
-    }
 };
 
 #endif //CPISYNCLIB_SETSOFCONTENT_H

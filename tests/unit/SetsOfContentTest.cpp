@@ -127,7 +127,7 @@ void SetsOfContentTest::testAll() {
 
 
     cout << "Terminal Str Trans: ------------------ " << Alice.getCustomResult("Literal comm")<<endl;
-    cout << "Set Comm: ------------------ " << report.bytesXTot+report.bytesRTot-Alice.getCustomResult("Terminal comm")<<endl;
+    cout << "Set Comm: ------------------ " << report.bytesXTot+report.bytesRTot-Alice.getCustomResult("Literal comm")<<endl;
     cout << "Number of node diff: " << Alice.getCustomResult("Partition Sym Diff") << endl;
     cout << "String Reconstruction Time: " << Alice.getCustomResult("Str Reconstruction Time")<<endl;
     cout << "String Add Time: "<< str_time<<endl;

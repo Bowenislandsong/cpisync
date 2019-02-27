@@ -157,8 +157,9 @@ void SetsOfContent::prepare_querys(list<DataObject *> &otherMinusSelf) {
     std::set<size_t> dup;// void duplicate (when a partition stay the same from upper level)
 
     for (DataObject *shingle_zz: otherMinusSelf) {
-        shingle_hash shingle = ZZtoT(shingle_zz->to_ZZ(),shingle_hash());
-        if(dup.emplace(shingle.second).second) cyc_query.erase(shingle.second); // if duplicated, we want the lower level
+        shingle_hash shingle = ZZtoT(shingle_zz->to_ZZ(), shingle_hash());
+        if (dup.emplace(shingle.second).second)
+            cyc_query.erase(shingle.second); // if duplicated, we want the lower level
         if (Dictionary.find(shingle.second) == Dictionary.end()) { // if it is not found anywhere
             if (shingle.lvl < Levels - 1)
                 cyc_query.emplace(shingle.second, cycle{.head=0, .len=0, .cyc=0});
@@ -180,7 +181,7 @@ bool SetsOfContent::answer_queries(std::set<size_t> &theirQueries) {
             auto it = theirQueries.find(shingle.second);
             if (it != theirQueries.end()) {
                 if (Levels - 1 == shingle.lvl)
-                    term_concern.emplace(shingle.second,Dictionary[shingle.second]);
+                    term_concern.emplace(shingle.second, Dictionary[shingle.second]);
                 else {
                     vector<size_t> tmp_vec = Cyc_dict[shingle.second];
                     cycle tmp = cycle{.head = tmp_vec.front(), .len = (unsigned int) tmp_vec.size(), .cyc=0};
@@ -703,7 +704,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
     }
 
     if (!answer_queries(queries))
-        cout<<"We failed to asnwer all the questions, thie sync should fail"<<endl;
+        cout << "We failed to answer all the questions, thie sync should fail" << endl;
 
     cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
     for (auto groupcyc : cyc_concern) {
@@ -752,7 +753,6 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     // ------------------------- Sync hash shingles
 
 
-
     bool success = false;
     size_t top_mbar = pow(2 * Partition, Levels) * 2; // Upper bound on the number of symmetrical difference
     while (!success and mbar < top_mbar) { // if set recon failed, This can be caused by error rate and small mbar
@@ -771,7 +771,9 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
 
     CustomResult["Partition Sym Diff"] = (selfMinusOther.size() +
                                           otherMinusSelf.size()); // recorder # symmetrical partition difference
-    cout << "After Set Recon, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
+    CustomResult["Total Num Partitions"] =
+            (getNumofTreeNodes() - selfMinusOther.size()) * 2 + selfMinusOther.size() + otherMinusSelf.size();
+//    cout << "After Set Recon, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
     prepare_querys(otherMinusSelf);
 
@@ -784,16 +786,16 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
         commSync->commSend(term.first);
     }
 
-    cout << "After Query, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
+//    cout << "After Query, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
 // --------------------- get answers from server
-    cout << "We queried " << cyc_query.size() << " cycles and " << term_query.size() << " hashes" << endl;
+//    cout << "We queried " << cyc_query.size() << " cycles and " << term_query.size() << " hashes" << endl;
 
 
     for (auto &cyc:cyc_query) {
-        cyc.second = ZZtoT(commSync->commRecv_ZZ(sizeof(cycle)),cycle());
+        cyc.second = ZZtoT(commSync->commRecv_ZZ(sizeof(cycle)), cycle());
     }
-    cout << "After Cyc Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
+//    cout << "After Cyc Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
 
     for (int i = 0; i < term_query.size(); ++i) {
@@ -802,7 +804,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
             add_to_dictionary(tmp);
     }
 
-    cout << "After Term Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
+//    cout << "After Term Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
 
 //    cout<<"Client Close"<<endl;
@@ -825,7 +827,7 @@ bool SetsOfContent::reconstructString(DataObject *&recovered_string, const list<
     myTree.clear();
     myTree.resize(Levels);
     for (auto s_zz : mySetData) {
-        shingle_hash shingle = ZZtoT(s_zz->to_ZZ(),shingle_hash());
+        shingle_hash shingle = ZZtoT(s_zz->to_ZZ(), shingle_hash());
         myTree[shingle.lvl].insert(shingle);
     }
 
