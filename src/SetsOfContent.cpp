@@ -127,7 +127,7 @@ void SetsOfContent::go_through_tree() {
 /* ---------fixed hash value end */
 
     for (int l = 1; l < Levels; ++l) {
-        clock_t time = clock();
+//        clock_t time = clock();
         // Fill up Cycle Dictionary for non terminal strings
         for (auto substr_hash:unique_substr_hash(myTree[l - 1])) {
 
@@ -135,7 +135,7 @@ void SetsOfContent::go_through_tree() {
             update_tree_shingles(cur_level, l);
 
         }
-        cout << "time: " << (double) (clock() - time) / CLOCKS_PER_SEC << endl;
+//        cout << "time: " << (double) (clock() - time) / CLOCKS_PER_SEC << endl;
         space = floor((space / Partition) / 2);
         shingle_size = floor(shingle_size / 2);
     }
