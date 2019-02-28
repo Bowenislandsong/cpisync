@@ -67,18 +67,6 @@ inline vector<byte> StrToVec(const string &data) {
     return result;
 }
 
-inline string ZZtoStr(const ZZ &zz) {
-    string str;
-    str.resize(NumBytes(zz), 0);
-    BytesFromZZ((uint8_t *) &str[0], zz, str.size());
-    return str;
-}
-
-inline ZZ StrtoZZ(const string &str) {
-    return ZZFromBytes((const uint8_t *) str.data(), str.size());
-}
-
-
 /**
  * Converts a vector of bytes into a string.  The opposite of StrToVec.
  * @param data The vector of bytes to be converted
@@ -90,6 +78,30 @@ inline string VecToStr(vector<byte> data) {
     for (unsigned char ii : data)
         result.push_back(ii);
     return result;
+}
+
+inline string ZZtoStr(const ZZ &zz) {
+    string str;
+    str.resize(NumBytes(zz), 0);
+    BytesFromZZ((uint8_t *) &str[0], zz, str.size());
+    return str;
+}
+
+inline ZZ StrtoZZ(const string &str) {
+    return ZZFromBytes((const uint8_t *) str.data(), str.size());
+}
+
+template<typename T>
+inline ZZ TtoZZ(T val) {
+    char *my_s_bytes = reinterpret_cast<char *>(&val);
+    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(T));
+}
+
+template<typename T>
+inline T ZZtoT(const ZZ &zz, const T) {
+    T val;
+    BytesFromZZ((uint8_t *) &val, zz, sizeof(T));
+    return val;
 }
 
 /**
@@ -122,7 +134,6 @@ inline string toStr(T item) {
     tmp << item;
     return tmp.str();
 }
-
 
 
 /**
@@ -239,7 +250,7 @@ public:
  * @param [begB, endB] Iterators pointing to the beginning and end of the second container.
  * @param coll Iterator onto which the results of the set difference will be pushed.
  */
-template <class IteratorA, class IteratorB, class IteratorOut>
+template<class IteratorA, class IteratorB, class IteratorOut>
 void rangeDiff(IteratorA begA, IteratorA endA, IteratorB begB, IteratorB endB, IteratorOut coll) {
     typedef typename std::iterator_traits<IteratorA>::value_type T;
     set_difference(begA, endA, begB, endB, coll, cmp<T>());
@@ -497,7 +508,8 @@ inline string subprocess_commandline(const char *command) {
 }
 
 struct rsync_stats {
-    size_t xmit, recv;
+    long long xmit, recv;
+    double time;
 };
 
 inline ostream &operator<<(ostream &os, const rsync_stats &stats) {
@@ -528,10 +540,14 @@ inline rsync_stats getRsyncStats(string origin, string target, bool full_report 
 
     string res = subprocess_commandline(("rsync --checksum --no-whole-file --progress --stats " + origin + " " +
                                          target).c_str());  // -a archive -z compress -v for verbose
-//    stats.time = stod(extractStringIn(res, "File list generation time: ", "seconds"));
-//    stats.time += stod(extractStringIn(res, "File list transfer time: ", "seconds"));
-    stats.xmit = stoll(extractStringIn(res, "Total bytes sent: ", "\n"));
-    stats.recv = stoll(extractStringIn(res, "Total bytes received: ", "\n"));
+    try {
+        stats.time = stod(extractStringIn(res, "File list generation time: ", "seconds"));
+        stats.time += stod(extractStringIn(res, "File list transfer time: ", "seconds"));
+        stats.xmit = stoll(extractStringIn(res, "Total bytes sent: ", "\n"));
+        stats.recv = stoll(extractStringIn(res, "Total bytes received: ", "\n"));
+    } catch (const std::exception &exc) {
+        stats = rsync_stats{.time=0, .xmit=0, .recv=0};
+    }
     if (full_report)
         cout << res << endl;
     return stats;

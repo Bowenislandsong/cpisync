@@ -108,8 +108,8 @@ bool Communicant::establishIBLTRecv(size_t size, size_t eltSize, bool oneWay /* 
 }
 
 
-bool Communicant::establishKshingleSend(size_t kshingle_size, char stop_word, bool oneWay /* = false */) {
-    commSend((long) kshingle_size);
+bool Communicant::establishKshingleSend(char stop_word, bool oneWay /* = false */) {
+
     commSend(string(1, stop_word));
     if (oneWay)
         return true;  // i.e. don't wait for a response
@@ -117,9 +117,8 @@ bool Communicant::establishKshingleSend(size_t kshingle_size, char stop_word, bo
         return (commRecv_byte() != SYNC_FAIL_FLAG);
 }
 
-bool Communicant::establishKshingleRecv(size_t kshingle_size, char stop_word, bool oneWay /* = false */) {
+bool Communicant::establishKshingleRecv(char stop_word, bool oneWay /* = false */) {
     // receive other size and eltSize. both must be read, even if the first parameter is wrong
-    long otherKshingleSize = commRecv_long();
     string temStopWord = commRecv_string();
     if (temStopWord.size()>1 or temStopWord.empty()){
         Logger::gLog(Logger::COMM, "otherStopWord is not a single char");
@@ -127,13 +126,13 @@ bool Communicant::establishKshingleRecv(size_t kshingle_size, char stop_word, bo
     }
     char otherStopWord = temStopWord[0]; // stopword is a single char
 
-    if(kshingle_size == otherKshingleSize && stop_word == otherStopWord) {
+    if(stop_word == otherStopWord) {
         if(!oneWay)
             commSend(SYNC_OK_FLAG);
         return true;
     } else {
-        Logger::gLog(Logger::COMM, "Kshingle params do not match: mine(shingle size=" + toStr(kshingle_size) + ", stop_word="
-                                   + toStr(stop_word) + ") vs other(size=" + toStr(otherKshingleSize) + ", eltSize=" + toStr(otherStopWord) + ").");
+        Logger::gLog(Logger::COMM, "Kshingle params do not match: stop_word="
+                                   + toStr(stop_word) + ") vs other("+ toStr(otherStopWord) + ").");
         if(!oneWay)
             commSend(SYNC_FAIL_FLAG);
         return false;

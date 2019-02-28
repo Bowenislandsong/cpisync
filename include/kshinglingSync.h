@@ -38,18 +38,15 @@ public:
      * @param Estimate whether estimate using existing estimation protocol, set mbar (maximum difference) if false
      * @return
      */
-    bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf,map<string,double>& CustomResult) override;
+    bool SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
+                    list<DataObject *> &otherMinusSelf, map<string, double> &CustomResult) override;
 
-    bool SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject*> &selfMinusOther, list<DataObject*> &otherMinusSelf) override;
+    bool SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *> &selfMinusOther,
+                    list<DataObject *> &otherMinusSelf) override;
 
-    bool reconstructString(DataObject *&recovered_string, const list<DataObject *> & mySetData) override;
+    bool reconstructString(DataObject *&recovered_string, const list<DataObject *> &mySetData) override;
 
-    bool addStr(DataObject* str, vector<DataObject*> &datum,  bool backtrack) override;
-
-
-        string reconString(size_t cycNum) {
-        return myKshingle.reconstructStringBacktracking(cycNum).first;
-    };
+    bool addStr(DataObject *str, vector<DataObject *> &datum, bool backtrack) override;
 
 
     // Get the name of the sync method
@@ -61,36 +58,31 @@ public:
      */
     long getVirMem() override;
 
-    long cycleNum;
-
 protected:
     bool oneway;
 private:
     K_Shingle myKshingle;
-    string Str;
-    size_t strLen;
 
-    size_t shingleSize =0, eltSize = 0; // defined by shingle size
+    long cycleNum;
+
+    size_t shingleSize = 0, eltSize = 0; // defined by shingle size
     size_t mbar = 0; // defined by set difference estimator ... not necessarily a global variable
 
     GenSync::SyncProtocol setSyncProtocol;
 
     //Mem handle
-    vector<DataObject*> setPointers;
+    vector<DataObject *> setPointers;
 
 
     /**
      * Configure set recon protocols
      */
-    void configurate(shared_ptr<SyncMethod> &setHost, idx_t set_size);
+    void configurate(shared_ptr<SyncMethod> &setHost);
 
-    /**
-     * assess if estimation is needed for the set reconcialition
-     * interCPI sync and Full sync does not need estimation
-     * @return
-     */
-    bool needEst() {
-        return setSyncProtocol == GenSync::SyncProtocol::IBLTSyncSetDiff;
+    string reconString(idx_t cycNum) {
+        string str;
+        myKshingle.shingle2string(cycNum,str);
+        return str;
     };
 
 };

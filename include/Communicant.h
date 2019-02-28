@@ -99,7 +99,7 @@ public:
      * @require an active connection via commConnect
      * @return true iff common parameters were verified
      */
-    bool establishKshingleSend(const size_t kshingle_size, const char stop_word, bool oneWay = false);
+    bool establishKshingleSend(const char stop_word, bool oneWay = false);
 
     /**
      * Establishes common Kshingling parameters with another connected Communicant.
@@ -109,7 +109,7 @@ public:
      * @require an active connection via commConnect
      * @return true iff common parameters were verified
      */
-    bool establishKshingleRecv(const size_t kshingle_size, const char stop_word, bool oneWay = false);
+    bool establishKshingleRecv(const char stop_word, bool oneWay = false);
 
 
     /**

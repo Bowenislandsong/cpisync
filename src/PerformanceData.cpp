@@ -286,8 +286,9 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     delete Alicetxt;
                                     delete Bobtxt;
-                                } catch (std::exception) {
+                                } catch (const std::exception &exc) {
                                     cout << "We failed after " << last_passed_before_exception << endl;
+                                    std::cerr << exc.what()<<endl;
                                     report_vec = {to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0)};

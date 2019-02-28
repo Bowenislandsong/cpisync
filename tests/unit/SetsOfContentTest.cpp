@@ -51,7 +51,7 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
+    string alicetxt = randSampleTxt(1e5); // 20MB is top on MAC
     int partition =4;
     int lvl =6;
     int space = 4;
