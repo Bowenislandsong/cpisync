@@ -95,16 +95,16 @@ void SetsOfContentTest::testAll() {
             setPort(8001).
             build();
 auto str_s = clock();
-     thread alice_thread([&](GenSync *gensync) { gensync->addStr(atxt, false); }, &Alice);
+//     thread alice_thread([&](GenSync *gensync) { gensync->addStr(atxt, false); }, &Alice);
 
-     thread bob_thread([&](GenSync *gensync) { gensync->addStr(btxt, false); }, &Bob);
+//     thread bob_thread([&](GenSync *gensync) { gensync->addStr(btxt, false); }, &Bob);
 
 
-//    Bob.addStr(btxt, false);
+    Bob.addStr(btxt, false);
 
-//   Alice.addStr(atxt, false);
-     alice_thread.join();
-     bob_thread.join();
+   Alice.addStr(atxt, false);
+//     alice_thread.join();
+//     bob_thread.join();
     double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
 
     auto recon_t = clock();
