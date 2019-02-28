@@ -18,16 +18,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Alice.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bob.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/SetsOfContent.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/SetsOfContent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SetsOfContent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/SetsOfContent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.aux" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.fdb_latexmk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.fls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
@@ -67,7 +58,7 @@
           <entry key="__string" value="1" />
           <entry key="__tree" value="3" />
           <entry key="algorithm" value="6" />
-          <entry key="cpp" value="433" />
+          <entry key="cpp" value="434" />
           <entry key="fdb_latexmk" value="1" />
           <entry key="functional" value="21" />
           <entry key="h" value="463" />
@@ -96,7 +87,7 @@
         <counts>
           <entry key="CMakeCache.txt" value="2" />
           <entry key="CMakeLists.txt" value="9" />
-          <entry key="ObjectiveC" value="1048" />
+          <entry key="ObjectiveC" value="1049" />
           <entry key="PLAIN_TEXT" value="499" />
           <entry key="Python" value="1" />
           <entry key="XML" value="2" />
@@ -104,7 +95,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="65683" />
+          <entry key="cpp" value="65687" />
           <entry key="h" value="26995" />
           <entry key="mm" value="18" />
           <entry key="txt" value="162" />
@@ -114,7 +105,7 @@
         <counts>
           <entry key="CMakeLists.txt" value="114" />
           <entry key="Doxygen file" value="45" />
-          <entry key="ObjectiveC" value="92651" />
+          <entry key="ObjectiveC" value="92655" />
           <entry key="PLAIN_TEXT" value="48" />
         </counts>
       </usages-collector>
@@ -176,11 +167,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="225" column="8" selection-start-line="225" selection-start-column="8" selection-end-line="225" selection-end-column="8" />
+            <state relative-caret-position="330">
+              <caret line="205" column="29" selection-start-line="205" selection-start-column="29" selection-end-line="205" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -200,8 +191,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
+            <state relative-caret-position="493">
               <caret line="97" selection-start-line="97" selection-end-line="97" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="351">
+              <caret line="93" column="110" selection-start-line="93" selection-start-column="110" selection-end-line="93" selection-end-column="110" />
             </state>
           </provider>
         </entry>
@@ -209,8 +209,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="178">
-              <caret line="133" selection-start-line="133" selection-end-line="133" />
+            <state relative-caret-position="15">
+              <caret line="1" column="36" selection-start-line="1" selection-start-column="36" selection-end-line="1" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -246,9 +246,9 @@
       <find>add_to_dictionary</find>
       <find>addstr</find>
       <find>str</find>
-      <find>create_HashSet</find>
       <find>hash_val</find>
       <find>pair</find>
+      <find>create_HashSet</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -298,7 +298,6 @@
         <option value="$PROJECT_DIR$/include/PerformanceData.h" />
         <option value="$PROJECT_DIR$/include/ProcessData.h" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" />
         <option value="$PROJECT_DIR$/src/Communicant.cpp" />
         <option value="$PROJECT_DIR$/src/kshinglingSync.cpp" />
         <option value="$PROJECT_DIR$/src/PerformanceData.cpp" />
@@ -309,8 +308,9 @@
         <option value="$PROJECT_DIR$/src/kshingling.cpp" />
         <option value="$PROJECT_DIR$/tests/unit/kshinglingTest.cpp" />
         <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" />
-        <option value="$PROJECT_DIR$/src/SetsOfContent.cpp" />
         <option value="$PROJECT_DIR$/include/SetsOfContent.h" />
+        <option value="$PROJECT_DIR$/src/SetsOfContent.cpp" />
+        <option value="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" />
       </list>
     </option>
   </component>
@@ -570,12 +570,12 @@
       <workItem from="1551282454551" duration="11209000" />
       <workItem from="1551294971244" duration="2046000" />
       <workItem from="1551298517845" duration="18477000" />
-      <workItem from="1551360513445" duration="19044000" />
+      <workItem from="1551360513445" duration="19251000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1289664000" />
+    <option name="totallyTimeSpent" value="1289871000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -899,13 +899,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="93" column="19" selection-start-line="93" selection-start-column="19" selection-end-line="93" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/include/kshingling.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="149">
@@ -931,22 +924,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="133" selection-start-line="133" selection-end-line="133" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="97" selection-start-line="97" selection-end-line="97" />
+        <state relative-caret-position="15">
+          <caret line="1" column="36" selection-start-line="1" selection-start-column="36" selection-end-line="1" selection-end-column="36" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="225" column="8" selection-start-line="225" selection-start-column="8" selection-end-line="225" selection-end-column="8" />
+        <state relative-caret-position="330">
+          <caret line="205" column="29" selection-start-line="205" selection-start-column="29" selection-end-line="205" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="97" selection-start-line="97" selection-end-line="97" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="93" column="110" selection-start-line="93" selection-start-column="110" selection-end-line="93" selection-end-column="110" />
         </state>
       </provider>
     </entry>
