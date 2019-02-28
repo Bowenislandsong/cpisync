@@ -19,31 +19,35 @@ SetsOfContent::~SetsOfContent() {
     for (DataObject *dop : setPointers) delete dop;
 }
 
-vector<size_t> SetsOfContent::create_HashSet(string str, size_t win_size, size_t space, size_t shingle_size) {
+vector<size_t> SetsOfContent::create_HashSet(size_t str_hash, size_t space, size_t shingle_size) {
     // space and shingle_size has to match between reconciling strings
     // Time Complexity 2n, where n is the string size.
     vector<size_t> hash_val, hash_set;
+    auto str_i = dict_geti(str_hash);
+    auto str = dict_getstr(str_hash);
+    if (str_i.second==0) return hash_set;
+    size_t win_size = floor((str_i.second/ Partition) / 2);
 
     /* ---------original begin  */
     // if the substring is smaller than the terminal string size, we do not partition it anymore.
-    if (str.size() <= TermStrSize) {
-        hash_set = {add_to_dictionary(str)};
+    if (str_i.second <= TermStrSize) {
+        hash_set = {str_hash};
     } else { // else we partitions it
-
         if (space == 0) throw invalid_argument("Space for windowing is 0 at create_HashSet");
         if (shingle_size < 2) throw invalid_argument("Shingle size should not go under 2");
         for (size_t i = 0; i < str.size() - shingle_size + 1; ++i) {
             std::hash<std::string> shash;
             hash_val.push_back(shash(str.substr(i, shingle_size)) % space);
         }
-        size_t prev = 0;
+        size_t prev = str_i.first;
 
         for (size_t min:local_mins(hash_val, win_size)) {
-            hash_set.push_back(add_to_dictionary(str.substr(prev, min - prev)));
+            min+=str_i.first;
+            hash_set.push_back(add_i_to_dictionary(prev, min - prev));
             prev = min;
         }
 
-        hash_set.push_back(add_to_dictionary(str.substr(prev)));
+        hash_set.push_back(add_i_to_dictionary(prev,str_i.second-(prev-str_i.first)));
     }
     /* ---------original end  */
     /* ---------fixed win size begin */
@@ -76,24 +80,17 @@ vector<size_t> SetsOfContent::create_HashSet(string str, size_t win_size, size_t
     /* ---------fixed hash value end */
 
     // write it to cyc-dict
-    auto cyc_it = Cyc_dict.find(str_to_hash(str));
-    if (cyc_it == Cyc_dict.end()) // check if cyc exists
-        Cyc_dict[str_to_hash(str)] = hash_set; // update Cyc_dict
+    auto cyc_it = cyc_dict.find(str_hash);
+    if (cyc_it == cyc_dict.end()) // check if cyc exists
+        cyc_dict[str_hash] = hash_set; // update cyc_dict
     else if (cyc_it->second != hash_set and cyc_it->second.size() == 1 and cyc_it->second.front() == cyc_it->first)
-        Cyc_dict[str_to_hash(str)] = hash_set;// last stage no partition, update Cyc_dict
+        cyc_dict[str_hash] = hash_set;// last stage no partition, update cyc_dict
     else if (cyc_it->second != hash_set) // check if it is getting overwritten
-        throw invalid_argument("More than one answer is possible for Cyc_dict");
+        throw invalid_argument("More than one answer is possible for cyc_dict");
 
     return hash_set;
 }
 
-
-size_t SetsOfContent::add_to_dictionary(const string &str) {
-    (Dictionary.find(str_to_hash(str)) == Dictionary.end() or Dictionary[str_to_hash(str)] == str)
-    ? Dictionary[str_to_hash(str)] = str : throw invalid_argument(
-            "Dictionary duplicated suggest using new/multiple hash functions");
-    return str_to_hash(str);
-}
 
 void SetsOfContent::go_through_tree() {
     myTree.clear(); // should be redundant
@@ -118,7 +115,7 @@ void SetsOfContent::go_through_tree() {
     myTree.resize(Levels);
 
     // put up the first level
-    update_tree_shingles({add_to_dictionary(myString)}, 0);
+    update_tree_shingles({add_i_to_dictionary(0,myString.size())}, 0);
 
 /* ---------fixed hash value begin */
 //vector<size_t> hash_val;
@@ -130,17 +127,15 @@ void SetsOfContent::go_through_tree() {
 /* ---------fixed hash value end */
 
     for (int l = 1; l < Levels; ++l) {
-
+        clock_t time = clock();
         // Fill up Cycle Dictionary for non terminal strings
         for (auto substr_hash:unique_substr_hash(myTree[l - 1])) {
-            string substring = Dictionary[substr_hash];
-            if (substring.empty()) continue; // this ditches the empty strings
 
-            cur_level = create_HashSet(substring, floor((substring.size() / Partition) / 2), space, shingle_size);
+            cur_level = create_HashSet(substr_hash, space, shingle_size);
             update_tree_shingles(cur_level, l);
 
         }
-
+        cout << "time: " << (double) (clock() - time) / CLOCKS_PER_SEC << endl;
         space = floor((space / Partition) / 2);
         shingle_size = floor(shingle_size / 2);
     }
@@ -160,7 +155,7 @@ void SetsOfContent::prepare_querys(list<DataObject *> &otherMinusSelf) {
         shingle_hash shingle = ZZtoT(shingle_zz->to_ZZ(), shingle_hash());
         if (dup.emplace(shingle.second).second)
             cyc_query.erase(shingle.second); // if duplicated, we want the lower level
-        if (Dictionary.find(shingle.second) == Dictionary.end()) { // if it is not found anywhere
+        if (dictionary.find(shingle.second) == dictionary.end()) { // if it is not found anywhere
             if (shingle.lvl < Levels - 1)
                 cyc_query.emplace(shingle.second, cycle{.head=0, .len=0, .cyc=0});
             else
@@ -181,12 +176,12 @@ bool SetsOfContent::answer_queries(std::set<size_t> &theirQueries) {
             auto it = theirQueries.find(shingle.second);
             if (it != theirQueries.end()) {
                 if (Levels - 1 == shingle.lvl)
-                    term_concern.emplace(shingle.second, Dictionary[shingle.second]);
+                    term_concern.emplace(shingle.second, dict_getstr(shingle.second));
                 else {
-                    vector<size_t> tmp_vec = Cyc_dict[shingle.second];
+                    vector<size_t> tmp_vec = cyc_dict[shingle.second];
                     cycle tmp = cycle{.head = tmp_vec.front(), .len = (unsigned int) tmp_vec.size(), .cyc=0};
 
-                    if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], Cyc_dict[shingle.second])) {
+                    if (!shingle2hash_train(tmp, myTree[shingle.lvl + 1], cyc_dict[shingle.second])) {
                         continue;
                     }
                     cyc_concern[shingle.second] = tmp;
@@ -203,9 +198,8 @@ void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level)
     if (hash_vector.size() > 100)
         cout << "It is advised to not exceed 100 partitions for fast backtracking at Level: " + to_string(level) +
                 " Current set size: " + to_string(hash_vector.size()) << endl;
-    if (hash_vector.empty())
-        throw invalid_argument("hash_vector is zero at level:" + to_string(level) +
-                               ". All terminal strings to be passed down to the bottom level");
+    if (hash_vector.empty()) return;
+
 
     map<pair<size_t, size_t>, size_t> tmp;
 
@@ -555,14 +549,14 @@ string SetsOfContent::retriveString() {
                 substring = "";
                 cycle tmp_cyc = it->second;
                 if (!shingle2hash_train(tmp_cyc, myTree[i + 1], tmp))
-                    substring = Dictionary[shingle.second];
+                    substring = dict_getstr(shingle.second);
                 for (size_t hash:tmp) {
-                    if (Dictionary.find(hash) == Dictionary.end())
+                    if (dictionary.find(hash) == dictionary.end())
                         cout << "Recover may have failed - Dictionary lookup failed for " << hash << " at level "
                              << shingle.lvl << endl;
-                    substring += Dictionary[hash];
+                    substring += dict_getstr(hash);
                 }
-                add_to_dictionary(substring);
+                add_str_to_dictionary(substring);
             }
         }
     }
@@ -596,7 +590,7 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 //    //show the info of the tree
 //    for(auto lvl:myTree) {
 //        vector<size_t> lvl_vec;
-//        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(Cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
+//        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
 //        sort(lvl_vec.begin(),lvl_vec.end());
 //        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
 //    }
@@ -711,7 +705,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
         commSync->commSend(TtoZZ(groupcyc.second), sizeof(cycle));
     }
     for (auto dic : term_concern) {
-        string tmp_str = Dictionary[dic.first];
+        string tmp_str = dict_getstr(dic.first);
         if (!tmp_str.empty())
             commSync->commSend(tmp_str);
         else
@@ -801,7 +795,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
         if (tmp != "$")
-            add_to_dictionary(tmp);
+            add_str_to_dictionary(tmp);
     }
 
     CustomResult["Literal comm"] = commSync->getRecvBytesTot() + commSync->getXmitBytesTot() - LiteralData;

@@ -104,9 +104,9 @@ inline size_t str_to_hash(const string &str) {
     return std::hash<std::string>{}(str);
 };
 
-inline vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size) {
+inline vector<size_t> local_mins(const vector<size_t> &hash_val, size_t win_size) {
     // relying on hashMap sorting (We expect HashMap arrange keys in an increasing order)
-
+    // O(nlgw)
     // minimum partition distance
     if (win_size < 1) {
         cout
@@ -126,19 +126,21 @@ inline vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size) {
     }
 
     for (size_t i = win_size + 1; i < hash_val.size() - win_size + 1; ++i) {
-        if (hash_val[i - 1] <= hash_occurr.begin()->first and i - ((!mins.empty()) ? mins.back() : 0) >
+        if (hash_val[i - 1] <= hash_occurr.begin()->first and i - ((mins.empty()) ? 0 : mins.back()) >
                                                               win_size) // this define partition rule to be min or equal instead of strictly less as local min
-            mins.push_back(i - 1);
+            mins.emplace_back(i - 1);
         auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
-        if (it_prev != hash_occurr.end())
-            it_prev->second--;
+        if (it_prev != hash_occurr.end()) {
+            if (it_prev->second > 1) it_prev->second--;
+            else hash_occurr.erase(it_prev);
+        }
 
         auto it_pos = hash_occurr.find(hash_val[i + win_size]);
-        if (it_pos != hash_occurr.end())
-            it_pos->second++;
-        else
-            hash_occurr.emplace(hash_val[i + win_size], 1);
+        if (it_pos != hash_occurr.end()) it_pos->second++;
+        else hash_occurr.emplace(hash_val[i + win_size], 1);
+
     }
+
     return mins;
 }
 
@@ -183,10 +185,10 @@ private:
 
     vector<std::set<shingle_hash>> myTree; // the hash shingle tree   // RECONCILLING TARGET
 
-    map<size_t, string> Dictionary;  // terminla strings
+    map<size_t, pair<string, pair<size_t, size_t>>> dictionary;  // dictionary strings
 
     // origin, cycle information to reform this string rep
-    map<size_t, vector<size_t>> Cyc_dict, hashcontent_dict; // has to be unique
+    map<size_t, vector<size_t>> cyc_dict; // has to be unique
 
     //requests
     map<size_t, string> term_concern, term_query;
@@ -201,7 +203,7 @@ private:
      * @param shingle_size inter-relation of the string
      * @return vector of substring hashes in origin string order
      */
-    vector<size_t> create_HashSet(string str, size_t win_size, size_t space = NOT_SET, size_t shingle_size = NOT_SET);
+    vector<size_t> create_HashSet(size_t str_hash, size_t space = NOT_SET, size_t shingle_size = NOT_SET);
 
 
     /**
@@ -210,7 +212,42 @@ private:
      * @return hash of the string
      * @throw if there is duplicates, suggest using new/multiple hash functions
      */
-    size_t add_to_dictionary(const string &str);
+    size_t add_str_to_dictionary(const string &str) {
+        size_t hash = str_to_hash(str);
+        dictionary.emplace(hash, make_pair(str, make_pair(0, 0)));
+//        if (!it.second and str != it.first->second.first and
+//            str != myString.substr(it.first->second.second.first, it.first->second.second.second))
+//            throw invalid_argument("Dictionary duplicated suggest using new/multiple hash functions");
+        return hash;
+    };
+
+    size_t add_i_to_dictionary(size_t start_i, size_t len) {
+        size_t hash = str_to_hash(myString.substr(start_i, len));
+        dictionary.emplace(hash, make_pair("", make_pair(start_i, len)));
+//        if (!it.second and myString.substr(it.first->second.second.first, it.first->second.second.second) != myString.substr(start_i, len) and
+//            it.first->second.first != myString.substr(start_i, len))
+//            throw invalid_argument("Dictionary duplicated suggest using new/multiple hash functions");
+        return hash;
+    };
+
+    string dict_getstr(size_t hash) {
+        auto it = dictionary.find(hash);
+        if (it != dictionary.end()) {
+            if (it->second.first.empty() and it->second.second.second != 0)
+                return myString.substr(it->second.second.first, it->second.second.second);
+            else return it->second.first;
+        }
+        return "";
+    }
+
+    // only available for local substrings
+    // use it in partition tree construction
+    pair<size_t, size_t> dict_geti(size_t hash) {
+        auto it = dictionary.find(hash);
+        if (it != dictionary.end()) return it->second.second;
+
+        return make_pair(0, 0);
+    }
 
     // extract the unique substring hashes from the shingle_hash vector
     vector<size_t> unique_substr_hash(std::set<shingle_hash> hash_set) {
@@ -250,7 +287,7 @@ private:
      * @param groupIDs
      * @return hashes of unknown
      */
-    void prepare_querys(list<DataObject *> & shingle_hash_theirs);
+    void prepare_querys(list<DataObject *> &shingle_hash_theirs);
 
 //    void prepare_concerns(const vector<shingle_hash> &shingle_hash_theirs, const vector<shingle_hash> &shingle_hash_mine);
 
@@ -272,9 +309,9 @@ private:
         return vector<ZZ>{res.begin(), res.end()};
     };
 
-    size_t getNumofTreeNodes(){
+    size_t getNumofTreeNodes() {
         size_t num_treenodes = 0;
-        for (auto lvl : myTree) num_treenodes+=lvl.size();
+        for (auto lvl : myTree) num_treenodes += lvl.size();
         return num_treenodes;
     }
 
