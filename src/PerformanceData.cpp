@@ -242,8 +242,10 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     last_passed_before_exception = "Bob GenSync"; // success Tag
                                     string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(), edit_dist, src);
                                     //(int) (str_size / edit_dist));
-                                    if (bobtmpstring.size() < pow(par, lvl))
-                                        bobtmpstring += randCharacters(pow(par, lvl) - bobtmpstring.size());
+                                    if (bobtmpstring.size() < str_sizeRange[i]*0.5) // keep strings about the same size
+                                        bobtmpstring += randCharacters(str_sizeRange[i] - bobtmpstring.size());
+                                    else if (bobtmpstring.size() > str_sizeRange[i]*1.5) // keep strings about the same size
+                                        bobtmpstring = bobtmpstring(0,str_sizeRange[i]);
 
                                     DataObject *Bobtxt = new DataObject(bobtmpstring);
 
