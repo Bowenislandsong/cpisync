@@ -4,6 +4,7 @@
         "iosfwd": "cpp",
         "__locale": "cpp",
         "iterator": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "thread": "cpp"
     }
 }

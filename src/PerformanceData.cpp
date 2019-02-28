@@ -250,6 +250,9 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     DataObject *Bobtxt = new DataObject(bobtmpstring);
 
                                     last_passed_before_exception = "Bob Create String"; // success Tag
+
+
+                                    thread thread2([&] (GenSync * gensync) { gensync->addStr(Bobtxt, false); }, &Bob);
                                     Bob.addStr(Bobtxt, false);
 
                                     last_passed_before_exception = "Bob Add String"; // success Tag

@@ -2,6 +2,7 @@
 // Created by Bowen Song on 12/9/18.
 //
 #include "SetsOfContentTest.h"
+
 CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 
 void SetsOfContentTest::SelfUnitTest() {
@@ -52,11 +53,10 @@ void SetsOfContentTest::testAll() {
 //    initResources(initRes);
 
     string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
-    int partition =4;
-    int lvl =6;
+    int partition = 4;
+    int lvl = 6;
     int space = 4;
     int shingleLen = 2;
-
 
 
     DataObject *atxt = new DataObject(alicetxt);
@@ -77,9 +77,9 @@ void SetsOfContentTest::testAll() {
 //    string bobtxt = randStringEdit(alicetxt, 10);
 //    string bobtxt = randStringEdit((*atxt).to_string(),2e3);
 
-    string bobtxt = randStringEditBurst(alicetxt, 5e2,"./tests/SampleTxt.txt");
-    if(bobtxt.size()<pow(partition,lvl))
-        bobtxt += randCharacters(pow(partition,lvl)-bobtxt.size());
+    string bobtxt = randStringEditBurst(alicetxt, 5e2, "./tests/SampleTxt.txt");
+    if (bobtxt.size() < pow(partition, lvl))
+        bobtxt += randCharacters(pow(partition, lvl) - bobtxt.size());
 
     DataObject *btxt = new DataObject(bobtxt);
 
@@ -94,15 +94,18 @@ void SetsOfContentTest::testAll() {
             setlvl(lvl).
             setPort(8001).
             build();
+auto str_s = clock();
+     thread alice_thread([&](GenSync *gensync) { gensync->addStr(atxt, false); }, &Alice);
 
-    Bob.addStr(btxt, false);
+     thread bob_thread([&](GenSync *gensync) { gensync->addStr(btxt, false); }, &Bob);
 
 
-    auto str_s = clock();
+//    Bob.addStr(btxt, false);
 
-    Alice.addStr(atxt, false);
+//   Alice.addStr(atxt, false);
+     alice_thread.join();
+     bob_thread.join();
     double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
-
 
     auto recon_t = clock();
     auto report = forkHandle(Alice, Bob, false);
@@ -112,13 +115,12 @@ void SetsOfContentTest::testAll() {
     string finally = Alice.dumpString()->to_string();
 
 
+    writeStrToFile("Alice.txt", alicetxt);
+    writeStrToFile("Bob.txt", bobtxt);
 
-    writeStrToFile("Alice.txt",alicetxt);
-    writeStrToFile("Bob.txt",bobtxt);
-
-    auto r_res = getRsyncStats("Alice.txt","Bob.txt",true);
-    cout<<"rsync comm cost: "<<r_res.recv+r_res.xmit<<endl;
-    cout<<"Set of Content cost: "<<to_string(report.bytesRTot+report.bytesXTot)<<endl;
+    auto r_res = getRsyncStats("Alice.txt", "Bob.txt", true);
+    cout << "rsync comm cost: " << r_res.recv + r_res.xmit << endl;
+    cout << "Set of Content cost: " << to_string(report.bytesRTot + report.bytesXTot) << endl;
 
     cout << "CPU Time: " + to_string(report.CPUtime) << endl;
     cout << "Time: " + to_string(report.totalTime) << endl;
@@ -126,12 +128,13 @@ void SetsOfContentTest::testAll() {
     cout << "bitsR: " + to_string(report.bytesRTot) << endl;
 
 
-    cout << "Terminal Str Trans: ------------------ " << Alice.getCustomResult("Literal comm")<<endl;
-    cout << "Set Comm: ------------------ " << report.bytesXTot+report.bytesRTot-Alice.getCustomResult("Literal comm")<<endl;
+    cout << "Terminal Str Trans: ------------------ " << Alice.getCustomResult("Literal comm") << endl;
+    cout << "Set Comm: ------------------ "
+         << report.bytesXTot + report.bytesRTot - Alice.getCustomResult("Literal comm") << endl;
     cout << "Number of node diff: " << Alice.getCustomResult("Partition Sym Diff") << endl;
-    cout << "String Reconstruction Time: " << Alice.getCustomResult("Str Reconstruction Time")<<endl;
-    cout << "String Add Time: "<< str_time<<endl;
-    cout << "Rest of the Recon time: " <<recon_time<<endl;
+    cout << "String Reconstruction Time: " << Alice.getCustomResult("Str Reconstruction Time") << endl;
+    cout << "String Add Time: " << str_time << endl;
+    cout << "Rest of the Recon time: " << recon_time << endl;
     delete btxt;
     delete atxt;
     CPPUNIT_ASSERT(finally == bobtxt);
