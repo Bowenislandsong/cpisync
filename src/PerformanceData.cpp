@@ -245,7 +245,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     if (bobtmpstring.size() < str_sizeRange[i]*0.5) // keep strings about the same size
                                         bobtmpstring += randCharacters(str_sizeRange[i] - bobtmpstring.size());
                                     else if (bobtmpstring.size() > str_sizeRange[i]*1.5) // keep strings about the same size
-                                        bobtmpstring = bobtmpstring(0,str_sizeRange[i]);
+                                        bobtmpstring = bobtmpstring.substr(0,str_sizeRange[i]);
 
                                     DataObject *Bobtxt = new DataObject(bobtmpstring);
 
