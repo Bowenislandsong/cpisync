@@ -78,7 +78,7 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.kshingle3D(GenSync::SyncProtocol::IBLTSyncSetDiff,editDistRange,strSizeRange,target_confidence, randSampleTxt);
 
 
-    vector<int> strSizeRange{100000,200000,1000000,2000000,10000000,20000000};
+    vector<int> strSizeRange{2000000,10000000,20000000};
     editDistRange = {5,10,50,100,500, 1000};
     vector<int> lvlRange = {5,5,6,6,7,7};
     vector<int> parRange = {3,4,5};
