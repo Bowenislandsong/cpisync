@@ -682,7 +682,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
         success = setReconServer(commSync, mbar, sizeof(shingle_hash), setPointers, selfMinusOther, otherMinusSelf);
         success = ((SYNC_SUCCESS == commSync->commRecv_int()) and success);
         success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
-        if (success) break;
+        if (success or GenSync::SyncProtocol::IBLTSyncSetDiff != baseSyncProtocol) break;
 
         Logger::gLog(Logger::METHOD,
                      "SetsOfContent::SyncServer - mbar doubled from " + to_string(mbar) + " to " +
@@ -753,14 +753,14 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
         success = setReconClient(commSync, mbar, sizeof(shingle_hash), setPointers, selfMinusOther, otherMinusSelf);
         success ? commSync->commSend(SYNC_SUCCESS) : commSync->commSend(SYNC_FAILURE);
         success = (commSync->commRecv_int() == SYNC_SUCCESS) and success;
-        if (success) break;
+        if (success or GenSync::SyncProtocol::IBLTSyncSetDiff != baseSyncProtocol) break;
 
         Logger::gLog(Logger::METHOD,
                      "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " +
                      to_string(2 * (mbar + 1)));
         cout << "SetsOfContent::SyncClient - mbar doubled from " + to_string(mbar) + " to " + to_string(2 * (mbar + 1))
              << endl;
-        mbar = pow(2, 10);
+        mbar = 2 * (mbar + 1);
     }
 
     CustomResult["Partition Sym Diff"] = (selfMinusOther.size() +
