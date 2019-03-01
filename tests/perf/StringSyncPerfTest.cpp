@@ -80,7 +80,7 @@ void KshingleSyncPerf::setsofcontent3D() {
 
     vector<int> strSizeRange{2000000,10000000,20000000};
     editDistRange = {5,10,50,100,500, 1000};
-    vector<int> lvlRange = {5,5,6,6,7,7};
+    vector<int> lvlRange = {6,7,7};
     vector<int> parRange = {3,4,5};
 
     string bookpath = string(std::getenv("HOME")) + "/Desktop/sync_database/BookText/";
