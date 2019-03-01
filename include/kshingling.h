@@ -27,38 +27,25 @@ typedef unsigned int idx_t;
 static const double MAX_TIME = 300; // secs
 static const size_t MAX_VM_SIZE = 1e10; //bytes
 
-struct shingle{
-    string vex,edge;
-    size_t occurr;
+struct shingle {
+    string vex, edge;
+    idx_t occurr;
 };
-
-
-static shingle ZZtoShingle(const ZZ& zz){
-    shingle shingle;
-    BytesFromZZ((uint8_t *) &shingle, zz, sizeof(shingle));
-    return shingle;
-}
-
-
-static ZZ ShingletoZZ(shingle _shingle) {
-    char *my_s_bytes = reinterpret_cast<char *>(&_shingle);
-    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(shingle));
-}
 
 //Compare and help differentiate struct shingle
 
 //Compare and help order struct shingle_hash from a vector
-static bool operator<(const shingle& a, const shingle& b) {
+static bool operator<(const shingle &a, const shingle &b) {
     return (a.vex < b.vex) or
            (a.vex == b.vex and a.edge < b.edge) or
            (a.vex == b.vex and a.edge == b.edge and a.occurr < b.occurr);
 };
 
-static bool operator==(const shingle& a, const shingle& b) {
+static bool operator==(const shingle &a, const shingle &b) {
     return a.vex == b.vex and a.edge == b.edge and a.occurr == b.occurr;
 };
 
-static bool operator!=(const shingle& a, const shingle& b) {
+static bool operator!=(const shingle &a, const shingle &b) {
     return !(a == b);
 };
 
@@ -76,115 +63,15 @@ public:
     // Default deconstructor
     ~K_Shingle();
 
-    bool inject(const string str) {
-        clear_shingleSet();
+    idx_t inject(const string str, bool back_track) {
+        shingleMAP.clear();
         orig_string = stopword + str + stopword;
-        return create(str);
+        create(str);
+        idx_t cyc_num = 0;
+        if (back_track)
+            shingle2string(cyc_num, orig_string);
+        return cyc_num;
     };
-
-    /**
-     * Increment the edge count of the ShingleSet, Creates no copy
-     * Works on object
-     * @param ver shingle
-     */
-    void incrementEdgeCount(const string ver, map<string, idx_t> &shingle_map);
-
-
-    /**
-     * 0 Based order
-     * Reconstruct a string from object's shingle set
-     * Using backtracking algorithm
-     * input order of string to retreive that
-     * @param Input int,
-     * @return String if input int, int if input string
-     * Fail to return a string, second would be 0
-     */
-    pair<string, idx_t> reconstructStringBacktracking(idx_t str_coll_tar = 0);
-
-    // get methods
-    /**
-     * @return The number of element in she shingle set
-     */
-    size_t getSetSize() const {
-        return shingleSet.size();
-    }
-
-    /**
-     * @return The bit size of a shingle set
-     */
-    size_t getElemSize() const {
-        //return sizeof(DataObject*);
-        int act_size = k+(floor(log(floor(orig_string.size()/k)))+2);
-        return sizeof(ZZ)*(floor(act_size/sizeof(ZZ)) + ((act_size%sizeof(DataObject*)>0)? 1:0));
-        // sizeof(shingle)+k; //bytes
-    }
-
-    char getStopWord() const {
-        return stopword;
-    }
-
-
-    string getOriginString() {
-        if (orig_string.empty() || orig_string == "$$") return "";
-        return orig_string.substr(1, orig_string.size() - 2);
-    }
-
-    vector<pair<string, idx_t>> getShingleSet() {
-        return shingleSet;
-    }
-
-    /**
-     * Interact with sending set elements as string
-     * @return
-     */
-    vector<string> getShingleSet_str() { return shingleSet_str; };
-
-    size_t getshinglelen_str() {return k;};
-
-    /**
-     * Interact with reciving set element update as string
-     */
-    void updateShingleSet_str(string shingle); //change here - send pair
-
-    // Delete and reinsert
-    void clear_shingleSet() {
-        shingleSet.clear();
-        shingleSet_str.clear();
-    };
-
-    size_t getUsedVM(){ // bytes
-        return initRes.VmemUsed;
-    };
-
-    double getUsedTime(){ //secs
-        return initRes.TimeElapsed;
-    }
-
-private:
-    // local data
-
-    //default constructor
-    K_Shingle();
-
-    size_t initVM =0, pMem = 0; // keeps track of Ram usage
-    Resources initRes;
-    // k and stopword better be the same between two hosts, or should be transferred.
-    size_t k = 0;  //shingle size
-
-    const char stopword;  // default stop word is "$"
-
-    // resetable parameters
-    vector<pair<string, idx_t>> shingleSet; // transfer shingleSet to other host
-    vector<string> shingleSet_str; // mirror variable, used to sedn to another hose in string format
-
-    string orig_string;  // original string with stopwords on both ends
-
-    /**
-     * GET THE NEXT POSSIBLE EDGES 
-     * @param changed_shingleSet pair<edge idx,edge occurrence>
-     * @return index of next edges to look at
-     */
-    vector<idx_t> getEdgeIdx(const string verStart, vector<idx_t> changed_shingleOccur);
 
     /**
      * Iterative function reconstructing string from a shingle set
@@ -195,26 +82,81 @@ private:
      * @param str current string
      * @return whether this process is successfully.
      */
-    bool shingle2string(vector<pair<string, idx_t>> changed_shingleOccur, string curEdge, idx_t &strCollect_ind,
-                        idx_t &str_order, string &final_str, string str = "");
+    bool shingle2string(idx_t& str_order, string &final_str);
+
+    // get methods
+    /**
+     * @return The number of element in she shingle set
+     */
+    size_t getSetSize() const {
+        return setSize;
+    }
+
+    void clearSet() {
+        shingleSet.clear();
+        shingleMAP.clear();
+    }
+
+    vector<shingle> getShingles() { return shingleSet; }
+
+
+    char getStopWord() const {
+        return stopword;
+    }
+
+
+    string getOriginString() {
+        if (orig_string.empty() || orig_string == string(2, stopword)) return "";
+        return orig_string;
+    }
+
+
+    size_t getUsedVM() { // bytes
+        return initRes.VmemUsed;
+    };
+
+    double getUsedTime() { //secs
+        return initRes.TimeElapsed;
+    }
+
+    void addtoshingleset(shingle s) {
+        shingleSet.emplace_back(s);
+        shingleMAP[s.vex].emplace_back(s);
+    }
+
+private:
+    // local data
+
+    //default constructor
+    K_Shingle();
+
+    size_t initVM = 0, setSize; // keeps track of Ram usage
+    Resources initRes;
+    // k and stopword better be the same between two hosts, or should be transferred.
+    size_t k = 0;  //shingle size
+
+    const char stopword;  // default stop word is "$"
+
+    // resetable parameters
+    map<string, vector<shingle>> shingleMAP; // transfer shingleSet to other host
+    vector<shingle> shingleSet;
+
+    string orig_string;  // original string with stopwords on both ends
+
+    /**
+     * GET THE NEXT POSSIBLE EDGES
+     */
+    vector<shingle> getNxtShingle_vec(string cur, const map<string, vector<shingle>> &last_state);
+
+
+    shingle mv2nxtshingle(string &cur, shingle _shingle);
 
     /**
      * create a set of k-shingles from String str
      * This operation always succeed
      * @param str Original string
      */
-    bool create(const string str);
-
-    inline bool emptyState(vector<idx_t> state) {
-        for (idx_t i = 0; i < state.size(); ++i) {
-            if (state[i] > 0) return false;
-        }
-        return true;
-    }
-
-    void insert(pair<string, idx_t> Elem) {
-        shingleSet.push_back(Elem);
-    };
+    void create(const string str);
 
 };
 

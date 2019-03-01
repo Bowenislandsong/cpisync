@@ -27,34 +27,29 @@ void kshinglingTest::testAll() {
 
     shingle s = shingle{.vex = "Bowe", .edge = "n", .occurr = 58};
 
-    CPPUNIT_ASSERT(s==ZZtoShingle(ShingletoZZ(s)));
+    CPPUNIT_ASSERT(s == ZZtoT(TtoZZ(s), shingle()));
 
     // init a string of random byte (shortest,longest) possible string len
-    string Alicetxt = randAsciiStr(50);  // generate a string, no longer than 1e4
+    string Alicetxt = randSampleTxt(50);  // generate a string, no longer than 1e4
+    Alicetxt = "katanatamasaka";
     //string Bobtxt = randStringEdit(Alicetxt,10);  // Generate a edited string
 
     clock_t t1 = clock();
     int shingle_size = 2;//ceil(log2(Alicetxt.size()));
     K_Shingle Alice = K_Shingle(shingle_size);
 
-    Alice.inject(Alicetxt);
+    auto cycle_num = Alice.inject(Alicetxt, true);
 
-    auto AliceStringNOrder = Alice.reconstructStringBacktracking();  // Get order of the cycle
+    string str;
+    bool success = Alice.shingle2string(cycle_num, str);  // Get order of the cycle
     clock_t t2 = clock();
 
-    cout<<to_string(double(t2-t1)/CLOCKS_PER_SEC)<<endl;
+    cout << to_string(double(t2 - t1) / CLOCKS_PER_SEC) << endl;
 
-    //test functions
-    CPPUNIT_ASSERT(AliceStringNOrder.first==Alicetxt);  // Make sure Alice can recover her own string from shingle set
-    CPPUNIT_ASSERT(AliceStringNOrder.second > 0);  //Make sure string order is not 0 (default)
-    //CPPUNIT_ASSERT(Alicetxt!=Bobtxt);
 
-    //auto RedoStringNOrder = Alice.reconstructStringBacktracking(AliceStringNOrder.second);  // Get string through the order of cycle
-    //CPPUNIT_ASSERT(RedoStringNOrder.first==Alicetxt);  // Make sure Alice can recover her own string from shingle set
-    //CPPUNIT_ASSERT(RedoStringNOrder.second ==AliceStringNOrder.second);  //Make sure string order returned are the same
-
-    CPPUNIT_ASSERT(Alice.getOriginString()==AliceStringNOrder.first);
-    CPPUNIT_ASSERT(Alice.getShingleSet().size()>0);
+    CPPUNIT_ASSERT(cycle_num > 0);
+    CPPUNIT_ASSERT(Alice.getOriginString() == str and success);
+    CPPUNIT_ASSERT(Alice.getShingles().size() > 0);
 
 
     //test with Half round sync

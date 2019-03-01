@@ -98,20 +98,6 @@ static ostream &operator<<(ostream &os, const shingle_hash shingle) {
     return os;
 };
 
-
-template<typename T>
-static ZZ TtoZZ(T val) {
-    char *my_s_bytes = reinterpret_cast<char *>(&val);
-    return ZZFromBytes((const uint8_t *) my_s_bytes, sizeof(T));
-}
-
-template<typename T>
-static T ZZtoT(const ZZ &zz, const T) {
-    T val;
-    BytesFromZZ((uint8_t *) &val, zz, sizeof(T));
-    return val;
-}
-
 //// ---------------------------------- inline Functions
 
 inline size_t str_to_hash(const string &str) {
@@ -161,7 +147,7 @@ inline vector<size_t> local_mins(vector<size_t> hash_val, size_t win_size) {
 class SetsOfContent : public SyncMethod {
 public:
     SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto,
-                  size_t shingle_size = 2, size_t ter_win_size = 2);
+                  size_t shingle_size = 2, size_t ter_space = 2);
 
     ~SetsOfContent();
 
@@ -186,7 +172,7 @@ protected:
 
 private:
     Resources initRes;
-    size_t highwater;
+    size_t highwater = 0;
 
     string myString; // original input string
     size_t TermStrSize, Levels, Partition, terShingleLen, terSpace;

@@ -27,11 +27,11 @@ void kshinglingSyncTest::tearDown() {}
 
 void kshinglingSyncTest::testAll() {
 
-    int string_len = 100;
+    int string_len = 10;
     //randascii = shingles size log10()+1
     // CPISYNC k = 3 b = 38; k = 4 b = 46; k = 5 b = 54
-    size_t shingle_len =7;//ceil(log(string_len));
-    int editDistance_bar = 5;
+    size_t shingle_len =2;//ceil(log(string_len));
+    int editDistance_bar = 1;
     GenSync::SyncProtocol base_set_proto = GenSync::SyncProtocol::CPISync;
     //GenSync::SyncProtocol base_set_proto = GenSync::SyncProtocol::CPISync;
     char stopword = '$';

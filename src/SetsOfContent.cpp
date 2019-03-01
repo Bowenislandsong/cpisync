@@ -380,7 +380,7 @@ vector<shingle_hash> SetsOfContent::get_nxt_shingle_vec(const size_t cur_edge,
     } else {
         auto cur_it = original_state_stack.find(cur_edge);
         if (cur_it == original_state_stack.end())return res_vec; // there is no possible edge(no edge after this)
-        for (auto tmp_shingle: original_state_stack.find(cur_edge)->second) {
+        for (auto tmp_shingle: cur_it->second) {
             if (tmp_shingle.occurr > 0) res_vec.push_back(tmp_shingle);
         }
     }
@@ -396,7 +396,7 @@ bool SetsOfContent::shingle2hash_train(cycle &cyc_info, const std::set<shingle_h
             shingle_set); // get a shingle dict from a level of a tree for fast next edge lookup
 
     if (shingle_set.empty())
-        throw invalid_argument(
+        Logger::error_and_quit(
                 "the shingle_set provided is empty for shingle2hash_train, we accessed a tree level with no shingle.");
 
     vector<map<size_t, vector<shingle_hash>>> stateStack;
@@ -706,7 +706,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
     if (!answer_queries(queries))
         cout << "We failed to answer all the questions, thie sync should fail" << endl;
 
-    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
+//    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
     for (auto groupcyc : cyc_concern) {
         commSync->commSend(TtoZZ(groupcyc.second), sizeof(cycle));
     }
@@ -796,13 +796,15 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
         cyc.second = ZZtoT(commSync->commRecv_ZZ(sizeof(cycle)), cycle());
     }
 //    cout << "After Cyc Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
-
+    size_t LiteralData = commSync->getRecvBytesTot() + commSync->getXmitBytesTot();
 
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
         if (tmp != "$")
             add_to_dictionary(tmp);
     }
+
+    CustomResult["Literal comm"] = commSync->getRecvBytesTot() + commSync->getXmitBytesTot() - LiteralData;
 
 //    cout << "After Term Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
