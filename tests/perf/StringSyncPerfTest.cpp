@@ -78,10 +78,10 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.kshingle3D(GenSync::SyncProtocol::IBLTSyncSetDiff,editDistRange,strSizeRange,target_confidence, randSampleTxt);
 
 
-    vector<int> strSizeRange{100000, 200000,1000000,2000000,10000000,20000000};
-    editDistRange = {5,10,50,100,500, 1000};
-    vector<int> lvlRange = {5,5,6,6,7,7};
-    vector<int> parRange = {3,4,5};
+    vector<int> strSizeRange{100000, 200000, 1000000, 2000000, 10000000, 20000000};
+    editDistRange = {5, 10, 50, 100, 500, 1000};
+    vector<int> lvlRange = {5, 5, 6, 6, 7, 7};
+    vector<int> parRange = {3, 4, 5};
 
     string bookpath = string(std::getenv("HOME")) + "/Desktop/sync_database/BookText/";
 //    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{2}, {10}, 10, randSampleTxt, 8001,false);
@@ -91,8 +91,12 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.setsofcontent(GenSync::SyncProtocol::CPISync, {1000}, {2000000}, lvlRange, parRange, {2}, {4}, 1,
 //                       randTxt, bookpath, 8002, 2);
 
+//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, {4}, {2}, {4}, 50,
+//                       randTxt, bookpath, 8005, 1);
+
+
     test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, {4}, {2}, {4}, 50,
-                       randTxt, bookpath, 8005, 1);
+                       randTxt, bookpath, 1, 1);
 
 //    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{5}, {10}, 100, randSampleTxt, 8001,false);
 
