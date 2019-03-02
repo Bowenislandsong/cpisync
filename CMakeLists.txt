@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 # some flags
 if(APPLE)
-set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -ltcmalloc") # -lprofiler 
+set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -ltcmalloc -O1") # -lprofiler 
 else()
 set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -lntl -lprofiler -ltcmalloc -O1")
 endif(APPLE)
