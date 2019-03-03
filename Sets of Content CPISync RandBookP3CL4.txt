@@ -1,1 +1,3 @@
 Sting Size|Edit Dist |Total Comm (bytes)|Literal comm|Partition Sym Diff|Total Num Partitions|Time Tree(s)|Time Recon(s)|Time Backtrack (included in Time Recon) (s)|Set Recon Success|Str Recon Success|Tree Heap SIze|High Water Heap|Rsync Comm
+20000000 5 4337 2684.000000 24.000000 26700.000000 102.753665 4.323422 0.191391 1 1 0 7008199590141318268 49352
+20000000 5 15241 9669.000000 76.000000 27938.000000 103.500307 4.634647 0.279931 1 1 0 7008199590141318268 62760
