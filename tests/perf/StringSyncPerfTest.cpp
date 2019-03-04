@@ -79,7 +79,7 @@ void KshingleSyncPerf::setsofcontent3D() {
 
 
     vector<int> strSizeRange{20000000};
-    editDistRange = {5, 10, 50, 100, 500, 1000};
+    editDistRange = { 1000};
     vector<int> lvlRange = {7};
     vector<int> parRange = {3, 4, 5};
 
@@ -95,8 +95,8 @@ void KshingleSyncPerf::setsofcontent3D() {
 //                       randTxt, bookpath, 8005, 1);
 
 
-    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, {4}, {2}, {4}, 50,
-                       randTxt, bookpath, 5, 1);
+    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, {4}, {2}, {4}, 25,
+                       randTxt, bookpath, 6, 1);
 
 //    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{5}, {10}, 100, randSampleTxt, 8001,false);
 
