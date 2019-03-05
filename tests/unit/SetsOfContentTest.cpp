@@ -52,7 +52,7 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randSampleTxt(2e6); // 20MB is top on MAC
+    string alicetxt = randAsciiStr(1e7); // 20MB is top on MAC
     int partition = 4;
     int lvl = 6;
     int space = 4;
@@ -101,11 +101,11 @@ auto str_s = clock();
 
 
     Bob.addStr(btxt, false);
-
+    double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
    Alice.addStr(atxt, false);
 //     alice_thread.join();
 //     bob_thread.join();
-    double str_time = (double) (clock() - str_s) / CLOCKS_PER_SEC;
+
 
     auto recon_t = clock();
     auto report = forkHandle(Alice, Bob, false);

@@ -104,6 +104,19 @@ inline size_t str_to_hash(const string &str) {
     return std::hash<std::string>{}(str);
 };
 
+inline void add_to_map(map<size_t, size_t>& hash_occurr,size_t val){
+    auto it_pos = hash_occurr.emplace(val, 1);
+    if (!it_pos.second) it_pos.first->second++;
+}
+
+inline void del_from_map(map<size_t, size_t>& hash_occurr,size_t val){
+    auto it_prev = hash_occurr.find(val);
+    if (it_prev != hash_occurr.end()) {
+        if (it_prev->second > 1) it_prev->second--;
+        else hash_occurr.erase(it_prev);
+    }
+}
+
 inline vector<size_t> local_mins(const vector<size_t> &hash_val, size_t win_size) {
     // relying on hashMap sorting (We expect HashMap arrange keys in an increasing order)
     // O(nlgw)
@@ -115,34 +128,75 @@ inline vector<size_t> local_mins(const vector<size_t> &hash_val, size_t win_size
         win_size = 1;
     }
 
+    clock_t start = clock();
     vector<size_t> mins;
     map<size_t, size_t> hash_occurr;
     for (size_t j = 0; j < 2 * win_size; ++j) {
-        auto it = hash_occurr.find(hash_val[j]);
-        if (it != hash_occurr.end())
-            it->second++;
-        else
-            hash_occurr.emplace(hash_val[j], 1);
+        auto it = hash_occurr.emplace(hash_val[j], 1);
+        if (!it.second) it.first->second++;
     }
-
+    cout << "first part:" << (double) (clock() - start) / CLOCKS_PER_SEC << endl;
+    start = clock();
+    cout << win_size << endl;
     for (size_t i = win_size + 1; i < hash_val.size() - win_size + 1; ++i) {
         if (hash_val[i - 1] <= hash_occurr.begin()->first and i - ((mins.empty()) ? 0 : mins.back()) >
                                                               win_size) // this define partition rule to be min or equal instead of strictly less as local min
             mins.emplace_back(i - 1);
-        auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
-        if (it_prev != hash_occurr.end()) {
-            if (it_prev->second > 1) it_prev->second--;
-            else hash_occurr.erase(it_prev);
-        }
 
-        auto it_pos = hash_occurr.find(hash_val[i + win_size]);
-        if (it_pos != hash_occurr.end()) it_pos->second++;
-        else hash_occurr.emplace(hash_val[i + win_size], 1);
-
+//        auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
+//        if (it_prev != hash_occurr.end()) {
+//            if (it_prev->second > 1) it_prev->second--;
+//            else hash_occurr.erase(it_prev);
+//        }
+//
+//        auto it_pos = hash_occurr.emplace(hash_val[i + win_size], 1);
+//        if (!it_pos.second) it_pos.first->second++;
+        del_from_map(hash_occurr,hash_val[i - win_size - 1]);
+        add_to_map(hash_occurr,hash_val[i + win_size]);
     }
+    cout << "second part:" << (double) (clock() - start) / CLOCKS_PER_SEC << endl;
 
     return mins;
 }
+
+//inline vector<size_t> local_mins(const vector<size_t> &hash_val, size_t win_size) {
+//    // relying on hashMap sorting (We expect HashMap arrange keys in an increasing order)
+//    // O(nlgw)
+//    // minimum partition distance
+//    if (win_size < 1) {
+//        cout
+//                << "Content Partition window size is less than 1 and adjusted to 1. Consider adjusting number of partition levels"
+//                << endl;
+//        win_size = 1;
+//    }
+//
+//    clock_t start = clock();
+//    vector<size_t> mins;
+//    vector<size_t> hash_occurr(2 * win_size, 0);
+//    for (size_t j = 0; j < 2 * win_size; ++j) {
+//        hash_occurr[j] = hash_val[j];
+//    }
+//    sort(hash_occurr.begin(), hash_occurr.end());
+//    cout << "first part:" << (double) (clock() - start) / CLOCKS_PER_SEC << endl;
+//    start = clock();
+//    cout << win_size << endl;
+//    for (size_t i = win_size + 1; i < hash_val.size() - win_size + 1; ++i) {
+//        if (hash_val[i - 1] <= hash_occurr.front() and i - ((mins.empty()) ? 0 : mins.back()) >
+//                                                       win_size) // this define partition rule to be min or equal instead of strictly less as local min
+//            mins.emplace_back(i - 1);
+//
+//
+//
+//        hash_occurr.insert(lower_bound(hash_occurr.begin(), hash_occurr.end(), hash_val[i + win_size]),
+//                           hash_val[i + win_size]);
+//        hash_occurr.erase(lower_bound(hash_occurr.begin(), hash_occurr.end(), hash_val[i - win_size - 1]));
+//
+//
+//    }
+//    cout << "second part:" << (double) (clock() - start) / CLOCKS_PER_SEC << endl;
+//
+//    return mins;
+//}
 
 //// -------------------------------------- Sets of Content
 
