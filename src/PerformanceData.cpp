@@ -196,7 +196,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     Resources initRes;
 //                            initResources(initRes);
-                                    if(mode==1){
+                                    if(mode==1 or mode==3){
                                         if (levelRange.size() != str_sizeRange.size()) throw invalid_argument("In mode 1, String size range and lvl range should have the same size");
                                         lvl = levelRange[i];
                                     }

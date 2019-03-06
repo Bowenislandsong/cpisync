@@ -46,7 +46,8 @@ Logger::gLog(Logger::METHOD,"Entering CPISync::CPISync");
       ** by splitting the error probability between hash collisions and sync failures.
       ** The former is controlled by lengthening the effective bit-representation of strings.
       */
-      bitNum = 2 * bits + log(-1.0/log(1.0-pow(2.0,-epsilon-1.0)))/log(2) - 1;      
+      bitNum = 2 * bits + log(-1.0/log(1.0-pow(2.0,-epsilon-1.0)))/log(2) - 1;
+
     /*
      *  The analysis here is based on the birthday paradox.
      *  The probability of a collision for (at most) 2^bits elements chosen from

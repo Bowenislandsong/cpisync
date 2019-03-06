@@ -8,7 +8,9 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "CPISync.h"
 #include "CPI.h"
+#include "GenSync.h"
 #include "Auxiliary.h"
+#include "ForkHandle.h"
 
 class CPITest : public CPPUNIT_NS::TestFixture{
     CPPUNIT_TEST_SUITE(CPITest);

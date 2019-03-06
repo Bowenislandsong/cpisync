@@ -104,14 +104,15 @@ void KshingleSyncPerf::setsofcontent3D() {
 //    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 4, 1, randSampleTxt, 8001);
 
 //    strSizeRange = {1000000};
-    editDistRange = {1000};
+    editDistRange = {100};
     vector<int> window = {2};
     vector<int> space = {2,4,6,8,10,12};
     parRange = {4};
-    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange,lvlRange, parRange,window,space, 50, randTxt,bookpath, 8003,3);
 
 
-    lvlRange = {4};
+    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange,lvlRange, parRange,window,space, 10, randTxt,bookpath, 8003,3);
+
+
 
 
 
