@@ -19,16 +19,8 @@
   <component name="ChangeListManager">
     <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Alicecopy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alicecopy.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bobcopy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bobcopy.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookStr 100000ED1000SS.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookStr 100000ED1000SS.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CPISync.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/CPISync.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PerformanceData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/PerformanceData.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/CPITest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/CPITest.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/CPITest.h" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/CPITest.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
@@ -84,7 +76,7 @@
           <entry key="py" value="1" />
           <entry key="set" value="2" />
           <entry key="sstream" value="10" />
-          <entry key="string" value="4" />
+          <entry key="string" value="5" />
           <entry key="thread" value="1" />
           <entry key="txt" value="491" />
           <entry key="type_traits" value="5" />
@@ -97,7 +89,7 @@
         <counts>
           <entry key="CMakeCache.txt" value="2" />
           <entry key="CMakeLists.txt" value="10" />
-          <entry key="ObjectiveC" value="1075" />
+          <entry key="ObjectiveC" value="1076" />
           <entry key="PLAIN_TEXT" value="503" />
           <entry key="Python" value="1" />
           <entry key="XML" value="2" />
@@ -105,7 +97,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="66746" />
+          <entry key="cpp" value="66787" />
           <entry key="h" value="27606" />
           <entry key="mm" value="18" />
           <entry key="txt" value="162" />
@@ -115,7 +107,7 @@
         <counts>
           <entry key="CMakeLists.txt" value="114" />
           <entry key="Doxygen file" value="45" />
-          <entry key="ObjectiveC" value="94325" />
+          <entry key="ObjectiveC" value="94366" />
           <entry key="PLAIN_TEXT" value="48" />
         </counts>
       </usages-collector>
@@ -204,8 +196,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="112" selection-start-line="112" selection-end-line="112" />
+            <state relative-caret-position="465">
+              <caret line="103" column="91" selection-start-line="103" selection-start-column="91" selection-end-line="103" selection-end-column="91" />
             </state>
           </provider>
         </entry>
@@ -213,8 +205,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="257" selection-start-line="257" selection-end-line="257" />
+            <state relative-caret-position="71">
+              <caret line="203" column="49" lean-forward="true" selection-start-line="203" selection-start-column="49" selection-end-line="203" selection-end-column="49" />
             </state>
           </provider>
         </entry>
@@ -603,12 +595,12 @@
       <workItem from="1551754440117" duration="8599000" />
       <workItem from="1551799792179" duration="4179000" />
       <workItem from="1551810297370" duration="6263000" />
-      <workItem from="1551874909191" duration="10367000" />
+      <workItem from="1551874909191" duration="12443000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1324548000" />
+    <option name="totallyTimeSpent" value="1326624000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -641,8 +633,8 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" x="902" y="407" width="1375" height="861" id="Run" order="4" sideWeight="0.49945176" weight="0.35264665" />
-      <window_info anchor="right" x="404" y="312" width="1440" height="829" id="Messages" order="5" sideWeight="0.49945176" weight="0.31330472" />
-      <window_info active="true" anchor="right" id="Debug" order="6" sideWeight="0.49893504" visible="true" weight="0.3855508" />
+      <window_info active="true" anchor="right" x="404" y="312" width="1440" height="829" id="Messages" order="5" sideWeight="0.49945176" visible="true" weight="0.31330472" />
+      <window_info anchor="right" id="Debug" order="6" sideWeight="0.49893504" weight="0.5314735" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21167593" />
@@ -683,18 +675,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/PerformanceData.cpp</url>
-          <line>203</line>
+          <line>205</line>
           <option name="timeStamp" value="499" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/PerformanceData.cpp</url>
-          <line>292</line>
-          <option name="timeStamp" value="500" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/tests/unit/CPITest.cpp</url>
           <line>94</line>
           <option name="timeStamp" value="506" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/PerformanceData.cpp</url>
+          <line>312</line>
+          <option name="timeStamp" value="522" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
@@ -717,7 +709,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Sets of Content InteractiveCPISync RandBookError 1000.txt" />
     <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookError 1000.txt" />
     <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookStr 2000000.txt" />
     <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED100LP.txt" />
@@ -985,17 +976,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/string">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="1254" selection-start-line="1254" selection-end-line="1254" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="112" selection-start-line="112" selection-end-line="112" />
+        <state relative-caret-position="465">
+          <caret line="103" column="91" selection-start-line="103" selection-start-column="91" selection-end-line="103" selection-end-column="91" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="257" selection-start-line="257" selection-end-line="257" />
+        <state relative-caret-position="71">
+          <caret line="203" column="49" lean-forward="true" selection-start-line="203" selection-start-column="49" selection-end-line="203" selection-end-column="49" />
         </state>
       </provider>
     </entry>

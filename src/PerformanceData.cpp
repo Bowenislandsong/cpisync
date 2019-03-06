@@ -189,18 +189,20 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                     for (int t : TershingleLen) {
                         for (int s : space) {
                             vector<string> report_vec;
+
+                            // change lvels
+                            if(mode==1 or mode==3){
+                                if (levelRange.size() != str_sizeRange.size()) throw invalid_argument("In mode 1, String size range and lvl range should have the same size");
+                                lvl = levelRange[i];
+                            }
                             for (int con = 0; con < confidence; ++con) {
                                 try {
 //                            cout << "level: " << lvl << ", partitions: " << par
 //                                 << ", Confidence: " << con << endl;
 
                                     Resources initRes;
-//                            initResources(initRes);
-                                    if(mode==1 or mode==3){
-                                        if (levelRange.size() != str_sizeRange.size()) throw invalid_argument("In mode 1, String size range and lvl range should have the same size");
-                                        lvl = levelRange[i];
-                                    }
-
+////                            initResources(initRes);
+//
                                     GenSync Alice = GenSync::Builder().
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                                             setProtocol(setReconProto).
@@ -223,7 +225,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     clock_t strStart = clock();
                                     Alice.addStr(Alicetxt, false);
                                     auto tree_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
-                                    resourceReport(initRes);
+//                                    resourceReport(initRes);
 
                                     last_passed_before_exception = "Alice Add String"; // success Tag
 
@@ -324,7 +326,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                     }
                 }
-                if(mode == 1) break;}
+                if(mode == 1 or mode ==3) break;}
         }
     }
 
