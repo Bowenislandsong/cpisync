@@ -165,10 +165,10 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
         plot.create("Sets of Content " + protoName + " " + str_type + "STR" + to_string(str_sizeRange.front()) + "ED" +
                     to_string(edit_distRange.front()) + "LP", catag);
     } else if (mode == 3) {
-        catag[0] = "TerShingle Length";
+        catag[0] = "Sting Size";
         catag[1] = "Space";
         plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()) + "ED" +
-                    to_string(edit_distRange.front()) + "TS", catag);
+                    to_string(edit_distRange.front()) + "SS", catag);
     } else if (mode ==4){
         catag[0] = "Str Size";
         catag[1] = "lvl";
@@ -309,7 +309,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     report_vec[1] = to_string(par);
                                     plot.add(report_vec);
                                 } else if (mode == 3) {
-                                    report_vec[0] = to_string(t);
+                                    report_vec[0] = to_string(str_sizeRange[i]);
                                     report_vec[1] = to_string(s);
                                     plot.add(report_vec);
                                 } else if (mode == 4){

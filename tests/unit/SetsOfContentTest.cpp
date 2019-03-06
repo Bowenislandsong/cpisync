@@ -52,11 +52,11 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randAsciiStr(1e7); // 20MB is top on MAC
-    int partition = 4;
+    string alicetxt = randAsciiStr(1e6); // 20MB is top on MAC
+    int partition = 5;
     int lvl = 6;
-    int space = 4;
-    int shingleLen = 2;
+    int space_c = 8;
+    int shingleLen_c = 2;
 
 
     DataObject *atxt = new DataObject(alicetxt);
@@ -67,8 +67,8 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(10).
             setNumPartitions(partition).
-            setShingleLen(shingleLen).
-            setSpace(space).
+            setShingleLen(shingleLen_c).
+            setSpace(space_c).
             setlvl(lvl).
             setPort(8001).
             build();
@@ -77,7 +77,7 @@ void SetsOfContentTest::testAll() {
 //    string bobtxt = randStringEdit(alicetxt, 10);
 //    string bobtxt = randStringEdit((*atxt).to_string(),2e3);
 
-    string bobtxt = randStringEditBurst(alicetxt, 5e2, "./tests/SampleTxt.txt");
+    string bobtxt = randStringEditBurst(alicetxt, 1e2, "./tests/SampleTxt.txt");
     if (bobtxt.size() < pow(partition, lvl))
         bobtxt += randCharacters(pow(partition, lvl) - bobtxt.size());
 
@@ -89,8 +89,8 @@ void SetsOfContentTest::testAll() {
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(10).
             setNumPartitions(partition).
-            setShingleLen(shingleLen).
-            setSpace(space).
+            setShingleLen(shingleLen_c).
+            setSpace(space_c).
             setlvl(lvl).
             setPort(8001).
             build();

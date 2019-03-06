@@ -7,7 +7,7 @@
 SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition,
                              GenSync::SyncProtocol base_set_proto, size_t shingle_size, size_t space)
         : TermStrSize(terminal_str_size), Levels(levels), Partition(partition), baseSyncProtocol(base_set_proto),
-          terShingleLen(shingle_size), terSpace(space) {
+          shingle_c(shingle_size), space_c(space) {
     SyncID = SYNC_TYPE::SetsOfContent;
     if (levels > USHRT_MAX or levels < 2)
         throw invalid_argument("Num of Level specified should be between 2 and " + to_string(USHRT_MAX));
@@ -105,11 +105,11 @@ void SetsOfContent::go_through_tree() {
                 to_string(Levels) + ", Terminal String Size: " + to_string(TermStrSize) + ", Actual String Size: " +
                 to_string(myString.size()));
 
-    size_t shingle_size = terShingleLen * pow(2,
-                                              Levels); //(Parameter c, terminal rolling hash window size) //max(floor(log2(String_Size)),pow(terWin_s,Levels+1))
+    size_t shingle_size = 2 * pow(shingle_c,
+                                              Levels); //(Parameter c, terminal rolling hash window size)
     if (shingle_size < 1)
         throw invalid_argument("Consider larger the parameters for auto shingle size to be more than 1");
-    size_t space = terSpace * pow(2 * Partition, Levels); //126 for ascii content (Parameter terminal space)
+    size_t space = 4 * pow(space_c, Levels); //126 for ascii content (Parameter terminal space)
     vector<size_t> cur_level;
     // fill up the tree
     myTree.resize(Levels);
@@ -136,8 +136,8 @@ void SetsOfContent::go_through_tree() {
 
         }
 //        cout << "time: " << (double) (clock() - time) / CLOCKS_PER_SEC << endl;
-        space = floor((space / Partition) / 2);
-        shingle_size = floor(shingle_size / 2);
+        space = floor(space / space_c);
+        shingle_size = floor(shingle_size / shingle_c);
     }
 
 }
@@ -590,13 +590,12 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
 //    //show the info of the tree
 //    for(auto lvl:myTree) {
 //        vector<size_t> lvl_vec;
-//        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(cyc_dict[item.second].size()) : lvl_vec.push_back(Dictionary[item.second].size());
+//        for(auto item : lvl) (item.lvl<myTree.size()-1)?lvl_vec.push_back(cyc_dict[item.second].size()) : lvl_vec.push_back(dict_getstr(item.second).size());
 //        sort(lvl_vec.begin(),lvl_vec.end());
 //        cout<<"max: "<<lvl_vec.back()<<", min: "<<lvl_vec.front()<<", median: "<<getMedian(lvl_vec)<<", lvl size: "<<lvl_vec.size()<<endl;
 //    }
 //    std::set<size_t> unique_hashes;
 //    for (auto term :myTree.back()){
-//        cout<<term<<endl;
 //        unique_hashes.insert(term.second);
 //    }
 //    cout<<"We have "<<unique_hashes.size()<<" unique terminal hashes over "<<myTree.back().size() <<" shingles"<<endl;
