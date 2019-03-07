@@ -84,11 +84,10 @@ void KshingleSyncPerf::setsofcontent3D() {
     vector<int> window = {2};
     vector<int> space = {8, 8, 8, 8, 6, 6};
     parRange = {4};
-    int conf = 2;
+    int conf = 50;
 
     // parallel processes
     int nProcesses = 3;
-
 
     pid_t pID[nProcesses];
     for (int i = 0; i < nProcesses; ++i) {
