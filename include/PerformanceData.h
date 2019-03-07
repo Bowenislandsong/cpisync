@@ -26,22 +26,24 @@ static multiset<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win
             hash_occurr[hash_val[j]] = 1;
     }
 
-    for (size_t i = win_size+1; i < hash_val.size() - win_size+1; ++i) {
-        if (hash_val[i-1] <= hash_occurr.begin()->first and i - ((!mins.empty())?mins.back():0) > win_size)
-            mins.push_back(i-1);
+    for (size_t i = win_size + 1; i < hash_val.size() - win_size + 1; ++i) {
+        if (hash_val[i - 1] <= hash_occurr.begin()->first and i - ((!mins.empty()) ? mins.back() : 0) > win_size)
+            mins.push_back(i - 1);
         auto it_prev = hash_occurr.find(hash_val[i - win_size - 1]);
         if (it_prev != hash_occurr.end())
             it_prev->second--;
 
-        auto it_pos = hash_occurr.find(hash_val[i+win_size]);
+        auto it_pos = hash_occurr.find(hash_val[i + win_size]);
         if (it_pos != hash_occurr.end())
             it_pos->second++;
         else
-            hash_occurr[hash_val[i+win_size]] = 1;
+            hash_occurr[hash_val[i + win_size]] = 1;
     }
 
-    return multiset<size_t>(mins.begin(),mins.end());
+    return multiset<size_t>(mins.begin(), mins.end());
 }
+
+
 
 class PerformanceData {
 public:
@@ -67,14 +69,11 @@ public:
     void setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
                        vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange,
                        vector<int> TershingleLen, vector<int> space, int confidence, string (*stringInput)(int, string),
-                       string src, int portnum, int mode);
+                       string src, int instance, int mode);
 
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 
-    void cascadingMissmatch(vector<int> num_error,vector<int> win,vector<int> space);
-
-
-
+    void cascadingMissmatch(vector<int> num_error, vector<int> win, vector<int> space);
 
 
 private:

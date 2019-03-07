@@ -407,10 +407,9 @@ bool CPISync::SyncClient(const shared_ptr<Communicant>& commSync, list<DataObjec
         // ... connect to the other party
         if (!keepAlive) {
             commSync->commConnect();
-        }
             // ... check that the other side is doing the same synchronization
             SendSyncParam(commSync, oneWay);
-
+        }
 
         // 1. Transmit characteristic polynomial values
         commSync->commSend((long) CPI_hash.size()); // ... first outputs how many set elements the client has
@@ -443,6 +442,7 @@ bool CPISync::SyncClient(const shared_ptr<Communicant>& commSync, list<DataObjec
                 tmp_vec.kill();
             }
         }
+
 
         if (!oneWay) {
             delta_other = commSync->commRecv_vec_ZZ_p();
@@ -494,9 +494,10 @@ bool CPISync::SyncServer(const shared_ptr<Communicant>& commSync, list<DataObjec
         Logger::gLog(Logger::METHOD, "Server: Started listening to: " + commSync->getName());
 //        commSync->state==Listern
         commSync->commListen();
-    }
         // ... verify sync parameters
         RecvSyncParam(commSync, oneWay);
+    }
+
 
 
 

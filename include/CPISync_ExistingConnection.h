@@ -18,8 +18,8 @@
 class CPISync_ExistingConnection : public CPISync {
 public:
    // Duplicate the CPISync constructors, but initializes "no hashing"
-    CPISync_ExistingConnection(long m_bar, long bits, int epsilon, int redundant=0) : CPISync(m_bar, bits, epsilon, redundant)
-    { hashQ=false; keepAlive = true; SyncID = SYNC_TYPE::CPISync_ExistingConnection; }
+    CPISync_ExistingConnection(long m_bar, long bits, int epsilon, int redundant=0) : CPISync(m_bar, bits, epsilon, redundant, false,true)
+    { hashQ=false; keepAlive = true; SyncID = SYNC_TYPE::CPISync_ExistingConnection; oneWay = true; } // we turn on onwway flag for string recon and save comm cost
 
     string getName() override {return CPISync::getName() + "   * assuming an existing connection\n";}
 };

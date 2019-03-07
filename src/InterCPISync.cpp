@@ -440,8 +440,8 @@ void InterCPISync::createChildren(pTree * parentNode, pTree * tempTree, const ZZ
                         conv(pos,dival);// Which child node to add data from parent
                         if(pos >= pFactor) pos = pFactor-1; // For odd pFactors put the edge data into the last bin
 			*/
-                        //cout<<"Elem = "<<toStr(elemZZ)<<" Begin Range = "<<toStr(begRange)<<" End Range = "<<toStr(endRange)<<" Step = "<<toStr(step)<<" ZZ Pos = "<<toStr(dival)<<"Int Pos = "<<pos<<endl;
-                        //cout<<"Elem = "<<toStr(elemZZ)<<" Begin Range = "<<toStr(begRange)<<" End Range = "<<toStr(endRange)<<" Step = "<<toStr(step)<<" Int Pos = "<<pos<<endl;
+//                        cout<<"Elem = "<<toStr(elemZZ)<<" Begin Range = "<<toStr(begRange)<<" End Range = "<<toStr(endRange)<<" Step = "<<toStr(step)<<" ZZ Pos = "<<toStr(dival)<<"Int Pos = "<<pos<<endl;
+//                        cout<<"Elem = "<<toStr(elemZZ)<<" Begin Range = "<<toStr(begRange)<<" End Range = "<<toStr(endRange)<<" Step = "<<toStr(step)<<" Int Pos = "<<pos<<endl;
 			nodes[pos]->addElem(*elem);//Add to appropriate child
 		}
 	}

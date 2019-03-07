@@ -71,46 +71,47 @@ void KshingleSyncPerf::kshingleTest3D() {
 void KshingleSyncPerf::setsofcontent3D() {
     PerformanceData test = PerformanceData(tesPts);
     vector<int> editDistRange;
-//   vector<int> strSizeRange = {400, 600, 800, 1000, 1400, 1800};//, 2000, 2200, 2600, 3000};//, 5000, 7000, 9000, 10000};
-//
-//    test.kshingle3D(GenSync::SyncProtocol::CPISync,editDistRange,strSizeRange,target_confidence, randSampleTxt);
-//    test.kshingle3D(GenSync::SyncProtocol::InteractiveCPISync,editDistRange,strSizeRange,target_confidence, randSampleTxt);
-//    test.kshingle3D(GenSync::SyncProtocol::IBLTSyncSetDiff,editDistRange,strSizeRange,target_confidence, randSampleTxt);
 
 
-    vector<int> strSizeRange{100000,200000,1000000,2000000,10000000,20000000};
-    editDistRange = {5,10,50,100,500, 1000};
-    vector<int> lvlRange = {5,5,6,6,7,7};
-    vector<int> parRange = {3,4,5};
+    vector<int> strSizeRange{100000, 200000, 1000000, 2000000, 10000000, 20000000};
+    editDistRange = {10, 50, 100, 500};
+    vector<int> lvlRange = {5, 5, 6, 6, 7, 7};
+    vector<int> parRange;
 
     string bookpath = string(std::getenv("HOME")) + "/Desktop/sync_database/BookText/";
-//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{2}, {10}, 10, randSampleTxt, 8001,false);
-
-//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{3}, {10}, {2},{4}, 10, randTxt,bookpath, 8002,1);
-
-//    test.setsofcontent(GenSync::SyncProtocol::CPISync, {1000}, {2000000}, lvlRange, parRange, {2}, {4}, 1,
-//                       randTxt, bookpath, 8002, 2);
-
-//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, {3}, {2}, {4}, 100,
-//                       randTxt, bookpath, 8005, 1);
-
-//    test.setsofcontent(GenSync::SyncProtocol::IBLTSyncSetDiff, editDistRange, strSizeRange,{5}, {10}, 100, randSampleTxt, 8001,false);
 
 
-//    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 2, 1, randSampleTxt, 8001);
-//
-//    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 3, 1, randSampleTxt, 8001);
-//
-//    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, 4, 1, randSampleTxt, 8001);
-
-//    strSizeRange = {1000000};
-    editDistRange = {100};
     vector<int> window = {2};
-    vector<int> space = {2,4,6,8,10,12};
+    vector<int> space = {8, 8, 8, 8, 6, 6};
     parRange = {4};
+    int conf = 2;
+
+    // parallel processes
+    int nProcesses = 0;
 
 
-    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange,lvlRange, parRange,window,space, 10, randTxt,bookpath, 8003,3);
+    pid_t pID[nProcesses];
+    for (int i = 0; i < nProcesses; ++i) {
+        if ((pID[i] = fork()) < 0) {
+            perror("fork");
+            abort();
+        } else if (pID[i] == 0) {
+            cout << "Chlid: " << i << endl;
+            test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, parRange, window,
+                               space, conf, randTxt, bookpath, 1 + i, 1);
+
+            exit(0);
+        }
+    }
+
+    int child_state;
+    cout << "Parent on job" << endl;
+    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, parRange,
+                       window, space, conf, randTxt, bookpath, 0, 1);
+    cout << "child " << wait(&child_state) << " done and well" << endl;
+
+
+//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange,lvlRange, parRange,window,space, 1, randTxt,bookpath, 3,3);
 
 
 
@@ -124,18 +125,8 @@ void KshingleSyncPerf::setsofcontent3D() {
 
 
 
-//   test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange,shingle,space, 100, randTxt,bookpath, 8002,3);
 //    test.cascadingMissmatch(numError, window, space);
-//    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange,lvlRange, parRange, 1, randAsciiStr, 8001);
 
-//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange,lvlRange, parRange, 1, randSampleTxt, 8001);
-
-
-//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 2, 1, randSampleTxt, 8001);
-//
-//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 3, 1, randSampleTxt, 8001);
-//
-//    test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, 4, 1, randSampleTxt, 8001);
 }
 
 void KshingleSyncPerf::testStrataEst3D() {

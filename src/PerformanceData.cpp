@@ -134,10 +134,12 @@ void PerformanceData::cascadingMissmatch(vector<int> num_error, vector<int> win,
 void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange,
                                     vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange,
                                     vector<int> TershingleLen, vector<int> space, int confidence,
-                                    string (*stringInput)(int, string), string src, int portnum, int mode) {
+                                    string (*stringInput)(int, string), string src, int instance, int mode) {
     // mode 1: change string size and edit distance
     // mode 2: change tree size with num of partitions and tree height
     // mode 3: change terminal space and
+
+
 
     string protoName, str_type;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == setReconProto) protoName = "IBLTSyncSetDiff";
@@ -158,26 +160,27 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
     if (mode == 1) {
         catag[0] = "Sting Size";
         catag[1] = "Edit Dist ";
-        plot.create("Sets of Content " + protoName + " " + str_type + "P" + to_string(partitionRange.front())+"CL", catag);
+        plot.create("Sets of Content " + protoName + " " + str_type + "P" + to_string(partitionRange.front()) + "CL" +
+                    to_string(instance), catag);
     } else if (mode == 2) {
         catag[0] = "Level";
         catag[1] = "Partition";
         plot.create("Sets of Content " + protoName + " " + str_type + "STR" + to_string(str_sizeRange.front()) + "ED" +
-                    to_string(edit_distRange.front()) + "LP", catag);
+                    to_string(edit_distRange.front()) + "LP" + to_string(instance), catag);
     } else if (mode == 3) {
-        catag[0] = "Sting Size";
-        catag[1] = "Space";
+        catag[0] = "String Size";
+        catag[1] = "Space constant";
         plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()) + "ED" +
-                    to_string(edit_distRange.front()) + "SS", catag);
-    } else if (mode ==4){
+                    to_string(edit_distRange.front()) + "SS" + to_string(instance), catag);
+    } else if (mode == 4) {
         catag[0] = "Str Size";
         catag[1] = "lvl";
         plot.create("Sets of Content " + protoName + " " + str_type + "ED " + to_string(edit_distRange.front()) + "P" +
-                            to_string(partitionRange.front()) + "SL", catag);
+                    to_string(partitionRange.front()) + "SL" + to_string(instance), catag);
     }
 
     //TODO: Separate Comm, and Time, Separate Fail rate.
-    for (int i = 0; i<str_sizeRange.size(); ++i) {
+    for (int i = 0; i < str_sizeRange.size(); ++i) {
 //        cout << " - Sets of Content " + protoName + " " + str_type + "str Size: " + to_string(str_size) << endl;
         for (int edit_dist : edit_distRange) {
 
@@ -191,9 +194,12 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             vector<string> report_vec;
 
                             // change lvels
-                            if(mode==1 or mode==3){
-                                if (levelRange.size() != str_sizeRange.size()) throw invalid_argument("In mode 1, String size range and lvl range should have the same size");
+                            if (mode == 1 or mode == 3) {
+                                if (levelRange.size() != str_sizeRange.size() and space.size() != str_sizeRange.size())
+                                    throw invalid_argument(
+                                            "In mode 1, String size range and lvl range should have the same size");
                                 lvl = levelRange[i];
+                                s = space[i];
                             }
                             for (int con = 0; con < confidence; ++con) {
                                 try {
@@ -212,7 +218,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                             setShingleLen(t).
                                             setSpace(s).
                                             setlvl(lvl).
-                                            setPort(portnum).
+                                            setPort(8005 + instance).
                                             build();
 
                                     last_passed_before_exception = "Alice GenSync"; // success Tag
@@ -238,16 +244,18 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                             setShingleLen(t).
                                             setSpace(s).
                                             setlvl(lvl).
-                                            setPort(portnum).
+                                            setPort(8005 + instance).
                                             build();
 
                                     last_passed_before_exception = "Bob GenSync"; // success Tag
                                     string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(), edit_dist, src);
                                     //(int) (str_size / edit_dist));
-                                    if (bobtmpstring.size() < str_sizeRange[i]*0.5) // keep strings about the same size
+                                    if (bobtmpstring.size() <
+                                        str_sizeRange[i] * 0.5) // keep strings about the same size
                                         bobtmpstring += randCharacters(str_sizeRange[i] - bobtmpstring.size());
-                                    else if (bobtmpstring.size() > str_sizeRange[i]*1.5) // keep strings about the same size
-                                        bobtmpstring = bobtmpstring.substr(0,str_sizeRange[i]);
+                                    else if (bobtmpstring.size() >
+                                             str_sizeRange[i] * 1.5) // keep strings about the same size
+                                        bobtmpstring = bobtmpstring.substr(0, str_sizeRange[i]);
 
                                     DataObject *Bobtxt = new DataObject(bobtmpstring);
 
@@ -259,17 +267,18 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     last_passed_before_exception = "Bob Add String"; // success Tag
 
-                                    forkHandleReport report = forkHandle(Alice, Bob,false);
+                                    forkHandleReport report = forkHandle(Alice, Bob, false);
 
                                     last_passed_before_exception = "String Recon"; // success Tag
 
                                     bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
                                     // rsync recon
-                                    writeStrToFile("Alicecopy.txt", Alicetxt->to_string());
-                                    writeStrToFile("Bobcopy.txt", Bobtxt->to_string());
+                                    writeStrToFile("Alice" + to_string(instance) + ".txt", Alicetxt->to_string());
+                                    writeStrToFile("Bob" + to_string(instance) + ".txt", Bobtxt->to_string());
 
-                                    auto r_res = getRsyncStats("Alicecopy.txt", "Bobcopy.txt");
+                                    auto r_res = getRsyncStats("Alice" + to_string(instance) + ".txt",
+                                                               "Bob" + to_string(instance) + ".txt");
 
 
                                     if (!success_StrRecon) // success Tag
@@ -295,7 +304,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     delete Bobtxt;
                                 } catch (const std::exception &exc) {
                                     cout << "We failed after " << last_passed_before_exception << endl;
-                                    std::cerr << exc.what()<<endl;
+                                    std::cerr << exc.what() << endl;
                                     report_vec = {to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
                                                   to_string(0), to_string(0), to_string(0), to_string(0)};
@@ -314,7 +323,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     report_vec[0] = to_string(str_sizeRange[i]);
                                     report_vec[1] = to_string(s);
                                     plot.add(report_vec);
-                                } else if (mode == 4){
+                                } else if (mode == 4) {
                                     report_vec[0] = to_string(str_sizeRange[i]);
                                     report_vec[1] = to_string(lvl);
                                     plot.add(report_vec);
@@ -322,11 +331,12 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                 plot.update();
                             }
 
-                        }
+                            if (mode == 1) break;}
 
                     }
                 }
-                if(mode == 1 or mode ==3) break;}
+
+                if (mode == 1 or mode == 3) break;}
         }
     }
 
