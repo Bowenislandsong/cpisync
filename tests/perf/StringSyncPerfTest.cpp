@@ -87,7 +87,7 @@ void KshingleSyncPerf::setsofcontent3D() {
     int conf = 2;
 
     // parallel processes
-    int nProcesses = 0;
+    int nProcesses = 3;
 
 
     pid_t pID[nProcesses];

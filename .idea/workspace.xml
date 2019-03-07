@@ -18,18 +18,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookP3CL.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookStr 100000ED100SS.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandBookStr 100000ED1000SS.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/PerformanceData.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/PerformanceData.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CPISync.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/CPISync.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/InterCPISync.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/InterCPISync.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PerformanceData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/PerformanceData.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alice.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alice0.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alice1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alice2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alicecopy.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bob.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bob0.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bob1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bob2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bobcopy.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookP4CL1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content InteractiveCPISync RandBookP4CL0.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/CPITest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/CPITest.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
@@ -120,7 +121,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="67650" />
+          <entry key="cpp" value="67658" />
           <entry key="h" value="27817" />
           <entry key="mm" value="18" />
           <entry key="txt" value="162" />
@@ -130,7 +131,7 @@
         <counts>
           <entry key="CMakeLists.txt" value="114" />
           <entry key="Doxygen file" value="45" />
-          <entry key="ObjectiveC" value="95440" />
+          <entry key="ObjectiveC" value="95448" />
           <entry key="PLAIN_TEXT" value="48" />
         </counts>
       </usages-collector>
@@ -195,11 +196,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="417">
-              <caret line="99" column="24" selection-start-line="99" selection-start-column="24" selection-end-line="99" selection-end-column="24" />
+            <state relative-caret-position="280">
+              <caret line="89" column="22" selection-start-line="89" selection-start-column="22" selection-end-line="89" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -233,11 +234,11 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="481">
-              <caret line="331" column="63" selection-start-line="331" selection-start-column="63" selection-end-line="331" selection-end-column="63" />
+            <state relative-caret-position="584">
+              <caret line="316" column="57" lean-forward="true" selection-start-line="316" selection-start-column="57" selection-end-line="316" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -357,8 +358,8 @@
         <option value="$PROJECT_DIR$/include/PerformanceData.h" />
         <option value="$PROJECT_DIR$/src/CPISync.cpp" />
         <option value="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" />
-        <option value="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" />
         <option value="$PROJECT_DIR$/src/PerformanceData.cpp" />
+        <option value="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" />
       </list>
     </option>
   </component>
@@ -631,7 +632,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1343133000" />
+    <option name="totallyTimeSpent" value="1343267000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -997,16 +998,6 @@
     <entry file="file://$PROJECT_DIR$/src/CPI.cpp">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/PerformanceData.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
-          <folding>
-            <element signature="e#114#134#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/include/ForkHandle.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
@@ -1031,9 +1022,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/InterCPISync.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="861">
@@ -1044,17 +1032,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="99" column="24" selection-start-line="99" selection-start-column="24" selection-end-line="99" selection-end-column="24" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.h">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="331" column="63" selection-start-line="331" selection-start-column="63" selection-end-line="331" selection-end-column="63" />
+        <state relative-caret-position="584">
+          <caret line="316" column="57" lean-forward="true" selection-start-line="316" selection-start-column="57" selection-end-line="316" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/PerformanceData.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="93">
+          <caret line="45" selection-start-line="45" selection-end-line="45" />
+          <folding>
+            <element signature="e#114#134#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="89" column="22" selection-start-line="89" selection-start-column="22" selection-end-line="89" selection-end-column="22" />
         </state>
       </provider>
     </entry>
