@@ -425,7 +425,6 @@ inline ZZ min(const ZZ &aa, const ZZ &bb) {
  * @require srand() must've been called
  */
 inline int randLenBetween(int lower, int upper) {
-    srand(time(NULL));
     int length = (rand() % (upper + 1));
     if (length < lower) length = lower;
     return length;

@@ -96,6 +96,7 @@ void KshingleSyncPerf::setsofcontent3D() {
             abort();
         } else if (pID[i] == 0) {
             cout << "Chlid: " << i << endl;
+            srand(i+1);
             test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, parRange, window,
                                space, conf, randTxt, bookpath, 1 + i, 1);
 
@@ -105,6 +106,7 @@ void KshingleSyncPerf::setsofcontent3D() {
 
     int child_state;
     cout << "Parent on job" << endl;
+    srand(0);
     test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, parRange,
                        window, space, conf, randTxt, bookpath, 0, 1);
     cout << "child " << wait(&child_state) << " done and well" << endl;

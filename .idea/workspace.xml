@@ -18,8 +18,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alice0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice0.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alice1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alice2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alice3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice3.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bob0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob0.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bob1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bob2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bob3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob3.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookP4CL0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookP4CL0.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookP4CL1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookP4CL1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookP4CL2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookP4CL2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookP4CL3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookP4CL3.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/Auxiliary.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Auxiliary.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" afterDir="false" />
     </list>
@@ -112,8 +123,8 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="67671" />
-          <entry key="h" value="27823" />
+          <entry key="cpp" value="67679" />
+          <entry key="h" value="27824" />
           <entry key="mm" value="18" />
           <entry key="txt" value="162" />
         </counts>
@@ -122,7 +133,7 @@
         <counts>
           <entry key="CMakeLists.txt" value="114" />
           <entry key="Doxygen file" value="45" />
-          <entry key="ObjectiveC" value="95467" />
+          <entry key="ObjectiveC" value="95476" />
           <entry key="PLAIN_TEXT" value="48" />
         </counts>
       </usages-collector>
@@ -190,8 +201,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="80" column="84" selection-start-line="80" selection-start-column="76" selection-end-line="80" selection-end-column="84" />
+            <state relative-caret-position="632">
+              <caret line="108" column="11" selection-start-line="108" selection-start-column="11" selection-end-line="108" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -200,7 +211,7 @@
         <entry file="file://$PROJECT_DIR$/include/Auxiliary.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="245">
-              <caret line="426" column="11" selection-start-line="426" selection-start-column="11" selection-end-line="426" selection-end-column="11" />
+              <caret line="426" column="49" selection-start-line="426" selection-start-column="49" selection-end-line="426" selection-end-column="49" />
             </state>
           </provider>
         </entry>
@@ -632,7 +643,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1344723000" />
+    <option name="totallyTimeSpent" value="1344950000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -702,7 +713,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp</url>
-          <line>112</line>
+          <line>114</line>
           <option name="timeStamp" value="497" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -1054,14 +1065,14 @@
     <entry file="file://$PROJECT_DIR$/include/Auxiliary.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="245">
-          <caret line="426" column="11" selection-start-line="426" selection-start-column="11" selection-end-line="426" selection-end-column="11" />
+          <caret line="426" column="49" selection-start-line="426" selection-start-column="49" selection-end-line="426" selection-end-column="49" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="80" column="84" selection-start-line="80" selection-start-column="76" selection-end-line="80" selection-end-column="84" />
+        <state relative-caret-position="632">
+          <caret line="108" column="11" selection-start-line="108" selection-start-column="11" selection-end-line="108" selection-end-column="11" />
         </state>
       </provider>
     </entry>
