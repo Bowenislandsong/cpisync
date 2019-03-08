@@ -1,4 +1,0 @@
-Level|Partition|Total Comm (bytes)|Literal comm|Partition Sym Diff|Total Num Partitions|Time Tree(s)|Time Recon(s)|Time Backtrack (included in Time Recon) (s)|Set Recon Success|Str Recon Success|Tree Heap SIze|High Water Heap|Rsync Comm
-4 2 34 0.000000 0.000000 80.000000 3.297942 0.007360 0.005349 0 0 0 0 22517
-4 3 121469 118156.000000 56.000000 312.000000 3.730602 0.108905 0.020117 1 1 0 8243124912629509998 22485
-4 4 71835 68979.000000 40.000000 794.000000 3.798859 0.230766 0.017642 1 1 0 8243124912629509998 20413
