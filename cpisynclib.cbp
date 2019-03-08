@@ -37,6 +37,40 @@
 					<DistClean command="/usr/bin/make -f &quot;/Users/bowensong/Google\ Drive/BU/StringReconResearch/cpisync/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="SCSync">
+				<Option output="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/SCSync" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
+					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/bowensong/Google\ Drive/BU/StringReconResearch/cpisync/Makefile&quot;  VERBOSE=1 SCSync"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/bowensong/Google\ Drive/BU/StringReconResearch/cpisync/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/bowensong/Google\ Drive/BU/StringReconResearch/cpisync/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/bowensong/Google\ Drive/BU/StringReconResearch/cpisync/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SCSync/fast">
+				<Option output="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/SCSync" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/include"/>
+					<Add directory="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/tests"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/bowensong/Google\ Drive/BU/StringReconResearch/cpisync/Makefile&quot;  VERBOSE=1 SCSync/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/bowensong/Google\ Drive/BU/StringReconResearch/cpisync/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/bowensong/Google\ Drive/BU/StringReconResearch/cpisync/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/bowensong/Google\ Drive/BU/StringReconResearch/cpisync/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="UnitTest">
 				<Option output="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/UnitTest" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync"/>
@@ -174,6 +208,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/CLI/SCSync.cpp">
+			<Option target="SCSync"/>
+		</Unit>
+		<Unit filename="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/CLI/SCSync.h">
+			<Option target="SCSync"/>
+		</Unit>
 		<Unit filename="/Users/bowensong/Google Drive/BU/StringReconResearch/cpisync/src/AdjMtx.cpp">
 			<Option target="cpisynclib"/>
 		</Unit>

@@ -21,14 +21,13 @@ set(SYSLONG_TEST_DIR ${TEST_DIR}/sys/long)
 set(PERF_DIR ${TEST_DIR}/perf)
 # Set location of the test runner
 set(TEST_RUNNER ${TEST_DIR}/testRunner.cpp)
-
+# set location of CLI
+set(cli CLI/SCSync.cpp)
 
 find_library(NTL_LIB ntl)
 if(NOT NTL_LIB)
     message(FATAL_ERROR "CAN NOT FIND ntl")
 endif()
-
-
 find_library(GMP_LIB gmp)
 if(NOT GMP_LIB)
     message(FATAL_ERROR "CAN NOT FIND gmp")
@@ -37,6 +36,9 @@ find_library(CPP_LIB cppunit)
 if(NOT CPP_LIB)
     message(FATAL_ERROR "CAN NOT FIND cppunit")
 endif()
+# without sudo, install libraries using "PREFIX" flag in config to install in local path
+# config .bashrc to include in export CPLUS_INCLUDE_PATH
+# installing upper version cmake include in export PATH
 
 # Set file config
 set(SOURCE_FILES
@@ -95,3 +97,8 @@ add_group_test(${UNIT_TEST_DIR} UnitTest)
 #add_group_test(${SYSSHORT_TEST_DIR} SystemShortTests)
 add_group_test(${SYSLONG_TEST_DIR} SystemLongTest)
 add_group_test(${PERF_DIR} Performance)
+
+
+# add CLI as excutable
+ADD_EXECUTABLE(SCSync ${cli})
+TARGET_LINK_LIBRARIES(SCSync cpisynclib ntl cppunit gmp pthread)

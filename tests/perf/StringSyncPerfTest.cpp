@@ -96,7 +96,7 @@ void KshingleSyncPerf::setsofcontent3D() {
             abort();
         } else if (pID[i] == 0) {
             cout << "Chlid: " << i << endl;
-            srand(i+1);
+            srand(i + 1);
             test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, parRange, window,
                                space, conf, randTxt, bookpath, 1 + i, 1);
 
