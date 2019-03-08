@@ -200,6 +200,9 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                             "In mode 1, String size range and lvl range should have the same size");
                                 lvl = levelRange[i];
                                 s = space[i];
+
+                            }else if(mode == 2){
+                                s = par*2;
                             }
                             for (int con = 0; con < confidence; ++con) {
                                 try {

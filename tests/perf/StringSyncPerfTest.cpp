@@ -73,18 +73,17 @@ void KshingleSyncPerf::setsofcontent3D() {
     vector<int> editDistRange;
 
 
-    vector<int> strSizeRange{100000, 200000, 1000000, 2000000, 10000000, 20000000};
-    editDistRange = {10, 50, 100, 500};
-    vector<int> lvlRange = {5, 5, 6, 6, 7, 7};
+    vector<int> strSizeRange{2000000};
+    editDistRange = {500};
+    vector<int> lvlRange = {4,5,6,7};
     vector<int> parRange;
 
     string bookpath = string(std::getenv("HOME")) + "/Desktop/sync_database/BookText/";
 
-
     vector<int> window = {2};
-    vector<int> space = {8, 8, 8, 8, 6, 6};
-    parRange = {4};
-    int conf = 50;
+    vector<int> space = {8};
+    parRange = {3,4,5,6};
+    int conf = 250;
 
     // parallel processes
     int nProcesses = 3;
@@ -98,7 +97,7 @@ void KshingleSyncPerf::setsofcontent3D() {
             cout << "Chlid: " << i << endl;
             srand(i + 1);
             test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, parRange, window,
-                               space, conf, randTxt, bookpath, 1 + i, 1);
+                               space, conf, randTxt, bookpath, 1 + i, 2);
 
             exit(0);
         }
@@ -108,7 +107,7 @@ void KshingleSyncPerf::setsofcontent3D() {
     cout << "Parent on job" << endl;
     srand(0);
     test.setsofcontent(GenSync::SyncProtocol::CPISync, editDistRange, strSizeRange, lvlRange, parRange,
-                       window, space, conf, randTxt, bookpath, 0, 1);
+                       window, space, conf, randTxt, bookpath, 0, 2);
     cout << "child " << wait(&child_state) << " done and well" << endl;
 
 
