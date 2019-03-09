@@ -135,10 +135,6 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange,
                                     vector<int> TershingleLen, vector<int> space, int confidence,
                                     string (*stringInput)(int, string), string src, int instance, int mode) {
-    // mode 1: change string size and edit distance
-    // mode 2: change tree size with num of partitions and tree height
-    // mode 3: change terminal space and
-
 
 
     string protoName, str_type;
@@ -163,16 +159,21 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
         plot.create("Sets of Content " + protoName + " " + str_type + "P" + to_string(partitionRange.front()) + "CL" +
                     to_string(instance), catag);
     } else if (mode == 2) {
+        catag[0] = "Sting Size";
+        catag[1] = "Edit Dist %";
+        plot.create("Sets of Content " + protoName + " " + str_type + "P" + to_string(partitionRange.front()) + "CL" +
+                    to_string(instance), catag);
+    } else if (mode == 3) {
         catag[0] = "Level";
         catag[1] = "Partition";
         plot.create("Sets of Content " + protoName + " " + str_type + "STR" + to_string(str_sizeRange.front()) + "ED" +
                     to_string(edit_distRange.front()) + "LP" + to_string(instance), catag);
-    } else if (mode == 3) {
+    } else if (mode == 4) {
         catag[0] = "String Size";
         catag[1] = "Space constant";
         plot.create("Sets of Content " + protoName + " " + str_type + "Str " + to_string(str_sizeRange.front()) + "ED" +
                     to_string(edit_distRange.front()) + "SS" + to_string(instance), catag);
-    } else if (mode == 4) {
+    } else if (mode == 5) {
         catag[0] = "Str Size";
         catag[1] = "lvl";
         plot.create("Sets of Content " + protoName + " " + str_type + "ED " + to_string(edit_distRange.front()) + "P" +
@@ -194,15 +195,15 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                             vector<string> report_vec;
 
                             // change lvels
-                            if (mode == 1 or mode == 3) {
+                            if (mode == 1 or mode == 4) {
                                 if (levelRange.size() != str_sizeRange.size() and space.size() != str_sizeRange.size())
                                     throw invalid_argument(
                                             "In mode 1, String size range and lvl range should have the same size");
                                 lvl = levelRange[i];
                                 s = space[i];
 
-                            }else if(mode == 2){
-                                s = par*2;
+                            } else if (mode == 3) {
+                                s = par * 2;
                             }
                             for (int con = 0; con < confidence; ++con) {
                                 try {
@@ -251,14 +252,21 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                             build();
 
                                     last_passed_before_exception = "Bob GenSync"; // success Tag
-                                    string bobtmpstring = randStringEditBurst((*Alicetxt).to_string(), edit_dist, src);
+
+                                    string bobtmpstring;
+                                    if (mode == 2)
+                                        bobtmpstring = randStringEditBurst((*Alicetxt).to_string(),
+                                                                           str_sizeRange[i] / edit_dist, src);
+                                    else
+                                        bobtmpstring = randStringEditBurst((*Alicetxt).to_string(), edit_dist, src);
+
                                     //(int) (str_size / edit_dist));
-                                    if (bobtmpstring.size() <
-                                        str_sizeRange[i] * 0.5) // keep strings about the same size
-                                        bobtmpstring += randCharacters(str_sizeRange[i] - bobtmpstring.size());
-                                    else if (bobtmpstring.size() >
-                                             str_sizeRange[i] * 1.5) // keep strings about the same size
-                                        bobtmpstring = bobtmpstring.substr(0, str_sizeRange[i]);
+//                                    if (bobtmpstring.size() <
+//                                        str_sizeRange[i] * 0.5) // keep strings about the same size
+//                                        bobtmpstring += randCharacters(str_sizeRange[i] - bobtmpstring.size());
+//                                    else if (bobtmpstring.size() >
+//                                             str_sizeRange[i] * 1.5) // keep strings about the same size
+//                                        bobtmpstring = bobtmpstring.substr(0, str_sizeRange[i]);
 
                                     DataObject *Bobtxt = new DataObject(bobtmpstring);
 
@@ -276,12 +284,17 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
-                                    // rsync recon
-                                    writeStrToFile("Alice" + to_string(instance) + ".txt", Alicetxt->to_string());
-                                    writeStrToFile("Bob" + to_string(instance) + ".txt", Bobtxt->to_string());
 
-                                    auto r_res = getRsyncStats("Alice" + to_string(instance) + ".txt",
-                                                               "Bob" + to_string(instance) + ".txt");
+                                    rsync_stats r_res{.recv = 0, .xmit=0, .time =0};
+
+                                    if (mode != 2 or mode != 3) {
+                                        // rsync recon
+                                        writeStrToFile("Alice" + to_string(instance) + ".txt", Alicetxt->to_string());
+                                        writeStrToFile("Bob" + to_string(instance) + ".txt", Bobtxt->to_string());
+
+                                        auto r_res = getRsyncStats("Alice" + to_string(instance) + ".txt",
+                                                                   "Bob" + to_string(instance) + ".txt");
+                                    }
 
 
                                     if (!success_StrRecon) // success Tag
@@ -319,14 +332,18 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     report_vec[1] = to_string(edit_dist);
                                     plot.add(report_vec);
                                 } else if (mode == 2) {
+                                    report_vec[0] = to_string(str_sizeRange[i]);
+                                    report_vec[1] = to_string((double) 1 / edit_dist);
+                                    plot.add(report_vec);
+                                } else if (mode == 3) {
                                     report_vec[0] = to_string(lvl);
                                     report_vec[1] = to_string(par);
                                     plot.add(report_vec);
-                                } else if (mode == 3) {
+                                } else if (mode == 4) {
                                     report_vec[0] = to_string(str_sizeRange[i]);
                                     report_vec[1] = to_string(s);
                                     plot.add(report_vec);
-                                } else if (mode == 4) {
+                                } else if (mode == 5) {
                                     report_vec[0] = to_string(str_sizeRange[i]);
                                     report_vec[1] = to_string(lvl);
                                     plot.add(report_vec);
@@ -334,12 +351,14 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                 plot.update();
                             }
 
-                            if (mode == 1) break;}
+                            if (mode == 1 and mode == 2) break;
+                        }
 
                     }
                 }
 
-                if (mode == 1 or mode == 3) break;}
+                if (mode == 1 or mode == 4) break;
+            }
         }
     }
 
