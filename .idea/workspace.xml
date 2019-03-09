@@ -18,7 +18,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="" />
+    <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SCSync" beforeDir="false" afterPath="$PROJECT_DIR$/SCSync" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/merge_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/merge_results.py" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,7 +50,7 @@
     <session id="-1919019994">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="111" />
+          <entry key="project.closed" value="112" />
           <entry key="project.open.time.0" value="6" />
           <entry key="project.open.time.1" value="42" />
           <entry key="project.open.time.10" value="3" />
@@ -649,12 +653,12 @@
       <workItem from="1551874909191" duration="12443000" />
       <workItem from="1551963198390" duration="31083000" />
       <workItem from="1552018963361" duration="1404000" />
-      <workItem from="1552091886801" duration="13136000" />
+      <workItem from="1552091886801" duration="14315000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1390797000" />
+    <option name="totallyTimeSpent" value="1391976000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
