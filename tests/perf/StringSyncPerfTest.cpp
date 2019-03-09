@@ -73,8 +73,8 @@ void KshingleSyncPerf::setsofcontent3D() {
     vector<int> editDistRange;
 
 
-    vector<int> strSizeRange{50000,100000,500000,1000000,5000000,10000000};
-    editDistRange = {10000,1000,100,10,1};
+    vector<int> strSizeRange{100000,500000,1000000,1500000,2000000,2500000};
+    editDistRange = {1};
     vector<int> lvlRange = {5};
     vector<int> parRange;
 

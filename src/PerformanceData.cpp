@@ -210,9 +210,14 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 //                            cout << "level: " << lvl << ", partitions: " << par
 //                                 << ", Confidence: " << con << endl;
 
+                                    DataObject *Alicetxt = new DataObject(stringInput(str_sizeRange[i], src));
+
+                                    last_passed_before_exception = "Alice Create String"; // success Tag
+
+
                                     Resources initRes;
-////                            initResources(initRes);
-//
+                                    initResources(initRes);
+
                                     GenSync Alice = GenSync::Builder().
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
                                             setProtocol(setReconProto).
@@ -228,14 +233,12 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     last_passed_before_exception = "Alice GenSync"; // success Tag
 
 
-                                    DataObject *Alicetxt = new DataObject(stringInput(str_sizeRange[i], src));
 
-                                    last_passed_before_exception = "Alice Create String"; // success Tag
 
                                     clock_t strStart = clock();
                                     Alice.addStr(Alicetxt, false);
                                     auto tree_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
-//                                    resourceReport(initRes);
+                                    resourceReport(initRes);
 
                                     last_passed_before_exception = "Alice Add String"; // success Tag
 
