@@ -658,7 +658,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
     commSync->commListen();
     RecvSyncParam(commSync);
 
-    long mbar;
+    long mbar = 0;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
         StrataEst est = StrataEst(sizeof(shingle_hash));
 
@@ -726,7 +726,7 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     commSync->commConnect();
     SendSyncParam(commSync);
 
-    long mbar;
+    long mbar = 0;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
         StrataEst est = StrataEst(sizeof(shingle_hash));
 

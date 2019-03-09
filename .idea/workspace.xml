@@ -20,17 +20,23 @@
   <component name="ChangeListManager">
     <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Alice0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice0.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Alice1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice1.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Alice2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice2.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bob0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob0.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alice3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice3.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bob1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob1.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bob2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bob3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob3.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CLI/SCSync.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CLI/SCSync.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SCSync" beforeDir="false" afterPath="$PROJECT_DIR$/SCSync" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PerformanceData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/PerformanceData.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP3.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Auxiliary.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Auxiliary.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SetsOfContent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/SetsOfContent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
@@ -63,7 +69,7 @@
           <entry key="project.open.time.0" value="6" />
           <entry key="project.open.time.1" value="42" />
           <entry key="project.open.time.10" value="3" />
-          <entry key="project.open.time.2" value="7" />
+          <entry key="project.open.time.2" value="8" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.5" value="8" />
@@ -71,7 +77,7 @@
           <entry key="project.open.time.7" value="27" />
           <entry key="project.open.time.8" value="9" />
           <entry key="project.open.time.9" value="8" />
-          <entry key="project.opened" value="121" />
+          <entry key="project.opened" value="122" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -84,13 +90,14 @@
           <entry key="__string" value="1" />
           <entry key="__tree" value="3" />
           <entry key="algorithm" value="6" />
-          <entry key="cpp" value="464" />
+          <entry key="cpp" value="470" />
           <entry key="fdb_latexmk" value="1" />
           <entry key="functional" value="21" />
-          <entry key="h" value="501" />
+          <entry key="h" value="506" />
           <entry key="heap" value="17" />
           <entry key="iosfwd" value="1" />
           <entry key="iostream" value="1" />
+          <entry key="istream" value="2" />
           <entry key="iterator" value="11" />
           <entry key="list" value="1" />
           <entry key="log" value="1" />
@@ -103,7 +110,7 @@
           <entry key="sstream" value="10" />
           <entry key="string" value="5" />
           <entry key="thread" value="1" />
-          <entry key="txt" value="497" />
+          <entry key="txt" value="499" />
           <entry key="type_traits" value="5" />
           <entry key="utility" value="1" />
           <entry key="vector" value="19" />
@@ -113,8 +120,8 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="CMakeCache.txt" value="2" />
-          <entry key="CMakeLists.txt" value="12" />
-          <entry key="ObjectiveC" value="1121" />
+          <entry key="CMakeLists.txt" value="14" />
+          <entry key="ObjectiveC" value="1134" />
           <entry key="PLAIN_TEXT" value="507" />
           <entry key="Python" value="1" />
           <entry key="XML" value="2" />
@@ -122,17 +129,17 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="71222" />
-          <entry key="h" value="30662" />
+          <entry key="cpp" value="71645" />
+          <entry key="h" value="30872" />
           <entry key="mm" value="18" />
-          <entry key="txt" value="528" />
+          <entry key="txt" value="572" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="CMakeLists.txt" value="480" />
+          <entry key="CMakeLists.txt" value="524" />
           <entry key="Doxygen file" value="45" />
-          <entry key="ObjectiveC" value="101857" />
+          <entry key="ObjectiveC" value="102490" />
           <entry key="PLAIN_TEXT" value="48" />
         </counts>
       </usages-collector>
@@ -200,26 +207,74 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CLI/SCSync.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="86" column="66" selection-start-line="86" selection-start-column="66" selection-end-line="86" selection-end-column="66" />
+            <state relative-caret-position="420">
+              <caret line="42" column="33" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
+        <entry file="file://$PROJECT_DIR$/include/Auxiliary.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="660">
-              <caret line="98" column="26" selection-start-line="98" selection-start-column="26" selection-end-line="98" selection-end-column="26" />
+            <state relative-caret-position="501">
+              <caret line="577" selection-start-line="577" selection-end-line="577" />
+              <folding>
+                <element signature="e#333#351#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="465">
+              <caret line="773" selection-start-line="773" selection-end-line="773" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/CPISync.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-778">
+              <caret line="409" selection-start-line="409" selection-end-line="410" selection-end-column="44" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
+        <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="205" column="29" lean-forward="true" selection-start-line="205" selection-start-column="29" selection-end-line="205" selection-end-column="29" />
+            <state relative-caret-position="513">
+              <caret line="86" column="71" selection-start-line="86" selection-start-column="71" selection-end-line="86" selection-end-column="71" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/unit/AuxiliaryTest.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="308">
+              <caret line="78" selection-start-line="78" selection-end-line="78" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="459">
+              <caret line="368" column="9" selection-start-line="368" selection-start-column="9" selection-end-line="368" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/unit/CPITest.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="823">
+              <caret line="81" selection-start-line="81" selection-end-line="81" />
             </state>
           </provider>
         </entry>
@@ -227,8 +282,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CLI/SCSync.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="121" selection-start-line="121" selection-end-line="121" />
+            <state relative-caret-position="587">
+              <caret line="125" selection-start-line="125" selection-end-line="125" />
               <folding>
                 <element signature="e#100#122#0" expanded="true" />
               </folding>
@@ -240,10 +295,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>str.end()</find>
-      <find>shingle2string</find>
-      <find>vector</find>
-      <find>strLen</find>
       <find>stoll</find>
       <find>exception</find>
       <find>inject</find>
@@ -270,6 +321,10 @@
       <find>rand</find>
       <find>TEST_RUNNER</find>
       <find>map</find>
+      <find>switch</find>
+      <find>newfile</find>
+      <find>ios</find>
+      <find>Sync parameters do not match between communicants</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -314,24 +369,24 @@
         <option value="$PROJECT_DIR$/include/kshingling.h" />
         <option value="$PROJECT_DIR$/src/kshingling.cpp" />
         <option value="$PROJECT_DIR$/tests/unit/kshinglingTest.cpp" />
-        <option value="$PROJECT_DIR$/src/SetsOfContent.cpp" />
         <option value="$PROJECT_DIR$/include/SetsOfContent.h" />
-        <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" />
         <option value="$PROJECT_DIR$/tests/unit/CPITest.h" />
         <option value="$PROJECT_DIR$/src/InterCPISync.cpp" />
-        <option value="$PROJECT_DIR$/tests/unit/CPITest.cpp" />
         <option value="$PROJECT_DIR$/include/PerformanceData.h" />
-        <option value="$PROJECT_DIR$/src/CPISync.cpp" />
-        <option value="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" />
-        <option value="$PROJECT_DIR$/include/Auxiliary.h" />
         <option value="$PROJECT_DIR$/CLI/cmdli.h" />
         <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.h" />
         <option value="$PROJECT_DIR$/CLI/SCSync.h" />
         <option value="$PROJECT_DIR$/include/ForkHandle.h" />
-        <option value="$PROJECT_DIR$/CLI/SCSync.cpp" />
         <option value="$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp" />
         <option value="$PROJECT_DIR$/src/PerformanceData.cpp" />
+        <option value="$PROJECT_DIR$/tests/unit/CPITest.cpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/CLI/SCSync.cpp" />
+        <option value="$PROJECT_DIR$/include/Auxiliary.h" />
+        <option value="$PROJECT_DIR$/src/CPISync.cpp" />
+        <option value="$PROJECT_DIR$/src/SetsOfContent.cpp" />
+        <option value="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" />
+        <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" />
       </list>
     </option>
   </component>
@@ -365,6 +420,16 @@
               <item name="cpisynclib" type="b2602c69:ProjectViewProjectNode" />
               <item name="cpisync" type="462c0819:PsiDirectoryNode" />
               <item name="CLI" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cpisynclib" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cpisync" type="462c0819:PsiDirectoryNode" />
+              <item name="include" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cpisynclib" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cpisync" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="cpisynclib" type="b2602c69:ProjectViewProjectNode" />
@@ -406,7 +471,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Performance">
+  <component name="RunManager" selected="Application.SCSync">
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -417,7 +482,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SCSync" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="$USER_HOME$/Desktop/src.txt $USER_HOME$/Desktop/dest.txt" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cpisynclib" TARGET_NAME="SCSync" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cpisynclib" RUN_TARGET_NAME="SCSync">
+    <configuration name="SCSync" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-intercpi $USER_HOME$/Desktop/src.txt $USER_HOME$/Desktop/dest.txt" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cpisynclib" TARGET_NAME="SCSync" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cpisynclib" RUN_TARGET_NAME="SCSync">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -603,11 +668,12 @@
       <workItem from="1551874909191" duration="12443000" />
       <workItem from="1551963198390" duration="31083000" />
       <workItem from="1552018963361" duration="1404000" />
+      <workItem from="1552091886801" duration="12362000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1377661000" />
+    <option name="totallyTimeSpent" value="1390023000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -622,7 +688,7 @@
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.24821173" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.19957082" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -639,9 +705,9 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" weight="0.3297568" />
-      <window_info anchor="right" x="902" y="407" width="1375" height="861" id="Run" order="4" sideWeight="0.49945176" weight="0.38984263" />
-      <window_info anchor="right" x="404" y="312" width="1440" height="829" id="Messages" order="5" sideWeight="0.49945176" visible="true" weight="0.31330472" />
-      <window_info anchor="right" id="Debug" order="6" sideWeight="0.49893504" weight="0.30758226" />
+      <window_info active="true" anchor="right" x="902" y="407" width="1375" height="861" id="Run" order="4" sideWeight="0.49945176" visible="true" weight="0.38984263" />
+      <window_info anchor="right" x="404" y="312" width="1440" height="829" id="Messages" order="5" sideWeight="0.49945176" weight="0.47353363" />
+      <window_info anchor="right" id="Debug" order="6" sideWeight="0.49893504" weight="0.35693848" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21167593" />
@@ -676,19 +742,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp</url>
-          <line>113</line>
-          <option name="timeStamp" value="497" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/PerformanceData.cpp</url>
           <line>214</line>
           <option name="timeStamp" value="499" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/tests/unit/CPITest.cpp</url>
-          <line>95</line>
-          <option name="timeStamp" value="506" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/PerformanceData.cpp</url>
@@ -696,9 +752,9 @@
           <option name="timeStamp" value="522" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/CLI/SCSync.h</url>
-          <line>121</line>
-          <option name="timeStamp" value="523" />
+          <url>file://$PROJECT_DIR$/src/SetsOfContent.cpp</url>
+          <line>751</line>
+          <option name="timeStamp" value="542" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
@@ -721,27 +777,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/include/kshinglingSync.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="83" selection-start-line="83" selection-end-line="83" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/kshingling.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="103" selection-start-line="103" selection-end-line="103" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/unit/kshinglingTest.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="33" column="30" selection-start-line="33" selection-start-column="30" selection-end-line="33" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/unit/kshinglingSyncTest.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -785,13 +820,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
           <caret line="1439" selection-start-line="1439" selection-end-line="1439" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="183" column="7" selection-start-line="183" selection-start-column="7" selection-end-line="183" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -858,24 +886,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/unit/CPITest.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="742">
-          <caret line="96" column="31" selection-start-line="96" selection-start-column="31" selection-end-line="96" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookStr 100000ED100SS1.txt" />
     <entry file="file://$PROJECT_DIR$/Sets of Content CPISync RandBookStr 100000ED100SS0.txt" />
     <entry file="file://$PROJECT_DIR$/src/CPI.cpp">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/CPISync_ExistingConnection.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" column="20" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
-        </state>
-      </provider>
     </entry>
     <entry file="file:///usr/include/stdlib.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -910,31 +924,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CPISync.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="410" column="12" selection-start-line="410" selection-start-column="12" selection-end-line="410" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/iosfwd">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
           <caret line="193" column="64" selection-start-line="193" selection-start-column="64" selection-end-line="193" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/Auxiliary.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="597" selection-start-line="597" selection-end-line="597" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>
@@ -948,37 +941,10 @@
     <entry file="file://$PROJECT_DIR$/tests/testRunner.cpp">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
-          <caret line="71" column="24" selection-start-line="71" selection-start-column="24" selection-end-line="71" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-          <folding>
-            <element signature="e#124#168#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/include/GenSync.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="750">
           <caret line="534" column="16" selection-start-line="534" selection-start-column="4" selection-end-line="534" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CLI/SCSync.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="121" selection-start-line="121" selection-end-line="121" />
-          <folding>
-            <element signature="e#100#122#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1006,31 +972,124 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CLI/SCSync.cpp">
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="86" column="66" selection-start-line="86" selection-start-column="66" selection-end-line="86" selection-end-column="66" />
+        <state relative-caret-position="360">
+          <caret line="24" column="21" selection-start-line="24" selection-start-column="21" selection-end-line="24" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/perf/StringSyncPerfTest.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="98" column="26" selection-start-line="98" selection-start-column="26" selection-end-line="98" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="70" selection-start-line="6" selection-start-column="70" selection-end-line="6" selection-end-column="70" />
+        <state relative-caret-position="-5">
+          <caret line="60" column="55" lean-forward="true" selection-start-line="60" selection-start-column="55" selection-end-line="60" selection-end-column="55" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PerformanceData.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="205" column="29" lean-forward="true" selection-start-line="205" selection-start-column="29" selection-end-line="205" selection-end-column="29" />
+        <state relative-caret-position="660">
+          <caret line="205" column="29" selection-start-line="205" selection-start-column="29" selection-end-line="205" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/stdio.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="154" column="5" selection-start-line="154" selection-start-column="5" selection-end-line="154" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/istream">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="1607" selection-start-line="1607" selection-end-line="1607" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CLI/SCSync.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="42" column="33" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/unit/CPITest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="823">
+          <caret line="81" selection-start-line="81" selection-end-line="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CLI/SCSync.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="587">
+          <caret line="125" selection-start-line="125" selection-end-line="125" />
+          <folding>
+            <element signature="e#100#122#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/SetsOfContent.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="368" column="9" selection-start-line="368" selection-start-column="9" selection-end-line="368" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+          <folding>
+            <element signature="e#124#168#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/unit/AuxiliaryTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="78" selection-start-line="78" selection-end-line="78" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Auxiliary.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="501">
+          <caret line="577" selection-start-line="577" selection-end-line="577" />
+          <folding>
+            <element signature="e#333#351#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/CPISync_ExistingConnection.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="21" column="85" selection-start-line="21" selection-start-column="85" selection-end-line="21" selection-end-column="85" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="773" selection-start-line="773" selection-end-line="773" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CPISync.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-778">
+          <caret line="409" selection-start-line="409" selection-end-line="410" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="86" column="71" selection-start-line="86" selection-start-column="71" selection-end-line="86" selection-end-column="71" />
         </state>
       </provider>
     </entry>

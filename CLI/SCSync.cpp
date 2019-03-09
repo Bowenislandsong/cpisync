@@ -29,7 +29,7 @@ void commandline_interface::help() {
 }
 
 void commandline_interface::Sync() {
-    // check if all paramters are there
+    // check if all parameters are there
 
 
     if (!canSync and error_msg.empty()) help();
@@ -84,8 +84,8 @@ void commandline_interface::Sync() {
             abort();
         } else if (pID == 0) {
             Bob.addStr(Bob_txt, false);
-            Logger::gLog(Logger::COMM,"created a server process");
-            Bob.listenSync(0,false);
+            Logger::gLog(Logger::COMM, "created a server process");
+            Bob.listenSync(0, false);
             exit(0);
         } else {
             int child_state;
@@ -100,21 +100,24 @@ void commandline_interface::Sync() {
             long bytesXTot = Alice.getXmitBytesTot(0);
             wait(&child_state);
             if (!isMute) {
-                cout << "Number of Transmitted Bytes: " << bytesXTot << endl;
-                cout << "Number of Recieved Bytes: " << bytesRTot << endl;
+                cout << "Number of Bytes Transmitted: " << bytesXTot << endl;
+                cout << "Number of Bytes Received: " << bytesRTot << endl;
                 if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent)
-                    cout << "Literal Data Transfered in Bytes: " << Alice.getCustomResult("Literal comm") << endl;
-                cout << "Time spent on preparation (Partition Tree or Creating Shingles):" << str_time << endl;
+                    cout << "Literal Data Transferred in Bytes: " << Alice.getCustomResult("Literal comm") << endl;
+                cout << "Time spent on preparation (Partition Tree):" << str_time << endl;
                 cout << "Time spent on reconciliation: " << totalTime << endl;
 
-                if (success)
-                    cout << "Set Recon Success" << endl;
-                else
-                    cout << "Set Recon Failed" << endl;
+                if (success) {
 
-                cout<< "Total Number of Bytes Communicated in Byte: "<<bytesXTot+bytesRTot<<endl;
+                    string new_file = Alice.dumpString()->to_string();
+                    cout << "Set Recon Success, new file size in bytes: " << new_file.size() << endl;
 
-                writeStrToFile(dst_path,Alice.dumpString()->to_string());
+                    writeStrToFile(dst_path, new_file);
+                } else
+                    cout << "Set Recon Failed, File NOT Synchronized." << endl;
+
+                cout <<"\n"<< "Total Number of Bytes Communicated: " << bytesXTot + bytesRTot << endl;
+
             }
         }
     }
@@ -125,27 +128,38 @@ void commandline_interface::parse_arg(std::pair<option, int> arg) {
     switch (arg.first) {
         case option::U_CPI:
             SET_RECON_PROTO = GenSync::SyncProtocol::CPISync;
+            break;
         case option::U_IBLT:
             SET_RECON_PROTO = GenSync::SyncProtocol::IBLTSyncSetDiff;
+            break;
         case option::U_InterCPI:
             SET_RECON_PROTO = GenSync::SyncProtocol::InteractiveCPISync;
+            break;
         case option::help:
             canSync = false; // we don't sync, we help.
+            break;
         case option::SetsOfC:
             STR_RECON_PROTO = GenSync::StringSyncProtocol::SetsOfContent;
+            break;
         case option::KShingle:
             STR_RECON_PROTO = GenSync::StringSyncProtocol::kshinglingSync;
+            break;
         case option::mute:
             isMute = true;
+            break;
         case option::shingleSize:
             param.shingle_size = arg.second;
+            break;
         case option::lvl:
             param.lvl = arg.second;
+            break;
         case option::par:
             param.par = arg.second;
+            break;
         case option::port:
             param.port = arg.second;
+            break;
         default:
-            return;
+            break;
     };
 }

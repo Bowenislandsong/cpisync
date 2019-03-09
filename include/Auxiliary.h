@@ -33,6 +33,7 @@
 #include <iostream>
 #include <fstream>
 #include <dirent.h>
+#include <stdio.h>
 
 // some standard names
 using std::cout;
@@ -528,8 +529,13 @@ inline string extractStringIn(string org, string from, string to) {
 
 // write string to file and return true if success
 inline void writeStrToFile(string file_name, string content) {
-    ofstream myfile;
-    myfile.open(file_name, ios::trunc);
+
+//    FILE * pFile;
+//    pFile = fopen(file_name.data(),"w");
+//    fprintf (pFile,"%s",content.data());
+//    fclose (pFile);
+
+    ofstream myfile(file_name);
     myfile << content;
     myfile.close();
 }
@@ -557,10 +563,18 @@ inline string scanTxtFromFile(string dir, int len) {
     std::string line;
     std::ifstream myfile(dir); //"./tests/SampleTxt.txt"
     ostringstream txt;
-    long long str_len = 0;
+    int str_len = 0;
     if (myfile.is_open()) {
-        while (getline(myfile, line) and (str_len += line.size()) < len) txt << line;
-        txt << line.substr(0, len - str_len + line.size());
+        while (getline(myfile, line)) {
+            if ((str_len + line.size() + 1) <= len) { // add one for the newline
+                txt << line << endl;
+                str_len += line.size() + 1;
+            }
+            else {
+                txt << line.substr(0, min(len - str_len, (int)line.size()));
+                break;
+            }
+        }
         myfile.close();
     } else {
         throw invalid_argument("Directory " + dir + " does not exist.-");

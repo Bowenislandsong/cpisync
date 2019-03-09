@@ -3,11 +3,12 @@ project(cpisynclib)
 set(CMAKE_CXX_STANDARD 11)
 
 # some flags
-if(APPLE)
-set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -lprofiler -ltcmalloc -O3")
-else()
-set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -lntl -lprofiler -ltcmalloc")
-endif(APPLE)
+if (APPLE)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEFAULT_LOGLEVEL=TEST -lprofiler -ltcmalloc")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEFAULT_LOGLEVEL=TEST -lprofiler -ltcmalloc -O3") # -O3 makes it impossible to debug
+else ()
+    set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -lntl -lprofiler -ltcmalloc")
+endif (APPLE)
 
 #set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -Wall")
 #set(CMAKE_LINKER_FLAGS_"-DDEFAULT_LOGLEVEL=TEST -fsanitize=address -fno-omit-frame-pointer -Wall")
@@ -25,17 +26,17 @@ set(TEST_RUNNER ${TEST_DIR}/testRunner.cpp)
 set(cli CLI/SCSync.cpp)
 
 find_library(NTL_LIB ntl)
-if(NOT NTL_LIB)
+if (NOT NTL_LIB)
     message(FATAL_ERROR "CAN NOT FIND ntl")
-endif()
+endif ()
 find_library(GMP_LIB gmp)
-if(NOT GMP_LIB)
+if (NOT GMP_LIB)
     message(FATAL_ERROR "CAN NOT FIND gmp")
-endif()
+endif ()
 find_library(CPP_LIB cppunit)
-if(NOT CPP_LIB)
+if (NOT CPP_LIB)
     message(FATAL_ERROR "CAN NOT FIND cppunit")
-endif()
+endif ()
 # without sudo, install libraries using "PREFIX" flag in config to install in local path
 # config .bashrc to include in export CPLUS_INCLUDE_PATH
 # installing upper version cmake include in export PATH
@@ -53,7 +54,7 @@ set(SOURCE_FILES
         ${SRC_DIR}/probCPISync.cpp
         ${SRC_DIR}/SyncMethod.cpp
         ${SRC_DIR}/UID.cpp
-		${SRC_DIR}/HashSync.cpp
+        ${SRC_DIR}/HashSync.cpp
         ${SRC_DIR}/CommDummy.cpp
         ${SRC_DIR}/IBLT.cpp
         ${SRC_DIR}/IBLTSync.cpp
@@ -85,11 +86,11 @@ macro(add_group_test dir name)
     FILE(GLOB testPaths ${dir}/*Test.cpp ${dir}/*Tests.cpp)
     ADD_EXECUTABLE(${name} ${TEST_RUNNER} ${testPaths})
 
-    FOREACH(test ${testPaths})
+    FOREACH (test ${testPaths})
         GET_FILENAME_COMPONENT(testName ${test} NAME_WE)
         TARGET_LINK_LIBRARIES(${name} cpisynclib ntl cppunit gmp pthread)
         ADD_TEST(${testName} ${name})
-    ENDFOREACH(test)
+    ENDFOREACH (test)
 endmacro()
 
 # Add test groups (note: executable will throw errors if there are no tests in the respective folder)
