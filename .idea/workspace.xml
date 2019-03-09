@@ -18,26 +18,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Alice1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Alice2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice2.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Alice3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Alice3.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bob1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bob2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob2.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bob3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Bob3.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CLI/SCSync.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CLI/SCSync.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Performance" beforeDir="false" afterPath="$PROJECT_DIR$/Performance" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SCSync" beforeDir="false" afterPath="$PROJECT_DIR$/SCSync" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP2.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sets of Content CPISync RandBookSTR2000000ED500LP3.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/Auxiliary.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Auxiliary.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SetsOfContent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/SetsOfContent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="9101c539-f338-4a39-ad7f-50b232c90229" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -129,7 +110,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="71645" />
+          <entry key="cpp" value="71677" />
           <entry key="h" value="30872" />
           <entry key="mm" value="18" />
           <entry key="txt" value="572" />
@@ -139,7 +120,7 @@
         <counts>
           <entry key="CMakeLists.txt" value="524" />
           <entry key="Doxygen file" value="45" />
-          <entry key="ObjectiveC" value="102490" />
+          <entry key="ObjectiveC" value="102522" />
           <entry key="PLAIN_TEXT" value="48" />
         </counts>
       </usages-collector>
@@ -204,11 +185,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CLI/SCSync.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="42" column="33" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="33" />
+            <state relative-caret-position="535">
+              <caret line="110" selection-start-line="110" selection-end-line="110" />
             </state>
           </provider>
         </entry>
@@ -243,7 +224,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="513">
@@ -381,12 +362,12 @@
         <option value="$PROJECT_DIR$/src/PerformanceData.cpp" />
         <option value="$PROJECT_DIR$/tests/unit/CPITest.cpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/CLI/SCSync.cpp" />
         <option value="$PROJECT_DIR$/include/Auxiliary.h" />
         <option value="$PROJECT_DIR$/src/CPISync.cpp" />
         <option value="$PROJECT_DIR$/src/SetsOfContent.cpp" />
         <option value="$PROJECT_DIR$/include/CPISync_ExistingConnection.h" />
         <option value="$PROJECT_DIR$/tests/unit/SetsOfContentTest.cpp" />
+        <option value="$PROJECT_DIR$/CLI/SCSync.cpp" />
       </list>
     </option>
   </component>
@@ -668,12 +649,12 @@
       <workItem from="1551874909191" duration="12443000" />
       <workItem from="1551963198390" duration="31083000" />
       <workItem from="1552018963361" duration="1404000" />
-      <workItem from="1552091886801" duration="12362000" />
+      <workItem from="1552091886801" duration="13136000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1390023000" />
+    <option name="totallyTimeSpent" value="1390797000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -705,8 +686,8 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" weight="0.3297568" />
-      <window_info active="true" anchor="right" x="902" y="407" width="1375" height="861" id="Run" order="4" sideWeight="0.49945176" visible="true" weight="0.38984263" />
-      <window_info anchor="right" x="404" y="312" width="1440" height="829" id="Messages" order="5" sideWeight="0.49945176" weight="0.47353363" />
+      <window_info anchor="right" x="902" y="407" width="1375" height="861" id="Run" order="4" sideWeight="0.49945176" weight="0.38984263" />
+      <window_info active="true" anchor="right" x="404" y="312" width="1440" height="829" id="Messages" order="5" sideWeight="0.49945176" visible="true" weight="0.47353363" />
       <window_info anchor="right" id="Debug" order="6" sideWeight="0.49893504" weight="0.35693848" />
     </layout>
     <layout-to-restore>
@@ -1007,13 +988,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CLI/SCSync.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="42" column="33" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/unit/CPITest.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="823">
@@ -1072,13 +1046,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="773" selection-start-line="773" selection-end-line="773" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CPISync.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-778">
@@ -1090,6 +1057,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="513">
           <caret line="86" column="71" selection-start-line="86" selection-start-column="71" selection-end-line="86" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SetsOfContent.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="773" selection-start-line="773" selection-end-line="773" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CLI/SCSync.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="535">
+          <caret line="110" selection-start-line="110" selection-end-line="110" />
         </state>
       </provider>
     </entry>
