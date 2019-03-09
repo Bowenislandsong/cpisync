@@ -25,8 +25,8 @@ vector<size_t> SetsOfContent::create_HashSet(size_t str_hash, size_t space, size
     vector<size_t> hash_val, hash_set;
     auto str_i = dict_geti(str_hash);
     auto str = dict_getstr(str_hash);
-    if (str_i.second==0) return hash_set;
-    size_t win_size = floor((str_i.second/ Partition) / 2);
+    if (str_i.second == 0) return hash_set;
+    size_t win_size = floor((str_i.second / Partition) / 2);
 
     /* ---------original begin  */
     // if the substring is smaller than the terminal string size, we do not partition it anymore.
@@ -42,12 +42,12 @@ vector<size_t> SetsOfContent::create_HashSet(size_t str_hash, size_t space, size
         size_t prev = str_i.first;
 
         for (size_t min:local_mins(hash_val, win_size)) {
-            min+=str_i.first;
+            min += str_i.first;
             hash_set.push_back(add_i_to_dictionary(prev, min - prev));
             prev = min;
         }
 
-        hash_set.push_back(add_i_to_dictionary(prev,str_i.second-(prev-str_i.first)));
+        hash_set.push_back(add_i_to_dictionary(prev, str_i.second - (prev - str_i.first)));
     }
     /* ---------original end  */
     /* ---------fixed win size begin */
@@ -106,7 +106,7 @@ void SetsOfContent::go_through_tree() {
                 to_string(myString.size()));
 
     size_t shingle_size = 2 * pow(shingle_c,
-                                              Levels); //(Parameter c, terminal rolling hash window size)
+                                  Levels); //(Parameter c, terminal rolling hash window size)
     if (shingle_size < 1)
         throw invalid_argument("Consider larger the parameters for auto shingle size to be more than 1");
     size_t space = 4 * pow(space_c, Levels); //126 for ascii content (Parameter terminal space)
@@ -115,7 +115,7 @@ void SetsOfContent::go_through_tree() {
     myTree.resize(Levels);
 
     // put up the first level
-    update_tree_shingles({add_i_to_dictionary(0,myString.size())}, 0);
+    update_tree_shingles({add_i_to_dictionary(0, myString.size())}, 0);
 
 /* ---------fixed hash value begin */
 //vector<size_t> hash_val;
@@ -697,12 +697,11 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
     }
 
     if (!answer_queries(queries))
-        cout << "We failed to answer all the questions, thie sync should fail" << endl;
+        cout << "We failed to answer all the questions, this sync should fail" << endl;
+
 
 //    cout << "we answered " << cyc_concern.size() << " cycles and " << term_concern.size() << " hashes" << endl;
-    for (auto groupcyc : cyc_concern) {
-        commSync->commSend(TtoZZ(groupcyc.second), sizeof(cycle));
-    }
+
     for (auto dic : term_concern) {
         string tmp_str = dict_getstr(dic.first);
         if (!tmp_str.empty())
@@ -710,6 +709,12 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
         else
             commSync->commSend("$");
     }
+
+//    commSync->commSend((int) cyc_concern.size());
+    for (auto groupcyc : cyc_concern) {
+        commSync->commSend(TtoZZ(groupcyc.second), sizeof(cycle));
+    }
+
 
 //    commSync->commSend(SYNC_SUCCESS);
 //    cout<<"Server Close"<<endl;
@@ -785,20 +790,29 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
 //    cout << "We queried " << cyc_query.size() << " cycles and " << term_query.size() << " hashes" << endl;
 
 
-    for (auto &cyc:cyc_query) {
-        cyc.second = ZZtoT(commSync->commRecv_ZZ(sizeof(cycle)), cycle());
-    }
+
 //    cout << "After Cyc Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
     size_t LiteralData = commSync->getRecvBytesTot() + commSync->getXmitBytesTot();
 
+
+    // two edge cases:
+    // 1: a partition can be not partitioned at an upper-level and partitioned at the next level.
+    // 2: a partition can be partitioned to terminal string size limit at an upper level and not be partitioned again later.
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
-        if (tmp != "$")
-            add_str_to_dictionary(tmp);
+        if (tmp != "$") {
+            auto it = cyc_query.find(add_str_to_dictionary(tmp)); // we search from bottom up, if there are strings reached terminal size and not partitioned later, it would not need cycle tracing
+            if (it != cyc_query.end())
+                cyc_query.erase(it);
+        }
     }
 
     CustomResult["Literal comm"] = commSync->getRecvBytesTot() + commSync->getXmitBytesTot() - LiteralData;
 
+
+    for (auto &cyc:cyc_query) {
+        cyc.second = ZZtoT(commSync->commRecv_ZZ(sizeof(cycle)), cycle());
+    }
 //    cout << "After Term Responce, we used comm bytes: " << commSync->getRecvBytesTot() + commSync->getXmitBytesTot() << endl;
 
 

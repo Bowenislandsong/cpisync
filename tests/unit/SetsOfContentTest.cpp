@@ -52,9 +52,9 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randAsciiStr(1e4); // 20MB is top on MAC
+    string alicetxt = randAsciiStr(1e6); // 20MB is top on MAC
     int partition = 4;
-    int lvl = 4;
+    int lvl = 6;
     int space_c = 8;
     int shingleLen_c = 2;
 
@@ -63,7 +63,7 @@ void SetsOfContentTest::testAll() {
 
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(10).
             setNumPartitions(partition).
@@ -77,7 +77,7 @@ void SetsOfContentTest::testAll() {
 //    string bobtxt = randStringEdit(alicetxt, 10);
 //    string bobtxt = randStringEdit((*atxt).to_string(),2e3);
 
-    string bobtxt = randStringEditBurst(alicetxt, 1e2, "./tests/SampleTxt.txt");
+    string bobtxt = randStringEditBurst(alicetxt, 1e6, "./tests/SampleTxt.txt");
     if (bobtxt.size() < pow(partition, lvl))
         bobtxt += randCharacters(pow(partition, lvl) - bobtxt.size());
 
@@ -85,7 +85,7 @@ void SetsOfContentTest::testAll() {
 
     GenSync Bob = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
-            setProtocol(GenSync::SyncProtocol::IBLTSyncSetDiff).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setTerminalStrSize(10).
             setNumPartitions(partition).
