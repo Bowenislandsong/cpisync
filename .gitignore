@@ -66,6 +66,7 @@ nbactions.xml
 
 # Ignore Mac folder files
 *Icon?
+*.dSYM
 
 # Created by https://www.gitignore.io/api/eclipse
 
@@ -190,6 +191,10 @@ fabric.properties
 # Sonarlint plugin
 .idea/sonarlint
 
+
+# Sync Dummy Files
+Alice*
+Bob*
 
 # End of https://www.gitignore.io/api/clion
 

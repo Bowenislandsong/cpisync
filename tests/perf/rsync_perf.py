@@ -8,6 +8,8 @@
 #strSize # size of the original string
 #Edist # edit distnace upper bounds
 
+# THIS CODE IS NOT USED SINCE PYTHON RANDOM HAS A DIFFERENT DISTRIBUTION THAN THAT OF C++ RAND()
+
 import random
 import subprocess
 
