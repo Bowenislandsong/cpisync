@@ -117,21 +117,32 @@ inline vector<size_t> local_mins(const vector<size_t> &hash_val, size_t win_size
         win_size = 1;
     }
 
+
 //    clock_t start = clock();
     vector<size_t> mins;
+
+    if (2 * win_size + 1 > hash_val.size())
+        return mins;
+
     map<size_t, size_t> hash_occurr;
     for (size_t j = 0; j < 2 * win_size + 1; ++j) {
         auto it = hash_occurr.emplace(hash_val[j], 1);
         if (!it.second) it.first->second++;
     }
+
+
 //    cout << "first part:" << (double) (clock() - start) / CLOCKS_PER_SEC << endl;
 //    start = clock();
 //    cout << win_size << endl;
-    for (size_t i = win_size; i < hash_val.size() - win_size - 1; ++i) {
+    for (size_t i = win_size; i < hash_val.size() - win_size; ++i) {
         // this define partition rule to be min or equal instead of strictly less as local min
         if (hash_val[i] <= hash_occurr.begin()->first and i - ((mins.empty()) ? 0 : mins.back()) > win_size)
             mins.emplace_back(i);
 
+        // We stop moving if we can't
+        if (i + win_size + 1 == hash_val.size()) break;
+
+        // We skip when incoming hash value is the same as leaving
         if (hash_val[i - win_size] == hash_val[i + win_size + 1]) continue;
 
         auto it_prev = hash_occurr.find(hash_val[i - win_size]);
@@ -256,7 +267,8 @@ private:
      * @throw if there is duplicates, suggest using new/multiple hash functions
      */
     size_t add_str_to_dictionary(const string &str) {
-        size_t hash = str_to_hash(str);
+        size_t
+        hash = str_to_hash(str);
         dictionary.emplace(hash, make_pair(str, make_pair(0, 0)));
 //        if (!it.second and str != it.first->second.first and
 //            str != myString.substr(it.first->second.second.first, it.first->second.second.second))
@@ -265,7 +277,8 @@ private:
     };
 
     size_t add_i_to_dictionary(size_t start_i, size_t len) {
-        size_t hash = str_to_hash(myString.substr(start_i, len));
+        size_t
+        hash = str_to_hash(myString.substr(start_i, len));
         dictionary.emplace(hash, make_pair("", make_pair(start_i, len)));
 //        if (!it.second and myString.substr(it.first->second.second.first, it.first->second.second.second) != myString.substr(start_i, len) and
 //            it.first->second.first != myString.substr(start_i, len))
@@ -353,7 +366,8 @@ private:
     };
 
     size_t getNumofTreeNodes() {
-        size_t num_treenodes = 0;
+        size_t
+        num_treenodes = 0;
         for (auto lvl : myTree) num_treenodes += lvl.size();
         return num_treenodes;
     }

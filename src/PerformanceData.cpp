@@ -290,7 +290,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                                     rsync_stats r_res{.recv = 0, .xmit=0, .time =0};
 
-                                    if (mode != 2 or mode != 3) {
+                                    if (mode != 2 and mode != 3) {
                                         // rsync recon
                                         writeStrToFile("Alice" + to_string(instance) + ".txt", Alicetxt->to_string());
                                         writeStrToFile("Bob" + to_string(instance) + ".txt", Bobtxt->to_string());
