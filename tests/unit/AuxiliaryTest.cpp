@@ -69,7 +69,7 @@ void AuxiliaryTest::testStringEditing() {
     std::string edited = randStringEdit(origI,4);
     CPPUNIT_ASSERT(origI != edited);
 
-    std::string burstEdited = randStringEditBurst(origI,4,2,"./tests/SampleTxt.txt");
+    std::string burstEdited = EditBurst(origI,4,2,"./tests/SampleTxt.txt");
     CPPUNIT_ASSERT(origI != burstEdited);
 
     std::string bookTxt = scanTxtFromFile("./tests/SampleTxt.txt",2000);
