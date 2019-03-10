@@ -84,7 +84,7 @@ inline string VecToStr(vector<byte> data) {
 inline string ZZtoStr(const ZZ &zz) {
     string str;
     str.resize(NumBytes(zz), 0);
-    BytesFromZZ((uint8_t *) &str[0], zz, str.size());
+    BytesFromZZ((uint8_t * ) & str[0], zz, str.size());
     return str;
 }
 
@@ -101,7 +101,7 @@ inline ZZ TtoZZ(T val) {
 template<typename T>
 inline T ZZtoT(const ZZ &zz, const T) {
     T val;
-    BytesFromZZ((uint8_t *) &val, zz, sizeof(T));
+    BytesFromZZ((uint8_t * ) & val, zz, sizeof(T));
     return val;
 }
 
@@ -529,12 +529,6 @@ inline string extractStringIn(string org, string from, string to) {
 
 // write string to file and return true if success
 inline void writeStrToFile(string file_name, string content) {
-
-//    FILE * pFile;
-//    pFile = fopen(file_name.data(),"w");
-//    fprintf (pFile,"%s",content.data());
-//    fclose (pFile);
-
     ofstream myfile(file_name);
     myfile << content;
     myfile.close();
@@ -559,6 +553,9 @@ inline rsync_stats getRsyncStats(string origin, string target, bool full_report 
     return stats;
 }
 
+
+// Retrive text from file of a length.
+// If length is too big, return text of entire file, and string length will be shorter than requested
 inline string scanTxtFromFile(string dir, int len) {
     std::string line;
     std::ifstream myfile(dir); //"./tests/SampleTxt.txt"
@@ -566,12 +563,11 @@ inline string scanTxtFromFile(string dir, int len) {
     int str_len = 0;
     if (myfile.is_open()) {
         while (getline(myfile, line)) {
-            if ((str_len + line.size() + 1) <= len) { // add one for the newline
+            if ((str_len + line.size() + 1) <= len) { // add one for the newline symbol
                 txt << line << endl;
                 str_len += line.size() + 1;
-            }
-            else {
-                txt << line.substr(0, min(len - str_len, (int)line.size()));
+            } else {
+                txt << line.substr(0, len - str_len);
                 break;
             }
         }
@@ -654,26 +650,21 @@ inline vector<string> getFileList(string dir_path, string file_type = ".txt") {
  */
 inline string randTxt(int len, string loc) {
     string full_txt;
-    size_t MAX_LEN;
+    if (len <= 0) return full_txt;
     if (isFile(loc)) { // it is a file
-        MAX_LEN = getFileSize(loc);
-        if (MAX_LEN < len)
-            throw invalid_argument(
-                    "Requested string size exceeds file size. Current file size: " + to_string(MAX_LEN));
-
-        full_txt = scanTxtFromFile(loc, MAX_LEN);
-        (len > full_txt.size()) ? len = full_txt.size() : 0;
-        int start_pt = randLenBetween(0, full_txt.size() - len);
+        full_txt = scanTxtFromFile(loc, len);
+        int start_pt = 0;
+        if (len < full_txt.size())
+            start_pt = randLenBetween(0, full_txt.size() - len);
         return full_txt.substr(start_pt, len);
     } else { // it is a directory
         vector<string> file_lst = getFileList(loc);
 //        std::random_shuffle ( file_lst.begin(), file_lst.end() );
-        while (len > full_txt.size()) {
+        while (len > 0) {
             string full_path = loc + file_lst[randLenBetween(0, file_lst.size() - 1)];
-            int file_size = getFileSize(full_path);
-            if (len < file_size + full_txt.size()) file_size = len - full_txt.size();
-
-            full_txt += randTxt(file_size, full_path);
+            string content = randTxt(len, full_path);
+            full_txt += content;
+            len -= content.size();
         }
         return full_txt;
     }
@@ -755,16 +746,21 @@ inline string randStringEdit(string str, int upperE) {
  * @param upperE Edit upper bound
  * @return Edited string upperE edit distance away from the original string
  */
-inline string randStringEditBurst(string str, int burstE, int numLoc, string loc) {
+inline string EditBurst(string str, int burstE, int numLoc, string loc) {
     for (int ii = 0; ii < numLoc; ++ii) {
-        int tmpBurst = (burstE > str.size()) ? str.size() : burstE;
-        int pos = randLenBetween(0, str.size() - tmpBurst);
-//        str = str.substr(0,pos)+randStringEdit(str.substr(pos,tmpBurst),burstE)+str.substr(pos+tmpBurst);
-        if (rand() % 2 == 0) //delete
-            str = str.substr(0, pos) + str.substr(pos + tmpBurst);
-        else  // insert
-            str = str.substr(0, pos) + randTxt(tmpBurst, loc) + str.substr(pos);
-//            str = str.substr(0, pos) + str.substr(randLenBetween(0, str.size() - tmpBurst), tmpBurst) + str.substr(pos);
+
+        if (rand() % 2 == 0) { //delete
+            if (burstE > str.size() or str.empty())
+                str = ""; // do not mess with the probability, include str empty inside
+            int pos = randLenBetween(0, str.size() - burstE);
+            str = str.substr(0, pos) + str.substr(pos + burstE);
+        } else {  // insert
+            int pos = randLenBetween(0, str.size());
+            if (pos < str.size())
+                str = str.substr(0, pos) + randTxt(burstE, loc) + str.substr(pos);
+            else
+                str += randTxt(burstE, loc);
+        }
     }
     return str;
 }
@@ -773,7 +769,7 @@ inline string randStringEditBurst(string str, int upperE, string loc) {
     while (upperE > 0) {
         int burst = randLenBetween(1, upperE);
         upperE -= burst;
-        str = randStringEditBurst(str, burst, 1, loc);
+        str = EditBurst(str, burst, 1, loc);
     }
     return str;
 }
