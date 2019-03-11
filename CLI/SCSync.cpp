@@ -119,6 +119,8 @@ void commandline_interface::Sync() {
                 cout <<"\n"<< "Total Number of Bytes Communicated: " << bytesXTot + bytesRTot << endl;
 
             }
+            delete Bob_txt;
+            delete Alice_txt;
         }
     }
 }
