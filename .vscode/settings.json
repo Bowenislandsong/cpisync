@@ -5,6 +5,7 @@
         "__locale": "cpp",
         "iterator": "cpp",
         "vector": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "string": "cpp"
     }
 }
