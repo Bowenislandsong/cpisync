@@ -7,7 +7,7 @@ if (APPLE)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEFAULT_LOGLEVEL=TEST -lprofiler -ltcmalloc")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEFAULT_LOGLEVEL=TEST -lprofiler -ltcmalloc -O3") # -O3 makes it impossible to debug
 else ()
-    set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -lntl -lprofiler -ltcmalloc")
+    set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -lprofiler -ltcmalloc")
 endif (APPLE)
 
 #set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -Wall")
