@@ -11,6 +11,7 @@ commandline_interface::commandline_interface() : STR_RECON_PROTO(GenSync::String
     param.par = NOT_SET;
     param.shingle_size = NOT_SET;
     param.port = 8001;
+    param.remoteHost = "localhost";
 }
 
 
@@ -52,43 +53,28 @@ void commandline_interface::Sync() {
             backtrack = true;
         }
 
+        if(isSRC)
 
         // get the strings inserted
-        GenSync Bob = GenSync::Builder().
+        GenSync mySync = GenSync::Builder().
                 setStringProto(STR_RECON_PROTO).
                 setProtocol(SET_RECON_PROTO).
                 setComm(GenSync::SyncComm::socket).
                 setTerminalStrSize(10).
                 setNumPartitions(param.par).
+                setHost(param.remoteHost).
                 setShingleLen(param.shingle_size).
                 setSpace(param.par * 2).
                 setlvl(param.lvl).
                 setPort(param.port).
                 build();
 
-        GenSync Alice = GenSync::Builder().
-                setStringProto(STR_RECON_PROTO).
-                setProtocol(SET_RECON_PROTO).
-                setComm(GenSync::SyncComm::socket).
-                setTerminalStrSize(10).
-                setNumPartitions(param.par).
-                setShingleLen(param.shingle_size).
-                setSpace(param.par * 2).
-                setlvl(param.lvl).
-                setPort(param.port).
-                build();
 
-        pid_t pID = fork();
-        if (pID < 0) {
-            perror("Fork Error at loading strings");
-            abort();
-        } else if (pID == 0) {
             Bob.addStr(Bob_txt, false);
             Logger::gLog(Logger::COMM, "created a server process");
             Bob.listenSync(0, false);
-            exit(0);
-        } else {
-            int child_state;
+
+
             clock_t start_time = clock();
             Alice.addStr(Alice_txt, backtrack);
             double str_time = (double) (clock() - start_time) / CLOCKS_PER_SEC;

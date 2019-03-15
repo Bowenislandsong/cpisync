@@ -35,6 +35,7 @@ public:
         par, //for sets of content
         shingleSize,// for kshingle and UD
         port,
+        remoteHost,
         mute,
         help,
         END
@@ -42,6 +43,8 @@ public:
 
     struct Param {
         int lvl, par, shingle_size, port;
+        string remoteHost;
+        bool isSRC;
     };
 
     // parse input tags one by one
@@ -99,6 +102,7 @@ private:
             {"-par", option::par},
             {"-p", option::port},
             {"-s", option::shingleSize},
+            {"-rh", option::remoteHost},
             {"-mute", option::mute},
             {"-h", option::help},
     };
