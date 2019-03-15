@@ -23,6 +23,7 @@
 #include "FullSync.h"
 #include "ProcessData.h"
 #include <thread>
+#include <gperftools/heap-profiler.h>
 
 #include "ForkHandle.h" // tobe removed
 
