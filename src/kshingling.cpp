@@ -154,7 +154,7 @@ bool K_Shingle::shingle2string(idx_t& str_order, string &final_str) {
                 str_order = current_cyc;
                 str.pop_back();
                 final_str = str.substr(1);
-                HeapProfilerStop();
+                //HeapProfilerStop();
                 return true;
             }
         }

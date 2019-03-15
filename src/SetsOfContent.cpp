@@ -510,7 +510,7 @@ bool SetsOfContent::shingle2hash_train(cycle &cyc_info, const std::set<shingle_h
 
 
         if (strCollect_size == cyc_info.cyc && cyc_info.cyc != 0) {
-            HeapProfilerStop();
+            //HeapProfilerStop();
             return true;
         }
     }
