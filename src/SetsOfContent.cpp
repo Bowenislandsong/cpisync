@@ -157,7 +157,7 @@ void SetsOfContent::prepare_querys(list<DataObject *> &otherMinusSelf) {
             cyc_query.erase(shingle.second); // if duplicated, we want the lower level
         if (dictionary.find(shingle.second) == dictionary.end()) { // if it is not found anywhere
             if (shingle.lvl < Levels - 1)
-                cyc_query.emplace(shingle.second, cycle{.head=0, .len=0, .cyc=0});
+                cyc_query.emplace(shingle.second, cycle{0,0,0});
             else
                 term_query.emplace(shingle.second, "");
         }
@@ -222,8 +222,7 @@ void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level)
             Logger::error_and_quit(
                     "Shingle occurrance is larger than USHRT_MAX, (backtracking could be infeasiable and our shingle_hash carrier is overflown)");
         myTree[level].insert(
-                shingle_hash{.first = item->first.first, .second = item->first.second, .occurr = (sm_i) item->second,
-                        .lvl = level});
+               shingle_hash{item->first.first, item->first.second, level, (sm_i) item->second});
     }
 
 }

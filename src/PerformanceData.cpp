@@ -288,7 +288,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
 
-                                    rsync_stats r_res{.recv = 0, .xmit=0, .time =0};
+                                    rsync_stats r_res{0, 0, 0};
 
                                     if (mode != 2 and mode != 3) {
                                         // rsync recon

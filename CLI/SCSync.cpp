@@ -53,7 +53,7 @@ void commandline_interface::Sync() {
             backtrack = true;
         }
 
-        if(isSRC)
+//        if(isSRC)
 
         // get the strings inserted
         GenSync mySync = GenSync::Builder().

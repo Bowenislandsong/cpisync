@@ -546,7 +546,7 @@ inline rsync_stats getRsyncStats(string origin, string target, bool full_report 
         stats.xmit = stoll(extractStringIn(res, "Total bytes sent: ", "\n"));
         stats.recv = stoll(extractStringIn(res, "Total bytes received: ", "\n"));
     } catch (const std::exception &exc) {
-        stats = rsync_stats{.time=0, .xmit=0, .recv=0};
+        stats = {0, 0, 0};
     }
     if (full_report)
         cout << res << endl;
