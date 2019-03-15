@@ -6,6 +6,8 @@
         "iterator": "cpp",
         "vector": "cpp",
         "thread": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "iostream": "cpp",
+        "new": "cpp"
     }
 }

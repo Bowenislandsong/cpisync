@@ -596,7 +596,6 @@ inline bool isPathExist(const string &path) {
  */
 inline bool isFile(const string &path) {
     struct stat buf;
-    int a = stat(path.c_str(), &buf);
     if (stat(path.c_str(), &buf) == 0) {
         if (buf.st_mode & S_IFREG)
             return true;
