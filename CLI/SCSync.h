@@ -16,6 +16,7 @@
 #include "ForkHandle.h"
 #include "kshinglingSync.h"
 #include "DataObject.h"
+#include <gperftools/heap-profiler.h>
 
 class commandline_interface {
 public:
