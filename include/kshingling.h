@@ -14,6 +14,7 @@
 #include "Auxiliary.h"
 #include "DataObject.h"
 #include "ProcessData.h"
+#include <gperftools/heap-profiler.h>
 
 using std::vector;
 using std::hash;
