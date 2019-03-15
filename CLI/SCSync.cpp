@@ -37,23 +37,25 @@ void commandline_interface::Sync() {
     else if (canSync and !error_msg.empty())
         cout << error_msg << " For how to use SCSync, use -h to show help." << endl;
     else {
-        DataObject *Bob_txt = new DataObject(scanTxtFromFile(src_path, INT_MAX));
-        DataObject *Alice_txt = new DataObject(scanTxtFromFile(dst_path, INT_MAX));
+        
+        DataObject *txt_pt = new DataObject(scanTxtFromFile((param.isSRC?src_path:dst_path), INT_MAX));
 
-        bool backtrack = false;
+        // quote file size for both
+        int src_size = 1000000,dest_size = 1000000;
+
         // set the unset parameters;
         if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent) {
             if (param.lvl <= NOT_SET)
-                param.lvl = (int) floor(log10(max(Alice_txt->to_string().size(), Bob_txt->to_string().size())));
+                param.lvl = (int) floor(log10(max(src_size, dest_size)));
             if (param.par <= NOT_SET)param.par = 4;
             param.shingle_size = 2;
         } else if (STR_RECON_PROTO == GenSync::StringSyncProtocol::kshinglingSync) {
             if (param.shingle_size <= NOT_SET)
-                param.shingle_size = (int) floor(log2(max(Alice_txt->to_string().size(), Bob_txt->to_string().size())));
-            backtrack = true;
+                param.shingle_size = (int) floor(log2(max(src_size, dest_size)));
+            Logger::error_and_quit("kshingling Currently not implemented in SCSync.");
         }
 
-//        if(isSRC)
+    
 
         // get the strings inserted
         GenSync mySync = GenSync::Builder().
@@ -70,32 +72,36 @@ void commandline_interface::Sync() {
                 build();
 
 
-            Bob.addStr(Bob_txt, false);
-            Logger::gLog(Logger::COMM, "created a server process");
-            Bob.listenSync(0, false);
-
-
+            
             clock_t start_time = clock();
-            Alice.addStr(Alice_txt, backtrack);
+            mySync.addStr(txt_pt, false);
             double str_time = (double) (clock() - start_time) / CLOCKS_PER_SEC;
+bool success;
+if(param.isSRC){
+            start_time = clock();
+            Logger::gLog(Logger::COMM, "created a server process");
+           success =  mySync.listenSync(0, false); // src
+}else{
 
             start_time = clock();
-            bool success = Alice.startSync(0, false);
+             success = mySync.startSync(0, false); // dest
+}
+
             double totalTime = (double) (clock() - start_time) / CLOCKS_PER_SEC;
-            long bytesRTot = Alice.getRecvBytesTot(0);
-            long bytesXTot = Alice.getXmitBytesTot(0);
-            wait(&child_state);
+            long bytesRTot = mySync.getRecvBytesTot(0);
+            long bytesXTot = mySync.getXmitBytesTot(0);
+
             if (!isMute) {
                 cout << "Number of Bytes Transmitted: " << bytesXTot << endl;
                 cout << "Number of Bytes Received: " << bytesRTot << endl;
                 if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent)
-                    cout << "Literal Data Transferred in Bytes: " << Alice.getCustomResult("Literal comm") << endl;
+                    cout << "Literal Data Transferred in Bytes: " << mySync.getCustomResult("Literal comm") << endl;
                 cout << "Time spent on preparation (Partition Tree):" << str_time << endl;
                 cout << "Time spent on reconciliation: " << totalTime << endl;
 
                 if (success) {
 
-                    string new_file = Alice.dumpString()->to_string();
+                    string new_file = mySync.dumpString()->to_string();
                     cout << "Set Recon Success, new file size in bytes: " << new_file.size() << endl;
 
                     writeStrToFile(dst_path, new_file);
@@ -105,11 +111,10 @@ void commandline_interface::Sync() {
                 cout <<"\n"<< "Total Number of Bytes Communicated: " << bytesXTot + bytesRTot << endl;
 
             }
-            delete Bob_txt;
-            delete Alice_txt;
+            delete txt_pt;
         }
     }
-}
+
 
 void commandline_interface::parse_arg(std::pair<option, int> arg) {
     if (arg.first == option::UNDEFINED) return;
