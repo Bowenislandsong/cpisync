@@ -71,6 +71,9 @@ public:
                        vector<int> TershingleLen, vector<int> space, int confidence, string (*stringInput)(int, string),
                        string src, int instance, int mode);
 
+    void setsofcontentREPO(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange, int confidence,
+                           string repo_dir, int instance);
+
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 
     void cascadingMissmatch(vector<int> num_error, vector<int> win, vector<int> space);

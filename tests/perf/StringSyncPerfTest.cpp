@@ -74,19 +74,21 @@ void KshingleSyncPerf::setsofcontent3D() {
 
 
     vector<int> strSizeRange{100000,500000,1000000,1500000,2000000,2500000};
-    editDistRange = {100000,10000,1000,100,10,1};
+    editDistRange = {10000};
     vector<int> lvlRange = {6};
     vector<int> parRange;
 
-    string bookpath = string(std::getenv("HOME")) + "/Desktop/sync_database/BookText/";
+//    string path = string(std::getenv("HOME")) + "/Desktop/sync_database/BookText/";
+    string path = string(std::getenv("HOME")) + "/Desktop/sync_database/Repo";
 
-    vector<int> window = {2};
-    vector<int> space = {8};
-    parRange = {4};
-    int conf = 250;
+
+//    vector<int> window = {2};
+//    vector<int> space = {8};
+//    parRange = {4};
+    int conf = 1;
 
     // parallel processes
-    int nProcesses = 3;
+    int nProcesses = 0;
 
     pid_t pID[nProcesses];
     for (int i = 0; i < nProcesses; ++i) {
@@ -96,8 +98,7 @@ void KshingleSyncPerf::setsofcontent3D() {
         } else if (pID[i] == 0) {
             cout << "Chlid: " << i << endl;
             srand(i + 1);
-            test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, lvlRange, parRange, window,
-                               space, conf, randTxt, bookpath, 1 + i, 2);
+            test.setsofcontentREPO(GenSync::SyncProtocol::CPISync, editDistRange, conf,  path, 1 + i);
 
             exit(0);
         }
@@ -106,8 +107,7 @@ void KshingleSyncPerf::setsofcontent3D() {
     int child_state;
     cout << "Parent on job" << endl;
     srand(0);
-    test.setsofcontent(GenSync::SyncProtocol::InteractiveCPISync, editDistRange, strSizeRange, lvlRange, parRange,
-                       window, space, conf, randTxt, bookpath, 0, 2);
+    test.setsofcontentREPO(GenSync::SyncProtocol::CPISync, editDistRange, conf, path, 0);
     cout << "child " << wait(&child_state) << " done and well" << endl;
 
 
@@ -120,8 +120,8 @@ void KshingleSyncPerf::setsofcontent3D() {
 
 
     vector<int> numError = {1, 2, 3, 4, 5, 6, 7, 8};
-    window = {2};
-    space = {4};
+//    window = {2};
+//    space = {4};
 
 
 

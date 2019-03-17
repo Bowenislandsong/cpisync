@@ -69,11 +69,17 @@ void AuxiliaryTest::testStringEditing() {
     std::string edited = randStringEdit(origI,4);
     CPPUNIT_ASSERT(origI != edited);
 
-    std::string burstEdited = EditBurst(origI,4,2,"./tests/SampleTxt.txt");
-    CPPUNIT_ASSERT(origI != burstEdited);
+//    std::string burstEdited = EditBurst(origI,4,2,"./tests/SampleTxt.txt");
+//    CPPUNIT_ASSERT(origI != burstEdited);
 
     std::string bookTxt = scanTxtFromFile("./tests/SampleTxt.txt",2000);
     CPPUNIT_ASSERT(bookTxt.size()==2000);
+
+//    for( string name : walkDir("/Users/bowensong/Desktop/sync_database")){
+//        cout<< name<<endl;
+//    }
+
+//    randInFolderChange(5,3,"/Users/bowensong/Desktop/cloud/");
 
     std::string longBookTxt = randTxt(2200000,"./tests/");
     CPPUNIT_ASSERT(longBookTxt.size()==2200000);
