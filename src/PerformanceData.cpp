@@ -422,7 +422,7 @@ cout<<org_files[i]<<endl;
                         DataObject *Alicetxt = new DataObject(scanTxtFromFile( org_files[i],INT_MAX));
 
                         last_passed_before_exception = "Alice Create String"; // success Tag
-                        int lvl = log10(Alicetxt->to_string().size());
+                        int lvl = floor(log10(Alicetxt->to_string().size()));
 
                         Resources initRes;
 //                    initResources(initRes);

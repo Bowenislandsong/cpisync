@@ -831,8 +831,9 @@ inline void randInFolderChange(int len, int file_cap, string dir){
     auto f = all_files.begin();
     for (int i = 0; i < all_files.size(); ++i) {
         if((f_e_vec.end() != f_e_vec.find(i))){ // we change this file
+            string a = *f;
             string full_txt = scanTxtFromFile((*f),INT_MAX);
-            full_txt = randStringEditBurst(full_txt,f_e_vec[i],dir);
+            full_txt = randStringEditBurst(full_txt,f_e_vec[i],*f);
             writeStrToFile((*f),full_txt);
         }
 

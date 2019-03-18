@@ -88,7 +88,7 @@ void KshingleSyncPerf::setsofcontent3D() {
     int conf = 10;
 
     // parallel processes
-    int nProcesses = 3;
+    int nProcesses = 0;
 
     pid_t pID[nProcesses];
     for (int i = 0; i < nProcesses; ++i) {
@@ -106,7 +106,7 @@ void KshingleSyncPerf::setsofcontent3D() {
 
     int child_state;
     cout << "Parent on job" << endl;
-    srand(0);
+    srand(time(NULL));
     test.setsofcontentREPO(GenSync::SyncProtocol::CPISync, editDistRange, conf, path, 0);
     cout << "child " << wait(&child_state) << " done and well" << endl;
 
