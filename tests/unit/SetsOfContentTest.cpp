@@ -52,9 +52,9 @@ void SetsOfContentTest::testAll() {
     Resources initRes;
 //    initResources(initRes);
 
-    string alicetxt = randAsciiStr(2e6); // 20MB is top on MAC
+    string alicetxt = randAsciiStr(2e4); // 20MB is top on MAC
     int partition = 4;
-    int lvl = 6;
+    int lvl = 3;
     int space_c = 8;
     int shingleLen_c = 2;
 

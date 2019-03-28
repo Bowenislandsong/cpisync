@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
 
     commandline_interface cli;
     if (string(argv[1]).substr(0, 5) == "-role") { // split cmd
-        for (int i = 1; i < argc - 1; ++i) { // last two are src and dest address
+        for (int i = 1; i < argc - 1; ++i) { // last one is either src or dest address
             cli.parse_arg(cli.getTag(string(argv[i])));
         }
         cli.parse_path(argv[argc - 1]);

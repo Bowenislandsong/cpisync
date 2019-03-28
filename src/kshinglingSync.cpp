@@ -146,7 +146,7 @@ void kshinglingSync::configurate(shared_ptr<SyncMethod> &setHost) {
 
 bool kshinglingSync::reconstructString(DataObject *&recovered_string, const list<DataObject *> &mySetData) {
 
-    if (cycleNum != 0)
+    //if (cycleNum != 0)
         myKshingle.clearSet();
 
     for (auto elem: mySetData) {

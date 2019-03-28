@@ -84,7 +84,7 @@ bool K_Shingle::shingle2string(idx_t& str_order, string &final_str) {
     if (final_str.empty()) {
         for (auto s : shingleMAP) {
             if (s.first[0] == stopword) {
-                if (s.second.size() != 1)
+                if (s.second.size() > 1)
                     Logger::error_and_quit(
                             "String start has " + to_string(s.second.size()) + " possible following edges.");
 
@@ -105,11 +105,12 @@ bool K_Shingle::shingle2string(idx_t& str_order, string &final_str) {
             last_shingle = mv2nxtshingle(cur, nxtEdges.back());
             nxtEdges.pop_back();
             nxtEdgeStack.push_back(nxtEdges);
-        } else if (!nxtEdgeStack.empty() and !nxtEdgeStack.back().empty()) {
+        } else if (!nxtEdgeStack.empty() and !nxtEdgeStack.back().empty()) { //see if we have other path at the current stage
             last_shingle = mv2nxtshingle(cur, nxtEdgeStack.back().back());
             nxtEdgeStack.back().pop_back();
             stateStack.pop_back();
-        } else if (!nxtEdgeStack.empty() and nxtEdgeStack.back().empty()) {
+            str.pop_back();
+        } else if (!nxtEdgeStack.empty() and nxtEdgeStack.back().empty()) { // walk back see other path
             if(str.size()>1) str.pop_back();
             while (!nxtEdgeStack.empty() and nxtEdgeStack.back().empty()) {
                 nxtEdgeStack.pop_back();
