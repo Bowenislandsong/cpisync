@@ -619,7 +619,7 @@ inline size_t getFileSize(const string &path) {
 /**
  * Get names of file available in a folder
  */
-inline vector<string> getFileList(string dir_path, string file_type = ".") {
+inline vector<string> getFileList(string dir_path, string file_type = ".", bool relative = false) {
     vector<string> f_lst;
     if (isPathExist(dir_path) and not isFile(dir_path)) {
         DIR *dir;
@@ -627,8 +627,10 @@ inline vector<string> getFileList(string dir_path, string file_type = ".") {
         if ((dir = opendir(dir_path.c_str())) != NULL) {
             while ((dirp = readdir(dir)) != NULL) {
                 string f_name = string(dirp->d_name);
-                if (f_name.find(file_type) != std::string::npos and f_name != "." and f_name != "..")
-                    f_lst.push_back(dir_path+"/"+f_name);
+                if (f_name.find(file_type) != std::string::npos and f_name != "." and f_name != "..") {
+                  if(!relative)  f_lst.push_back(dir_path + "/" + f_name);
+                  else f_lst.push_back(f_name);
+                }
             }
             closedir(dir);
         } else {
@@ -698,14 +700,27 @@ inline string randTxt(int len, string loc) {
  * @param dir Absolute directory path
  * @return All path of files
  */
-inline list<string> walkDir(string dir) {
+inline list<string> walkabsDir(string dir) {
     if (isFile(dir)) throw invalid_argument("Input path is a file."); // No Error Means it exist and is dir
     list<string> res;
     for (string file_name : getFileList(dir,".")){ // get all files
         res.emplace_back(file_name);
     }
     for(string folder_name : getFolderList(dir)){
-        res.merge(walkDir(folder_name));
+        res.merge(walkabsDir(folder_name));
+    }
+    return res;
+}
+
+inline list<string> walkRelDir(string dir, int reduceLen = -1) {
+    if (isFile(dir)) throw invalid_argument("Input path is a file."); // No Error Means it exist and is dir
+    list<string> res;
+    if (reduceLen<0)reduceLen+=dir.size()+2;
+    for (string file_name : getFileList(dir,".")){ // get all files
+        res.emplace_back((file_name.substr(reduceLen)));
+    }
+    for(string folder_name : getFolderList(dir)){
+        res.merge(walkRelDir(folder_name,reduceLen));
     }
     return res;
 }
@@ -819,7 +834,7 @@ inline string randStringEditBurst(string str, int upperE, string loc) {
  * @param dir
  */
 inline void randInFolderChange(int len, int file_cap, string dir){
-    auto all_files = walkDir(dir);
+    auto all_files = walkabsDir(dir);
     map<int,int> f_e_vec; // file id : number of changes
     while(len > 0) {
         int n_changes = min(randLenBetween(0, len),file_cap);

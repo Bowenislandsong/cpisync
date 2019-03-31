@@ -8,7 +8,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include "SetsOfContent.h"
-
+#include "RCDS.h"
 
 
 class SetsOfContentTest : public CPPUNIT_NS::TestFixture{

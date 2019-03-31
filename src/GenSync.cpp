@@ -20,6 +20,7 @@
 #include "IBLTSync_SetDiff.h"
 #include "kshinglingSync.h"
 #include "SetsOfContent.h"
+#include "RCDS.h"
 
 
 /**
@@ -466,6 +467,9 @@ GenSync GenSync::Builder::build() {
             break;
         case StringSyncProtocol::SetsOfContent:
             myMeth = make_shared<SetsOfContent>(TerminalStrSize, lvl, numParts, proto, shingleLen, baseSpace);
+            break;
+        case StringSyncProtocol ::RCDS:
+            myMeth = make_shared<RCDS>(proto);
             break;
         default: // do nothing
             break;

@@ -6,6 +6,26 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 
 void SetsOfContentTest::SelfUnitTest() {
+
+    GenSync Alice = GenSync::Builder().
+            setStringProto(GenSync::StringSyncProtocol::RCDS).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
+            setComm(GenSync::SyncComm::socket).
+            setPort(8001).
+            build();
+
+    GenSync Bob = GenSync::Builder().
+            setStringProto(GenSync::StringSyncProtocol::RCDS).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
+            setComm(GenSync::SyncComm::socket).
+            setPort(8001).
+            build();
+
+    Alice.addStr(new DataObject("/Users/bowensong/Desktop/old"),false);
+    cout<< "done File list Alice"<<endl;
+    Bob.addStr(new DataObject("/Users/bowensong/Desktop/new"),false);
+    cout<< "done File list Bob"<<endl;
+    forkHandle(Alice,Bob,false);
 //
 
 //    shingle_hash Shingle_A({.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3});

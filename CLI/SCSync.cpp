@@ -26,7 +26,6 @@ void commandline_interface::help() {
             "Please find source Code at https://github.com/Bowenislandsong/cpisync " << endl;
     cout << "Usage : SCSync [OPTION] ... <SRC> ... <DEST>" << endl;
     cout << "Options" << endl;
-
 }
 
 void commandline_interface::Sync() {

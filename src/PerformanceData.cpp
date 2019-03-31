@@ -404,8 +404,8 @@ void PerformanceData::setsofcontentREPO(GenSync::SyncProtocol setReconProto, vec
                 // edit folder
                 randInFolderChange(edit_dist, 300, edfolder);
                 // SCSync every file in folder
-                auto org = walkDir(orgfolder);
-                auto ed = walkDir(edfolder);
+                auto org = walkabsDir(orgfolder);
+                auto ed = walkabsDir(edfolder);
                 auto org_files = vector<string>{org.begin(), org.end()};
                 auto ed_files = vector<string>{ed.begin(), ed.end()};
                 sort(org_files.begin(), org_files.end());

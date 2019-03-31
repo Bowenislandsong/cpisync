@@ -303,6 +303,7 @@ public:
         BEGIN,
         kshinglingSync=BEGIN,
         SetsOfContent,
+        RCDS,
         END
     };
 

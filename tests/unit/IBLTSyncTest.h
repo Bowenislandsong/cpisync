@@ -15,7 +15,7 @@ class IBLTSyncTest : public CPPUNIT_NS::TestFixture {
         CPPUNIT_TEST(justSyncTest);
         CPPUNIT_TEST(testAddDelElem);
         CPPUNIT_TEST(testGetStrings);
-        CPPUNIT_TEST(stringReconFullTest);
+//        CPPUNIT_TEST(stringReconFullTest);
 
     CPPUNIT_TEST_SUITE_END();
 public:

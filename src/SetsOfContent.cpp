@@ -11,7 +11,7 @@ SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t par
     SyncID = SYNC_TYPE::SetsOfContent;
     if (levels > USHRT_MAX or levels < 2)
         throw invalid_argument("Num of Level specified should be between 2 and " + to_string(USHRT_MAX));
-
+    useExisting = false;
 //    initResources(initRes);
 }
 
@@ -157,7 +157,7 @@ void SetsOfContent::prepare_querys(list<DataObject *> &otherMinusSelf) {
             cyc_query.erase(shingle.second); // if duplicated, we want the lower level
         if (dictionary.find(shingle.second) == dictionary.end()) { // if it is not found anywhere
             if (shingle.lvl < Levels - 1)
-                cyc_query.emplace(shingle.second, cycle{0,0,0});
+                cyc_query.emplace(shingle.second, cycle{0, 0, 0});
             else
                 term_query.emplace(shingle.second, "");
         }
@@ -222,7 +222,7 @@ void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level)
             Logger::error_and_quit(
                     "Shingle occurrance is larger than USHRT_MAX, (backtracking could be infeasiable and our shingle_hash carrier is overflown)");
         myTree[level].insert(
-               shingle_hash{item->first.first, item->first.second, level, (sm_i) item->second});
+                shingle_hash{item->first.first, item->first.second, level, (sm_i) item->second});
     }
 
 }
@@ -653,9 +653,10 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
                                list<DataObject *> &otherMinusSelf) {
 
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncServer");
-
-    commSync->commListen();
-    RecvSyncParam(commSync);
+    if (!useExisting) {
+        commSync->commListen();
+        RecvSyncParam(commSync);
+    }
 
     long mbar = 0;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
@@ -726,9 +727,10 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
                                list<DataObject *> &otherMinusSelf, map<string, double> &CustomResult) {
 
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncClient");
-
-    commSync->commConnect();
-    SendSyncParam(commSync);
+    if (!useExisting) {
+        commSync->commConnect();
+        SendSyncParam(commSync);
+    }
 
     long mbar = 0;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
@@ -800,7 +802,8 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
         if (tmp != "$") {
-            auto it = cyc_query.find(add_str_to_dictionary(tmp)); // we search from bottom up, if there are strings reached terminal size and not partitioned later, it would not need cycle tracing
+            auto it = cyc_query.find(add_str_to_dictionary(
+                    tmp)); // we search from bottom up, if there are strings reached terminal size and not partitioned later, it would not need cycle tracing
             if (it != cyc_query.end())
                 cyc_query.erase(it);
         }

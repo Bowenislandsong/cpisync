@@ -68,7 +68,8 @@ set(SOURCE_FILES
         ${SRC_DIR}/StrataEst.cpp
         ${SRC_DIR}/StrataEst_CPI.cpp
         ${SRC_DIR}/CPI.cpp
-        ${SRC_DIR}/SetsOfContent.cpp)
+        ${SRC_DIR}/SetsOfContent.cpp
+        ${SRC_DIR}/RCDS.cpp)
 
 #cppunit
 include_directories(include)
