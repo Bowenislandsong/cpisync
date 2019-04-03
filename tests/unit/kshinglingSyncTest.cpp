@@ -85,7 +85,7 @@ if(recoveredAlice == Alicetxt)
 //    cout << "bitsTot: " + to_string(report.bytesXTot) << endl;
 //    cout << "bitsR: " + to_string(report.bytesRTot) << endl;
 //    cout << "Btyes: "<< report.bytes<<endl;
-//    if(recoveredAlice != Bobtxt) cout<< "enable stgring recon in GenSync"<<endl;
+//    if(recoveredAlice != Bobtxt) cout<< "enable starting recon in GenSync"<<endl;
     CPPUNIT_ASSERT(recoveredAlice == Bobtxt);
 //    CPPUNIT_ASSERT(report.success);
 

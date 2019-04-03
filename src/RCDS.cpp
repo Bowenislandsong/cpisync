@@ -18,6 +18,11 @@ bool RCDS::addStr(DataObject *str, vector<DataObject *> &datum, bool sync) {
         if (FolderName.back() == '/')FolderName.pop_back();
         for (string f_name : walkRelDir(FolderName))
             setPointers.push_back(new DataObject(f_name));
+        singleFileMode = false;
+        return true;
+    } else {
+        setPointers.push_back(new DataObject(FolderName));
+        singleFileMode = true;
         return true;
     }
     return false;
@@ -29,34 +34,48 @@ bool RCDS::SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *
     Logger::gLog(Logger::METHOD, "Entering RCDS::SyncServer");
 
     commSync->commListen();
-    cout << "we linked-server" << endl;
-    // use CPI/interactive CPI (fixed)
-    (FolderName.back() == '/') ? 0 : FolderName += "/";
-    vector<DataObject *> heuristic_set = heuristic_check(setPointers);
-    setReconServer(commSync, 10e2, sizeof(size_t), heuristic_set, selfMinusOther, otherMinusSelf);
+
+    // make sure we ar syncing the same type of things
+    commSync->commSend((singleFileMode ? 1 : 0));
+    if (commSync->commRecv_byte() != SYNC_OK_FLAG) {
+        Logger::error_and_quit("Wrong Input: trying to Sync a folder with a file.");
+    }
+
+    if (singleFileMode) {
+        Logger::gLog(Logger::METHOD, "We use RCDS");
+        int levels = (int) floor(log10(getFileSize(FolderName)));
+        int par = 4;
+        commSync->commSend(levels);
+        stringSyncServer(commSync, FolderName, levels, par);
+    } else {
+
+        (FolderName.back() == '/') ? 0 : FolderName += "/";
+        vector<DataObject *> heuristic_set = heuristic_check(setPointers);
+        setReconServer(commSync, 10e2, sizeof(size_t), heuristic_set, selfMinusOther, otherMinusSelf);
 
 
-    commSync->commSend(selfMinusOther.size());
-    for (DataObject *f:selfMinusOther) {
-        string f_name = hash2filename(f->to_ZZ());
+        commSync->commSend(selfMinusOther.size());
+        for (DataObject *f:selfMinusOther) {
+            string f_name = hash2filename(f->to_ZZ());
 
-        commSync->commSend((f_name.empty()) ? "$" : f_name);
-        if (f_name.empty())continue;
-        int mode = 0;
-        (commSync->commRecv_byte() == SYNC_OK_FLAG) ? mode = 1 : mode = 2;
+            commSync->commSend((f_name.empty()) ? "$" : f_name);
+            if (f_name.empty())continue;
+            int mode = 0;
+            (commSync->commRecv_byte() == SYNC_OK_FLAG) ? mode = 1 : mode = 2;
 
-        if (mode == 2) {
-            Logger::gLog(Logger::METHOD, "We use full sync");
-            string content = scanTxtFromFile(FolderName + f_name, INT_MAX);
-            commSync->commSend((content.empty() ? "$" : content));
-        } else if (mode == 1) {
-            Logger::gLog(Logger::METHOD, "We use RCDS");
-            int levels = (int) floor(log10(getFileSize(FolderName + f_name)));
-            int par = 4;
-            commSync->commSend(levels);
-            stringSyncServer(commSync, FolderName + f_name, levels, par);
-        } else Logger::error_and_quit("Unkonwn Sync Mode, should never happen in RCDS");
+            if (mode == 2) {
+                Logger::gLog(Logger::METHOD, "We use full sync");
+                string content = scanTxtFromFile(FolderName + f_name, INT_MAX);
+                commSync->commSend((content.empty() ? "$" : content));
+            } else if (mode == 1) {
+                Logger::gLog(Logger::METHOD, "We use RCDS");
+                int levels = (int) floor(log10(getFileSize(FolderName + f_name)));
+                int par = 4;
+                commSync->commSend(levels);
+                stringSyncServer(commSync, FolderName + f_name, levels, par);
+            } else Logger::error_and_quit("Unkonwn Sync Mode, should never happen in RCDS");
 
+        }
     }
     commSync->commClose();
     return true;
@@ -67,47 +86,62 @@ bool RCDS::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *
     Logger::gLog(Logger::METHOD, "Entering RCDS::SyncClient");
 
     commSync->commConnect();
-    cout << "we linked-Cient" << endl;
-    // use CPI/interactive CPI (fixed)
 
-    (FolderName.back() == '/') ? 0 : FolderName += "/";
-    vector<DataObject *> heuristic_set = heuristic_check(setPointers);
+    // make sure we ar syncing the same type of things
+    if (commSync->commRecv_int() != (singleFileMode ? 1 : 0)) {
+        commSync->commSend(SYNC_FAIL_FLAG);
+        Logger::error_and_quit("Wrong Input: trying to Sync a folder with a file.");
+    }
+    commSync->commSend(SYNC_OK_FLAG);
 
-    setReconClient(commSync, 10e2, sizeof(size_t), heuristic_set, selfMinusOther, otherMinusSelf);
+    if (singleFileMode) {
+        Logger::gLog(Logger::METHOD, "We use RCDS");
+        int levels = commSync->commRecv_int();
+        int par = 4;
+        string syncContent = stringSyncClient(commSync, FolderName, levels, par);
+        if (!Quota_mode) writeStrToFile(FolderName, syncContent);
+    } else {
 
 
-    size_t diff_size = commSync->commRecv_size_t();
-    for (int i = 0; i < diff_size; ++i) {
-        //mode 1: I have a file, lets sync.
-        //mode 2: i don't have this file, send me the whole thing.
-        int mode = 0;
-        string f_name;
-        if ((f_name = commSync->commRecv_string()) == "$")continue;
-        cout << FolderName + f_name << endl;
-        if (isPathExist(FolderName + f_name)) {
-            commSync->commSend(SYNC_OK_FLAG);
-            mode = 1;
-        } else {
-            commSync->commSend(SYNC_NO_INFO);
-            mode = 2;
+        (FolderName.back() == '/') ? 0 : FolderName += "/";
+        vector<DataObject *> heuristic_set = heuristic_check(setPointers);
+
+        setReconClient(commSync, 10e2, sizeof(size_t), heuristic_set, selfMinusOther, otherMinusSelf);
+
+
+        size_t diff_size = commSync->commRecv_size_t();
+        for (int i = 0; i < diff_size; ++i) {
+            //mode 1: I have a file, lets sync.
+            //mode 2: i don't have this file, send me the whole thing.
+            int mode = 0;
+            string f_name;
+            if ((f_name = commSync->commRecv_string()) == "$")continue;
+            cout << FolderName + f_name << endl;
+            if (isPathExist(FolderName + f_name)) {
+                commSync->commSend(SYNC_OK_FLAG);
+                mode = 1;
+            } else {
+                commSync->commSend(SYNC_NO_INFO);
+                mode = 2;
+            }
+
+            if (mode == 2) {
+                cout << "Using Full Sync" << endl;
+                Logger::gLog(Logger::METHOD, "We use full sync");
+                string content = commSync->commRecv_string();
+                if (!Quota_mode)
+                    writeStrToFile(FolderName + f_name, (content == "$" ? "" : content));
+            } else if (mode == 1) {
+                cout << "Using RCDS" << endl;
+                Logger::gLog(Logger::METHOD, "We use RCDS");
+                int levels = commSync->commRecv_int();
+                int par = 4;
+                string syncContent = stringSyncClient(commSync, FolderName + f_name, levels, par);
+                if (!Quota_mode) writeStrToFile(FolderName + f_name, syncContent);
+
+            } else Logger::error_and_quit("Unkonwn Sync Mode, should never happen in RCDS");
+
         }
-
-        if (mode == 2) {
-            cout << "Using Full Sync" << endl;
-            Logger::gLog(Logger::METHOD, "We use full sync");
-            string content = commSync->commRecv_string();
-            if (!Quota_mode)
-                writeStrToFile(FolderName + f_name, (content == "$" ? "" : content));
-        } else if (mode == 1) {
-            cout << "Using RCDS" << endl;
-            Logger::gLog(Logger::METHOD, "We use RCDS");
-            int levels = commSync->commRecv_int();
-            int par = 4;
-            string syncContent = stringSyncClient(commSync, FolderName + f_name, levels, par);
-            if (!Quota_mode) writeStrToFile(FolderName + f_name, syncContent);
-
-        } else Logger::error_and_quit("Unkonwn Sync Mode, should never happen in RCDS");
-
     }
 
     commSync->commClose();
@@ -123,10 +157,6 @@ bool RCDS::stringSyncServer(const shared_ptr<Communicant> &commSync, string absf
     stringHost->addStr(str, Elems, false);
     stringHost->SyncServer(commSync, selfMinusOther, otherMinusSelf);
     delete str;
-//    for (auto dop:Elems) delete dop;
-//    for (auto dop:selfMinusOther) delete dop;
-//    for (auto dop:otherMinusSelf) delete dop;
-//    for (auto dop:strelems) delete dop;
     return true;
 }
 
@@ -147,9 +177,5 @@ string RCDS::stringSyncClient(const shared_ptr<Communicant> &commSync, string ab
     content = res->to_string();
     delete res;
     delete str;
-//    for (auto dop:Elems) delete dop;
-//    for (auto dop:selfMinusOther) delete dop;
-//    for (auto dop:otherMinusSelf) delete dop;
-//    for (auto dop:strelems) delete dop;
     return content;
 }

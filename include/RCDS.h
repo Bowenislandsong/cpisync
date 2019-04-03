@@ -48,7 +48,7 @@ private:
     string FolderName;
     vector<DataObject *> setPointers;
     map<size_t, string> Dict_fname;
-    bool Quota_mode;
+    bool Quota_mode, singleFileMode;
 
 
     void configure(shared_ptr<SyncMethod> &setHost, long mbar, size_t elem_size) {

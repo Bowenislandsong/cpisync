@@ -7,6 +7,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 
 void SetsOfContentTest::SelfUnitTest() {
 
+
+    string old_version = "/Users/bowen/Desktop/old/kubernetes/";
+    string new_version = "/Users/bowen/Desktop/new/kubernetes/";
+
+
+    clock_t start_t = clock();
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::RCDS).
             setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
@@ -21,11 +27,19 @@ void SetsOfContentTest::SelfUnitTest() {
             setPort(8001).
             build();
 
-    Alice.addStr(new DataObject("/Users/bowen/Desktop/old"), false);
-    cout << "done File list Alice" << endl;
-    Bob.addStr(new DataObject("/Users/bowen/Desktop/new"), false);
-    cout << "done File list Bob" << endl;
-    forkHandle(Alice, Bob, false);
+    Alice.addStr(new DataObject(old_version), false);
+
+    Bob.addStr(new DataObject(new_version), false);
+
+    auto report = forkHandle(Alice, Bob, false);
+    double RCDS_time = (double) (clock() - start_t) / CLOCKS_PER_SEC;
+
+    auto r_res = getRsyncStats(old_version, new_version, true);
+    cout << "rsync comm cost: " << r_res.recv + r_res.xmit << endl;
+    cout << "rsync Time cost: " << r_res.time << endl;
+    cout << "RCDS cost: " << to_string(report.bytesRTot + report.bytesXTot) << endl;
+    cout << "RCDS Time Cost: " << RCDS_time << endl;
+
 //
 
 //    shingle_hash Shingle_A({.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3});

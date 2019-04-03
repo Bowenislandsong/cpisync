@@ -10,7 +10,7 @@ commandline_interface::commandline_interface() : STR_RECON_PROTO(GenSync::String
     param.lvl = NOT_SET;
     param.par = NOT_SET;
     param.shingle_size = NOT_SET;
-    param.port = 8001;
+    param.port = 8010;
     param.host_name = "localhost";
 }
 
@@ -34,43 +34,22 @@ void commandline_interface::Sync() {
     else if (canSync and !error_msg.empty())
         cout << error_msg << " For how to use SCSync, use -h to show help." << endl;
     else { // all good, let's sync
-
-        DataObject *txt_pt = new DataObject(scanTxtFromFile((param.file_path), INT_MAX));
-
-        // quote file size for both
-        int src_size = 1000000, dest_size = 1000000;
-
-        // set the unset parameters;
-        if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent) {
-            if (param.lvl <= NOT_SET)
-                param.lvl = (int) floor(log10(max(src_size, dest_size)));
-            if (param.par <= NOT_SET)param.par = 4;
-            param.shingle_size = 2;
-        } else if (STR_RECON_PROTO == GenSync::StringSyncProtocol::kshinglingSync) {
-            if (param.shingle_size <= NOT_SET)
-                param.shingle_size = (int) floor(log2(max(src_size, dest_size)));
-            Logger::error_and_quit("kshingling Currently not implemented in SCSync.");
-        }
+        DataObject *path_pt = new DataObject(param.file_path);
 
 
-
-        // get the strings inserted
         GenSync mySync = GenSync::Builder().
-                setStringProto(STR_RECON_PROTO).
-                setProtocol(SET_RECON_PROTO).
+                setStringProto(GenSync::StringSyncProtocol::RCDS).
+                setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
                 setComm(GenSync::SyncComm::socket).
-                setTerminalStrSize(10).
-                setNumPartitions(param.par).
-                setHost(param.host_name).
-                setShingleLen(param.shingle_size).
-                setSpace(param.par * 2).
-                setlvl(param.lvl).
-                setPort(param.port).
+                setPort(8001).
                 build();
 
 
+
         clock_t start_time = clock();
-        mySync.addStr(txt_pt, false);
+
+        mySync.addStr(path_pt, false);
+
         double str_time = (double) (clock() - start_time) / CLOCKS_PER_SEC;
         bool success;
         if (param.isSRC) {
@@ -90,24 +69,24 @@ void commandline_interface::Sync() {
         if (!isMute) {
             cout << "Number of Bytes Transmitted: " << bytesXTot << endl;
             cout << "Number of Bytes Received: " << bytesRTot << endl;
-            if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent)
-                cout << "Literal Data Transferred in Bytes: " << mySync.getCustomResult("Literal comm") << endl;
+//            if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent)
+//                cout << "Literal Data Transferred in Bytes: " << mySync.getCustomResult("Literal comm") << endl;
             cout << "Time spent on preparation (Partition Tree):" << str_time << endl;
             cout << "Time spent on reconciliation: " << totalTime << endl;
 
-            if (success) {
-
-                string new_file = mySync.dumpString()->to_string();
-                cout << "Set Recon Success, new file size in bytes: " << new_file.size() << endl;
-
-                writeStrToFile(dest_path, new_file);
-            } else
-                cout << "Set Recon Failed, File NOT Synchronized." << endl;
+//            if (success) {
+//
+//                string new_file = mySync.dumpString()->to_string();
+//                cout << "Set Recon Success, new file size in bytes: " << new_file.size() << endl;
+//
+//                writeStrToFile(dest_path, new_file);
+//            } else
+//                cout << "Set Recon Failed, File NOT Synchronized." << endl;
 
             cout << "\n" << "Total Number of Bytes Communicated: " << bytesXTot + bytesRTot << endl;
 
         }
-        delete txt_pt;
+        delete path_pt;
     }
 }
 

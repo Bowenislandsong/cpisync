@@ -170,7 +170,12 @@ private:
     // check if file exist
     // check if it is txt file
     bool isValidFile(const string &path) {
-        return isFile(path) and path.substr(path.find(".")) == ".txt";
+        try {
+            isFile(path);
+        }catch (exception &e){
+            return false;
+        }
+        return true;
     }
 
 };
@@ -194,6 +199,7 @@ int main(int argc, char *argv[]) {
         for (int i = 1; i < argc - 1; ++i) { // last one is either src or dest address
             cli.parse_arg(cli.getTag(string(argv[i])));
         }
+
         cli.parse_path(argv[argc - 1]);
         cli.Sync();
     } else if (string(argv[1]) == "-h") {
