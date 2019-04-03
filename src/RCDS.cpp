@@ -31,10 +31,10 @@ bool RCDS::SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *
     commSync->commListen();
     cout << "we linked-server" << endl;
     // use CPI/interactive CPI (fixed)
-    vector<DataObject *> heuristic_set = heuristic_check(setPointers);
-    setReconServer(commSync, 10e4, sizeof(size_t), heuristic_set, selfMinusOther, otherMinusSelf);
-
     (FolderName.back() == '/') ? 0 : FolderName += "/";
+    vector<DataObject *> heuristic_set = heuristic_check(setPointers);
+    setReconServer(commSync, 10e2, sizeof(size_t), heuristic_set, selfMinusOther, otherMinusSelf);
+
 
     commSync->commSend(selfMinusOther.size());
     for (DataObject *f:selfMinusOther) {
@@ -47,7 +47,8 @@ bool RCDS::SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *
 
         if (mode == 2) {
             Logger::gLog(Logger::METHOD, "We use full sync");
-            commSync->commSend(scanTxtFromFile(FolderName + f_name, INT_MAX));
+            string content = scanTxtFromFile(FolderName + f_name, INT_MAX);
+            commSync->commSend((content.empty() ? "$" : content));
         } else if (mode == 1) {
             Logger::gLog(Logger::METHOD, "We use RCDS");
             int levels = (int) floor(log10(getFileSize(FolderName + f_name)));
@@ -68,11 +69,12 @@ bool RCDS::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *
     commSync->commConnect();
     cout << "we linked-Cient" << endl;
     // use CPI/interactive CPI (fixed)
-    vector<DataObject *> heuristic_set = heuristic_check(setPointers);
-
-    setReconClient(commSync, 10e4, sizeof(size_t), heuristic_set, selfMinusOther, otherMinusSelf);
 
     (FolderName.back() == '/') ? 0 : FolderName += "/";
+    vector<DataObject *> heuristic_set = heuristic_check(setPointers);
+
+    setReconClient(commSync, 10e2, sizeof(size_t), heuristic_set, selfMinusOther, otherMinusSelf);
+
 
     size_t diff_size = commSync->commRecv_size_t();
     for (int i = 0; i < diff_size; ++i) {
@@ -91,14 +93,13 @@ bool RCDS::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *
         }
 
         if (mode == 2) {
-            cout<<"mode2"<<endl;
+            cout << "Using Full Sync" << endl;
             Logger::gLog(Logger::METHOD, "We use full sync");
-            if (Quota_mode)
-                commSync->commRecv_string();
-            else
-                writeStrToFile(FolderName + f_name, commSync->commRecv_string());
+            string content = commSync->commRecv_string();
+            if (!Quota_mode)
+                writeStrToFile(FolderName + f_name, (content == "$" ? "" : content));
         } else if (mode == 1) {
-            cout<<"mode1"<<endl;
+            cout << "Using RCDS" << endl;
             Logger::gLog(Logger::METHOD, "We use RCDS");
             int levels = commSync->commRecv_int();
             int par = 4;
@@ -114,10 +115,41 @@ bool RCDS::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *
 }
 
 bool RCDS::stringSyncServer(const shared_ptr<Communicant> &commSync, string absfilename, int level, int partition) {
-
+    shared_ptr<SyncMethod> stringHost = make_shared<SetsOfContent>(baseSyncProtocol, level, partition);
+    vector<DataObject *> Elems;
+    list<DataObject *> selfMinusOther, otherMinusSelf, strelems;
+    string content = scanTxtFromFile(absfilename, INT_MAX);
+    DataObject *str = new DataObject(content);
+    stringHost->addStr(str, Elems, false);
+    stringHost->SyncServer(commSync, selfMinusOther, otherMinusSelf);
+    delete str;
+//    for (auto dop:Elems) delete dop;
+//    for (auto dop:selfMinusOther) delete dop;
+//    for (auto dop:otherMinusSelf) delete dop;
+//    for (auto dop:strelems) delete dop;
     return true;
 }
 
 string RCDS::stringSyncClient(const shared_ptr<Communicant> &commSync, string absfilename, int level, int partition) {
-    return "";
+    shared_ptr<SyncMethod> stringHost = make_shared<SetsOfContent>(baseSyncProtocol, level, partition);
+    vector<DataObject *> Elems;
+    list<DataObject *> selfMinusOther, otherMinusSelf, strelems;
+    string content = scanTxtFromFile(absfilename, INT_MAX);
+    DataObject *res, *str = new DataObject(content);
+    map<string, double> CustomResult;
+    try {
+        stringHost->addStr(str, Elems, false);
+    } catch (std::exception &e) {
+        cout << e.what() << endl;
+    }
+    stringHost->SyncClient(commSync, selfMinusOther, otherMinusSelf, CustomResult);
+    stringHost->reconstructString(res, strelems);
+    content = res->to_string();
+    delete res;
+    delete str;
+//    for (auto dop:Elems) delete dop;
+//    for (auto dop:selfMinusOther) delete dop;
+//    for (auto dop:otherMinusSelf) delete dop;
+//    for (auto dop:strelems) delete dop;
+    return content;
 }

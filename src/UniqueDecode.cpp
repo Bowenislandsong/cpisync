@@ -42,9 +42,9 @@ void UniqueDecode::UDonline(const string &str, std::map<string,std::set<size_t>>
     // For easy implementation, we follow UD paper to create O(n^2) whereas it can be promoted to O(n)
 
     // Sanity check
-    if (str.empty()) throw invalid_argument("The input string is empty - UDonline");
-    if (!merg_idx.empty()) throw invalid_argument("The input Merge Index Vector is not empty - UDonline");
-    if (str[0] != stopWord) throw invalid_argument("No stop word found at the begining of the string - UDonline");
+    if (str.empty())  Logger::error_and_quit("The input string is empty - UDonline");
+    if (!merg_idx.empty())  Logger::error_and_quit("The input Merge Index Vector is not empty - UDonline");
+    if (str[0] != stopWord)  Logger::error_and_quit("No stop word found at the begining of the string - UDonline");
 
     std::map<string, pair<bool, bool>> isCycVis; //Init visited and cycle .first = isCycle .second = isVisited
     std::map<string, size_t> order_reference; // reference for location

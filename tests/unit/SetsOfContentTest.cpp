@@ -21,11 +21,11 @@ void SetsOfContentTest::SelfUnitTest() {
             setPort(8001).
             build();
 
-    Alice.addStr(new DataObject("/Users/bowensong/Desktop/old"),false);
-    cout<< "done File list Alice"<<endl;
-    Bob.addStr(new DataObject("/Users/bowensong/Desktop/new"),false);
-    cout<< "done File list Bob"<<endl;
-    forkHandle(Alice,Bob,false);
+    Alice.addStr(new DataObject("/Users/bowen/Desktop/old"), false);
+    cout << "done File list Alice" << endl;
+    Bob.addStr(new DataObject("/Users/bowen/Desktop/new"), false);
+    cout << "done File list Bob" << endl;
+    forkHandle(Alice, Bob, false);
 //
 
 //    shingle_hash Shingle_A({.first = 298273671273648, .second = 198273671273645, .occurr = 1990, .lvl = 3});

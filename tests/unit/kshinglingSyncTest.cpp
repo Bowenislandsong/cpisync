@@ -32,7 +32,7 @@ void kshinglingSyncTest::testAll() {
     // CPISYNC k = 3 b = 38; k = 4 b = 46; k = 5 b = 54
     size_t shingle_len =2;//ceil(log(string_len));
     int editDistance_bar = 1;
-    GenSync::SyncProtocol base_set_proto = GenSync::SyncProtocol::CPISync;
+    GenSync::SyncProtocol base_set_proto = GenSync::SyncProtocol::InteractiveCPISync;
     //GenSync::SyncProtocol base_set_proto = GenSync::SyncProtocol::CPISync;
     char stopword = '$';
 

@@ -12,7 +12,7 @@ IBLT::~IBLT() = default;
 
 IBLT::IBLT(size_t expectedNumEntries, size_t _valueSize)
 : valueSize(_valueSize) {
-    if (expectedNumEntries < 0) throw invalid_argument("expected NumEntries should be >= 0");
+    if (expectedNumEntries < 0)  Logger::error_and_quit("expected NumEntries should be >= 0");
     // 1.5x expectedNumEntries gives very low probability of decoding failure
     size_t nEntries = expectedNumEntries + expectedNumEntries / 2;
     // ... make nEntries exactly divisible by N_HASH

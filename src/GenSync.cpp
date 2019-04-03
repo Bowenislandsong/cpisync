@@ -158,7 +158,7 @@ bool GenSync::startSync(int method_num, bool isRecon) {
         // do the sync
         try {
             if ((*syncAgentIt)->isStringReconMethod() and
-                !(*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf, CustomResult)){
+                !(*syncAgentIt)->SyncClient(*itComm, selfMinusOther, otherMinusSelf, CustomResult)) {
                 Logger::gLog(Logger::METHOD, "Sync to " + (*itComm)->getName() + " failed!");
                 syncSuccess = false;
             } else {
@@ -407,11 +407,11 @@ GenSync GenSync::Builder::build() {
 
     // check pre-conditions
     if (proto == SyncProtocol::UNDEFINED)
-        throw invalid_argument("The synchronization protocol has not been defined.");
+        Logger::error_and_quit("The synchronization protocol has not been defined.");
     if (comm == SyncComm::UNDEFINED)
-        throw invalid_argument("No communication protocol defined.");
+        Logger::error_and_quit("No communication protocol defined.");
     if (stringProto != StringSyncProtocol::UNDEFINED and proto == SyncProtocol::UNDEFINED)
-        throw invalid_argument("String synchronization protocol requires base set sync protocol.");
+        Logger::error_and_quit("String synchronization protocol requires base set sync protocol.");
 
     // setup
     switch (comm) {
@@ -468,7 +468,7 @@ GenSync GenSync::Builder::build() {
         case StringSyncProtocol::SetsOfContent:
             myMeth = make_shared<SetsOfContent>(TerminalStrSize, lvl, numParts, proto, shingleLen, baseSpace);
             break;
-        case StringSyncProtocol ::RCDS:
+        case StringSyncProtocol::RCDS:
             myMeth = make_shared<RCDS>(proto);
             break;
         default: // do nothing

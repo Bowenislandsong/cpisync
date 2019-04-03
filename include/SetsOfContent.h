@@ -206,9 +206,13 @@ public:
     SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto,
                   size_t shingle_size = 2, size_t ter_space = 2);
 
-    SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto)
+    SetsOfContent(GenSync::SyncProtocol base_set_proto, size_t levels, size_t partition, size_t terminal_str_size = 10)
             : TermStrSize(terminal_str_size), Levels(levels), Partition(partition),
-              baseSyncProtocol(base_set_proto) { useExisting = true; };
+              baseSyncProtocol(base_set_proto) {
+        useExisting = true;
+        shingle_c = 2;
+        space_c = 2;
+    };
 
     ~SetsOfContent();
 

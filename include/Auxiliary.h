@@ -574,7 +574,7 @@ inline string scanTxtFromFile(string dir, int len) {
         }
         myfile.close();
     } else {
-        throw invalid_argument("Directory " + dir + " does not exist.-");
+        Logger::error_and_quit("Directory " + dir + " does not exist.-");
     }
     return txt.str();
 }
@@ -603,9 +603,9 @@ inline bool isFile(const string &path) {
         else if (buf.st_mode & S_IFDIR)
             return false;
         else
-            throw invalid_argument("Given path: " + path + " exist, but it is not a file nor directory");
+            Logger::error_and_quit("Given path: " + path + " exist, but it is not a file nor directory");
     }
-    throw invalid_argument("Given path: " + path + " does not exist.");
+    Logger::error_and_quit("Given path: " + path + " does not exist.");
 }
 
 inline size_t getFileSize(const string &path) {
@@ -701,7 +701,7 @@ inline string randTxt(int len, string loc) {
  * @return All path of files
  */
 inline list<string> walkabsDir(string dir) {
-    if (isFile(dir)) throw invalid_argument("Input path is a file."); // No Error Means it exist and is dir
+    if (isFile(dir))  Logger::error_and_quit("Input path is a file."); // No Error Means it exist and is dir
     list<string> res;
     for (string file_name : getFileList(dir,".")){ // get all files
         res.emplace_back(file_name);
@@ -713,7 +713,7 @@ inline list<string> walkabsDir(string dir) {
 }
 
 inline list<string> walkRelDir(string dir, int reduceLen = -1) {
-    if (isFile(dir)) throw invalid_argument("Input path is a file."); // No Error Means it exist and is dir
+    if (isFile(dir))  Logger::error_and_quit("Input path is a file."); // No Error Means it exist and is dir
     list<string> res;
     if (reduceLen<0)reduceLen+=dir.size()+2;
     for (string file_name : getFileList(dir,".")){ // get all files

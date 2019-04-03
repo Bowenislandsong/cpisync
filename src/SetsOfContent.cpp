@@ -33,8 +33,8 @@ vector<size_t> SetsOfContent::create_HashSet(size_t str_hash, size_t space, size
     if (str_i.second <= TermStrSize) {
         hash_set = {str_hash};
     } else { // else we partitions it
-        if (space == 0) throw invalid_argument("Space for windowing is 0 at create_HashSet");
-        if (shingle_size < 2) throw invalid_argument("Shingle size should not go under 2");
+        if (space == 0)  Logger::error_and_quit("Space for windowing is 0 at create_HashSet");
+        if (shingle_size < 2)  Logger::error_and_quit("Shingle size should not go under 2");
         for (size_t i = 0; i < str.size() - shingle_size + 1; ++i) {
             std::hash<std::string> shash;
             hash_val.push_back(shash(str.substr(i, shingle_size)) % space);
@@ -86,7 +86,7 @@ vector<size_t> SetsOfContent::create_HashSet(size_t str_hash, size_t space, size
     else if (cyc_it->second != hash_set and cyc_it->second.size() == 1 and cyc_it->second.front() == cyc_it->first)
         cyc_dict[str_hash] = hash_set;// last stage no partition, update cyc_dict
     else if (cyc_it->second != hash_set) // check if it is getting overwritten
-        throw invalid_argument("More than one answer is possible for cyc_dict");
+        Logger::error_and_quit("More than one answer is possible for cyc_dict");
 
     return hash_set;
 }
@@ -99,7 +99,7 @@ void SetsOfContent::go_through_tree() {
                        TermStrSize; // calculate a supposed string size, a string size that make sense with the parameters
 
     if (String_Size < 1)
-        throw invalid_argument(
+        Logger::error_and_quit(
                 "fxn go_through_tree - parameters do not make sense - num of par: " + to_string(Partition) +
                 ", num of lvls: " +
                 to_string(Levels) + ", Terminal String Size: " + to_string(TermStrSize) + ", Actual String Size: " +
@@ -108,7 +108,7 @@ void SetsOfContent::go_through_tree() {
     size_t shingle_size = 2 * pow(shingle_c,
                                   Levels); //(Parameter c, terminal rolling hash window size)
     if (shingle_size < 1)
-        throw invalid_argument("Consider larger the parameters for auto shingle size to be more than 1");
+        Logger::error_and_quit("Consider larger the parameters for auto shingle size to be more than 1");
     size_t space = 4 * pow(space_c, Levels); //126 for ascii content (Parameter terminal space)
     vector<size_t> cur_level;
     // fill up the tree
@@ -194,7 +194,7 @@ bool SetsOfContent::answer_queries(std::set<size_t> &theirQueries) {
 }
 
 void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level) {
-    if (myTree.size() <= level) throw invalid_argument("We have exceeded the levels of the tree");
+    if (myTree.size() <= level)  Logger::error_and_quit("We have exceeded the levels of the tree");
     if (hash_vector.size() > 100)
         cout << "It is advised to not exceed 100 partitions for fast backtracking at Level: " + to_string(level) +
                 " Current set size: " + to_string(hash_vector.size()) << endl;
@@ -461,7 +461,7 @@ bool SetsOfContent::shingle2hash_train(cycle &cyc_info, const std::set<shingle_h
                 stateStack.pop_back();
             }
         } else if (stateStack.size() != nxtEdgeStack.size() + 1) {
-            throw invalid_argument("state stack and nxtEdge Stack size miss match" + to_string(stateStack.size())
+            Logger::error_and_quit("state stack and nxtEdge Stack size miss match" + to_string(stateStack.size())
                                    + ":" + to_string(nxtEdgeStack.size()));
         }
 
@@ -580,7 +580,7 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
         invalid_argument("Terminal String size could end up less than 1, limited at" + to_string(TermStrSize) +
                          ", please consider lessen the levels or number of partitions");
 
-    if (Levels == NOT_SET) throw invalid_argument("Consider set a Level value bigger than 0");
+    if (Levels == NOT_SET)  Logger::error_and_quit("Consider set a Level value bigger than 0");
 
 
     go_through_tree();
@@ -605,7 +605,6 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
     for (auto item : getHashShingles_ZZ()) {
         setPointers.push_back(new DataObject(item));
     }
-
     datum = setPointers;
     return true;
 }
@@ -654,6 +653,7 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
 
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncServer");
     if (!useExisting) {
+        cout<<"i should not be here"<<endl;
         commSync->commListen();
         RecvSyncParam(commSync);
     }
@@ -718,8 +718,10 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
 
 //    commSync->commSend(SYNC_SUCCESS);
 //    cout<<"Server Close"<<endl;
-    Logger::gLog(Logger::METHOD, "Server Set Of Content Done");
-    commSync->commClose();
+    if (!useExisting) {
+        Logger::gLog(Logger::METHOD, "Server Set Of Content Done");
+        commSync->commClose();
+    }
     return success;
 }
 
@@ -819,8 +821,10 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
 
 
 //    cout<<"Client Close"<<endl;
-    Logger::gLog(Logger::METHOD, "Client Set Of Content Done");
-    commSync->commClose();
+    if (!useExisting) {
+        Logger::gLog(Logger::METHOD, "Client Set Of Content Done");
+        commSync->commClose();
+    }
     return success;
 }
 
