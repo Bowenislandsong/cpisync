@@ -606,6 +606,7 @@ inline bool isFile(const string &path) {
             Logger::error_and_quit("Given path: " + path + " exist, but it is not a file nor directory");
     }
     Logger::error_and_quit("Given path: " + path + " does not exist.");
+    return false;
 }
 
 inline size_t getFileSize(const string &path) {
