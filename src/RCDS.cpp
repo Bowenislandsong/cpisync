@@ -69,8 +69,12 @@ bool RCDS::SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *
 
             if (mode == 2) {
                 Logger::gLog(Logger::METHOD, "We use full sync");
-                string content = scanTxtFromFile(FolderName + f_name, INT_MAX);
-                commSync->commSend((content.empty() ? "$" : content));
+                if (Quota_mode) {
+                    commSync->commSend((long) getFileSize(FolderName + f_name));
+                } else {
+                    string content = scanTxtFromFile(FolderName + f_name, INT_MAX);
+                    commSync->commSend((content.empty() ? "$" : content));
+                }
             } else if (mode == 1) {
                 Logger::gLog(Logger::METHOD, "We use RCDS");
                 int levels = (int) floor(log10(getFileSize(FolderName + f_name)));
@@ -134,10 +138,12 @@ bool RCDS::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *
             if (mode == 2) {
                 cout << "Using Full Sync" << endl;
                 Logger::gLog(Logger::METHOD, "We use full sync");
-
-                string content = commSync->commRecv_string();
-                if (!Quota_mode)
+                if (Quota_mode) { // quota mode, full sync data transfer is only going to take time.
+                    commSync->addRecvBytesQuote(commSync->commRecv_long());
+                } else {
+                    string content = commSync->commRecv_string();
                     writeStrToFile(FolderName + f_name, (content == "$" ? "" : content));
+                }
             } else if (mode == 1) {
                 cout << "Using RCDS" << endl;
                 Logger::gLog(Logger::METHOD, "We use RCDS");
@@ -167,7 +173,8 @@ bool RCDS::stringSyncServer(const shared_ptr<Communicant> &commSync, string absf
     return true;
 }
 
-string RCDS::stringSyncClient(const shared_ptr<Communicant> &commSync, string absfilename, int level, int partition) {
+string
+RCDS::stringSyncClient(const shared_ptr<Communicant> &commSync, string absfilename, int level, int partition) {
     shared_ptr<SyncMethod> stringHost = make_shared<SetsOfContent>(baseSyncProtocol, level, partition);
     vector<DataObject *> Elems;
     list<DataObject *> selfMinusOther, otherMinusSelf, strelems;
