@@ -15,14 +15,14 @@ void SetsOfContentTest::SelfUnitTest() {
     clock_t start_t = clock();
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::RCDS).
-            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
+            setProtocol(GenSync::SyncProtocol::CPISync).
             setComm(GenSync::SyncComm::socket).
             setPort(8001).
             build();
 
     GenSync Bob = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::RCDS).
-            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
+            setProtocol(GenSync::SyncProtocol::CPISync).
             setComm(GenSync::SyncComm::socket).
             setPort(8001).
             build();
