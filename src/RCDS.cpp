@@ -66,7 +66,7 @@ bool RCDS::SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *
             if (mode == 1 and getFileSize(FolderName + f_name) < 500) {
                 commSync->commSend(SYNC_FAIL_FLAG);
                 mode = 2;
-            } else {
+            } else if (mode == 1) {
                 commSync->commSend(SYNC_OK_FLAG);// check file size
             }
 
