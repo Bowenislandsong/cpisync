@@ -58,6 +58,7 @@ private:
             setHost = make_shared<InterCPISync>(5, elem_size * 8, 64, 3, true);
         else if (GenSync::SyncProtocol::CPISync == baseSyncProtocol)
             setHost = make_shared<ProbCPISync>(mbar, elem_size * 8, 64, true);
+        setHost = make_shared<InterCPISync>(5, elem_size * 8, 64, 3, true);
     }
 
     bool setReconClient(const shared_ptr<Communicant> &commSync, long mbar, size_t elem_size,

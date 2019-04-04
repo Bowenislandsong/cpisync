@@ -8,21 +8,21 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 void SetsOfContentTest::SelfUnitTest() {
 
 
-    string old_version = "/Users/bowen/Desktop/old/linux/";
-    string new_version = "/Users/bowen/Desktop/new/linux/";
+    string old_version = "/Users/bowen/Desktop/old/jaeger/";
+    string new_version = "/Users/bowen/Desktop/new/jaeger/";
 
 
     clock_t start_t = clock();
     GenSync Alice = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::RCDS).
-            setProtocol(GenSync::SyncProtocol::CPISync).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setPort(8001).
             build();
 
     GenSync Bob = GenSync::Builder().
             setStringProto(GenSync::StringSyncProtocol::RCDS).
-            setProtocol(GenSync::SyncProtocol::CPISync).
+            setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
             setComm(GenSync::SyncComm::socket).
             setPort(8001).
             build();
