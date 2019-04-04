@@ -63,9 +63,12 @@ bool RCDS::SyncServer(const shared_ptr<Communicant> &commSync, list<DataObject *
             int mode = 0;
             (commSync->commRecv_byte() == SYNC_OK_FLAG) ? mode = 1 : mode = 2;
 
-            if (mode == 1)
-                (getFileSize(FolderName + f_name) < 500 ? commSync->commSend(SYNC_FAIL_FLAG) : commSync->commSend(
-                        SYNC_OK_FLAG));// check file size
+            if (mode == 1 and getFileSize(FolderName + f_name) < 500) {
+                commSync->commSend(SYNC_FAIL_FLAG);
+                mode = 2;
+            } else {
+                commSync->commSend(SYNC_OK_FLAG);// check file size
+            }
 
             if (mode == 2) {
                 Logger::gLog(Logger::METHOD, "We use full sync");
@@ -133,7 +136,7 @@ bool RCDS::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *
                 mode = 2;
             }
 
-            if (mode == 1 and commSync->commRecv_byte() == SYNC_FAIL_FLAG)mode = 2;
+            if (mode == 1 and commSync->commRecv_byte() == SYNC_FAIL_FLAG) mode = 2;
 
             if (mode == 2) {
                 cout << "Using Full Sync" << endl;
