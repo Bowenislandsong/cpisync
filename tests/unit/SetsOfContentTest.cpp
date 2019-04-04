@@ -8,8 +8,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 void SetsOfContentTest::SelfUnitTest() {
 
 
-    string old_version = "/Users/bowen/Desktop/old/kubernetes/";
-    string new_version = "/Users/bowen/Desktop/new/kubernetes/";
+    string old_version = "/Users/bowen/Desktop/old/linux/";
+    string new_version = "/Users/bowen/Desktop/new/linux/";
 
 
     clock_t start_t = clock();

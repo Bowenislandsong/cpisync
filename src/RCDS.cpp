@@ -134,6 +134,7 @@ bool RCDS::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *
             if (mode == 2) {
                 cout << "Using Full Sync" << endl;
                 Logger::gLog(Logger::METHOD, "We use full sync");
+
                 string content = commSync->commRecv_string();
                 if (!Quota_mode)
                     writeStrToFile(FolderName + f_name, (content == "$" ? "" : content));
