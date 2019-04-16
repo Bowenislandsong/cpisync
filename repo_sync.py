@@ -21,6 +21,7 @@ class rsync_sync:
         self.recv = 0
         self.timeGen = 0
         self.timeTrans = 0
+        self.total_size = 0
     
     def get_costs(self):
         s_res = self.res.split('\n')
@@ -33,7 +34,9 @@ class rsync_sync:
                 self.xmit = s[len('Total bytes sent: '):]
             elif s.startswith('Total bytes received: '):
                 self.recv = s[len('Total bytes received: '):]
-        return [str(self.timeGen + self.timeTrans), str(self.xmit + self.recv)]
+            elif s.startswith('Total file size: '):
+                self.total_size = s[len('Total file size: '):].split(' ')[0]
+        return [str(self.timeGen + self.timeTrans), str(self.xmit + self.recv), self.total_size]
 
 
 class RCDS_sync:
@@ -113,9 +116,9 @@ def sync(repo_name):
     folder_name = repo_name[repo_name.find("/")+1:]
     new_path = os.environ['HOME']+"/Desktop/new/"+folder_name
     old_path = os.environ['HOME']+"/Desktop/old/"+folder_name
-    [RCDS_time, RCDS_comm] = RCDS_sync(old_path,new_path).get_costs()
-    [r_time, r_comm] = rsync_sync(old_path,new_path).get_costs()
-    return RCDS_time, RCDS_comm, r_time, r_comm
+    [RCDS_time, RCDS_comm] = RCDS_sync(new_path,old_path).get_costs()
+    [r_time, r_comm, total_size] = rsync_sync(new_path,old_path).get_costs()
+    return RCDS_time, RCDS_comm, r_time, r_comm, total_size
     
 
 def waitlist():
@@ -138,10 +141,10 @@ def waitlistRM(repo_name):
     fwrite.close()
 
 #Repo Name, latest version, laste second version, RCDS_comm, RCDS_time, rsync_comm, rsync_time, RCDS_is_Better
-def report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm):
-    print([repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm])
+def report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size):
+    print([repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size])
     res = open("sync_repo_result.txt","a")
-    res.write([repo,old_v,new_v,str(RCDS_time), str(RCDS_comm), str(r_time), str(r_comm) , str(RCDS_comm<r_comm)]+"\n")
+    res.write(repo + " " + old_v + " " + new_v + " " + str(RCDS_time) + " " +  str(RCDS_comm) + " " +  str(r_time) + " " +  str(r_comm)  + " " + str(total_size)+" "+  str(RCDS_comm<r_comm)+"\n")
     res.close()
     
 
@@ -155,8 +158,8 @@ if __name__=="__main__":
                 waitlistRM(repo)
                 continue
             print("We cloned: "+repo)
-            RCDS_time, RCDS_comm, r_time, r_comm = sync(repo)
-            report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm)
+            RCDS_time, RCDS_comm, r_time, r_comm, total_size = sync(repo)
+            report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size)
             deleteRepo(repo)
             waitlistRM(repo)
     # repos = searchRepo("repositories?q=stars:>10&sort=stars&order=desc")
