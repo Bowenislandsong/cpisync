@@ -4,7 +4,7 @@
 
 #include "SCSync.h"
 
-commandline_interface::commandline_interface() : STR_RECON_PROTO(GenSync::StringSyncProtocol::SetsOfContent),
+commandline_interface::commandline_interface() : STR_RECON_PROTO(GenSync::StringSyncProtocol::RCDS),
                                                  SET_RECON_PROTO(GenSync::SyncProtocol::CPISync),
                                                  isMute(false), canSync(true) {
     param.lvl = NOT_SET;
@@ -39,9 +39,10 @@ void commandline_interface::Sync() {
 
         GenSync mySync = GenSync::Builder().
                 setStringProto(GenSync::StringSyncProtocol::RCDS).
-                setProtocol(GenSync::SyncProtocol::InteractiveCPISync).
+                setProtocol(SET_RECON_PROTO).
                 setComm(GenSync::SyncComm::socket).
-                setPort(8001).
+//                setHost(param.host_name).
+                setPort(param.port).
                 build();
 
 
@@ -56,6 +57,7 @@ void commandline_interface::Sync() {
             start_time = clock();
             Logger::gLog(Logger::COMM, "created a server process");
             success = mySync.listenSync(0, false); // src
+
         } else {
 
             start_time = clock();
@@ -71,8 +73,7 @@ void commandline_interface::Sync() {
             cout << "Number of Bytes Received: " << bytesRTot << endl;
 //            if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent)
 //                cout << "Literal Data Transferred in Bytes: " << mySync.getCustomResult("Literal comm") << endl;
-            cout << "Time spent on preparation (Partition Tree):" << str_time << endl;
-            cout << "Time spent on reconciliation: " << totalTime << endl;
+            cout << "Time spent on preparation (Partition Tree): " << str_time << endl;
 
 //            if (success) {
 //
@@ -84,6 +85,7 @@ void commandline_interface::Sync() {
 //                cout << "Set Recon Failed, File NOT Synchronized." << endl;
 
             cout << "\n" << "Total Number of Bytes Communicated: " << bytesXTot + bytesRTot << endl;
+            cout << "Total Time Elapsed: " << totalTime << endl;
 
         }
         delete path_pt;

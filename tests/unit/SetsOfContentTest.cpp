@@ -9,7 +9,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SetsOfContentTest);
 
 void SetsOfContentTest::SelfUnitTest() {
 
-    cloneRepo("vuejs/vue","User/bowensong/Desktop/old","2");
+
     string old_version = "/Users/bowen/Desktop/old/jaeger/";
     string new_version = "/Users/bowen/Desktop/new/jaeger/";
 

@@ -574,7 +574,7 @@ inline string scanTxtFromFile(string dir, int len) {
         }
         myfile.close();
     } else {
-        Logger::error_and_quit("Directory " + dir + " does not exist.-");
+        Logger::error_and_quit("Directory: " + dir + " does not exist.");
     }
     return txt.str();
 }

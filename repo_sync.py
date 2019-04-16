@@ -33,29 +33,24 @@ class rsync_sync:
                 self.xmit = s[len('Total bytes sent: '):]
             elif s.startswith('Total bytes received: '):
                 self.recv = s[len('Total bytes received: '):]
-        return [self.timeGen + self.timeTrans, self.xmit + self.recv]
+        return [str(self.timeGen + self.timeTrans), str(self.xmit + self.recv)]
 
 
 class RCDS_sync:
     def __init__(self,org_fname,ed_fname):
-        self.res = subprocess.check_output(["rsync", "-v", "--stats", "--progress", org_fname, ed_fname]).decode("utf-8")
-        self.xmit = 0
-        self.recv = 0
-        self.timeGen = 0
-        self.timeTrans = 0
+        self.res = subprocess.check_output(["./SCSync", "-intercpi", org_fname, ed_fname]).decode("utf-8")
+        self.time = 0
+        self.comm = 0
     
     def get_costs(self):
         s_res = self.res.split('\n')
         for s in s_res:
-            if s.startswith('File list generation time: '):
-                self.timeGen = s[len('File list generation time: '):].split(' ')[0]
-            elif s.startswith('File list transfer time: '):
-                self.timeTrans = s[len('File list transfer time: '):].split(' ')[0]
-            elif s.startswith('Total bytes sent: '):
-                self.xmit = s[len('Total bytes sent: '):]
-            elif s.startswith('Total bytes received: '):
-                self.recv = s[len('Total bytes received: '):]
-        return [self.timeGen + self.timeTrans, self.xmit + self.recv]
+            if s.startswith('Total Number of Bytes Communicated: '):
+                self.comm = s[len('Total Number of Bytes Communicated: '):]
+            elif s.startswith('Total Time Elapsed: '):
+                self.time = s[len('Total Time Elapsed: '):]
+
+        return [str(self.time), str(self.comm)]
 
 
 # clone
@@ -130,11 +125,23 @@ def waitlist():
         list.append(str(name.strip('\n')))
     return list
 
+def waitlistRM(repo_name):
+    list = []
+    rfile = open("waitlist.txt","r")
+    for name in rfile.readlines():
+        if str(name.strip('\n')) != repo_name:
+            list.append(str(name))
+    rfile.close()
+    wfile = open("waitlist.txt","w")
+    for name in list:
+        fwrite.write(name)
+    fwrite.close()
+
 #Repo Name, latest version, laste second version, RCDS_comm, RCDS_time, rsync_comm, rsync_time, RCDS_is_Better
 def report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm):
     print([repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm])
     res = open("sync_repo_result.txt","a")
-    res.writelines([repo,old_v,new_v,str(RCDS_time), str(RCDS_comm), str(r_time), str(r_comm) , str(RCDS_comm<r_comm)]+"\n")
+    res.write([repo,old_v,new_v,str(RCDS_time), str(RCDS_comm), str(r_time), str(r_comm) , str(RCDS_comm<r_comm)]+"\n")
     res.close()
     
 
@@ -145,11 +152,13 @@ if __name__=="__main__":
         for repo in waitlist():
             iscloned,old_v,new_v = cloneRepo(repo)
             if (not iscloned):
+                waitlistRM(repo)
                 continue
             print("We cloned: "+repo)
             RCDS_time, RCDS_comm, r_time, r_comm = sync(repo)
             report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm)
             deleteRepo(repo)
+            waitlistRM(repo)
     # repos = searchRepo("repositories?q=stars:>10&sort=stars&order=desc")
 
     # for repo in data:

@@ -90,23 +90,22 @@ public:
     };
 
     void parse_path(string path) {
+
         if (path.find(":") != string::npos) { //it is on remote host
             param.host_name = path.substr(0, path.find(":")); // assume there is only one remote host
             path = path.substr(path.find(":") + 1);
-            cout << "remote host addr:" << param.host_name << endl;
+            cout << "remote host addr: " << param.host_name << endl;
         } else { param.host_name = "localhost"; }
 
-        if (!isValidFile(path)) {
-            canSync = false;
-            error_msg = "Invalid destination path";
-        } else {
-            param.file_path = path;
-        }
+
+        param.file_path = path;
+
+
     }
 
     void cmdCall(vector<string> flags) {
-        string dest = "SCSync -role=1 "; // dest is 1
-        string src = "SCSync -role=0 "; // src is 0
+        string dest = "/Users/bowen/Documents/cpisync/SCSync -role=1 "; // dest is 1
+        string src = "/Users/bowen/Documents/cpisync/SCSync -role=0 "; // src is 0
         for (string f : flags) {
             dest += f + " ";
             src += f + " ";
@@ -117,9 +116,8 @@ public:
         src += param.remoteHost_src + ":";
         src += src_path;
 
-        if (param.remoteHost_src!="localhost") src = "ssh " + param.remoteHost_src + " " + src;
-        if (param.remoteHost_dest!="localhost") dest = "ssh " + param.remoteHost_dest + " " + dest;
-
+        if (param.remoteHost_src != "localhost") src = "ssh " + param.remoteHost_src + " " + src;
+        if (param.remoteHost_dest != "localhost") dest = "ssh " + param.remoteHost_dest + " " + dest;
         pid_t pID = fork();
         if (pID == 0) system(dest.c_str());
         else if (pID > 0) {
@@ -171,8 +169,8 @@ private:
     // check if it is txt file
     bool isValidFile(const string &path) {
         try {
-            isFile(path);
-        }catch (exception &e){
+            isPathExist(path);
+        } catch (exception &e) {
             return false;
         }
         return true;
@@ -192,28 +190,30 @@ int main(int argc, char *argv[]) {
     // ---- SCSync [-flags] [remote]:<src> [remote]:<dest>
 
     // split into two cmds for src and dest 
-    // ---- SCSync -role=<src or dest> [-flags] [remote]:<src> [remote]:<dest>
+    // ---- SCSync -role=<src 0 or dest 1> [-flags] [remote]:<src> [remote]:<dest>
 
     commandline_interface cli;
     if (string(argv[1]).substr(0, 5) == "-role") { // split cmd
         for (int i = 1; i < argc - 1; ++i) { // last one is either src or dest address
             cli.parse_arg(cli.getTag(string(argv[i])));
         }
-
         cli.parse_path(argv[argc - 1]);
         cli.Sync();
     } else if (string(argv[1]) == "-h") {
         cli.help();
 
     } else {// main command
+
         vector<string> flags;
         for (int i = 1; i < argc - 2; ++i) { // last two are src and dest address
             flags.push_back(string(argv[i]));
         }
+
         cli.addSRC(string(argv[argc - 2]));
         cli.addDST(string(argv[argc - 1]));
         cli.cmdCall(flags);
-    }
+
+    };
     return 0;
 }
 
