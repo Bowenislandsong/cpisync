@@ -2,34 +2,157 @@
 # check if there are two release versions
 # Download Repo (both release versions)
 # RCDS quota then Rsync
-# record: (Repo Name, latest version, laste second version, RCDS_comm, RCDS_time, rsync_comm, rsync_time, url)
+# record: (Repo Name, latest version, laste second version, RCDS_comm, RCDS_time, rsync_comm, rsync_time, RCDS_is_Better)
 
 
 from github import Github
+import requests
+import git
+import json
+import os
+import shutil
+import subprocess
 
-class repo:
-    def __init__(self,cred):
-        self.g = Github(cred)
 
-    # Search Top repos
-    def searchRepo(self,search_it):
-        repositories = set()
-        content_files = self.g.search_code(query=search_it)
-        for content in content_files:
-            repositories.add(content.repository.full_name)
-            rate_limit = self.g.get_rate_limit()
-            if rate_limit.search.remaining == 0 or len(repositories)>5:
-                break
-        return repositories
-        
-    def releaseVer(repo_name):
-        addr = "www.github.com/"+repo_name
+class rsync_sync:
+    def __init__(self,org_fname,ed_fname):
+        self.res = subprocess.check_output(["rsync", "-v", "--stats", "--progress", org_fname, ed_fname]).decode("utf-8")
+        self.xmit = 0
+        self.recv = 0
+        self.timeGen = 0
+        self.timeTrans = 0
+    
+    def get_costs(self):
+        s_res = self.res.split('\n')
+        for s in s_res:
+            if s.startswith('File list generation time: '):
+                self.timeGen = s[len('File list generation time: '):].split(' ')[0]
+            elif s.startswith('File list transfer time: '):
+                self.timeTrans = s[len('File list transfer time: '):].split(' ')[0]
+            elif s.startswith('Total bytes sent: '):
+                self.xmit = s[len('Total bytes sent: '):]
+            elif s.startswith('Total bytes received: '):
+                self.recv = s[len('Total bytes received: '):]
+        return [self.timeGen + self.timeTrans, self.xmit + self.recv]
+
+
+class RCDS_sync:
+    def __init__(self,org_fname,ed_fname):
+        self.res = subprocess.check_output(["rsync", "-v", "--stats", "--progress", org_fname, ed_fname]).decode("utf-8")
+        self.xmit = 0
+        self.recv = 0
+        self.timeGen = 0
+        self.timeTrans = 0
+    
+    def get_costs(self):
+        s_res = self.res.split('\n')
+        for s in s_res:
+            if s.startswith('File list generation time: '):
+                self.timeGen = s[len('File list generation time: '):].split(' ')[0]
+            elif s.startswith('File list transfer time: '):
+                self.timeTrans = s[len('File list transfer time: '):].split(' ')[0]
+            elif s.startswith('Total bytes sent: '):
+                self.xmit = s[len('Total bytes sent: '):]
+            elif s.startswith('Total bytes received: '):
+                self.recv = s[len('Total bytes received: '):]
+        return [self.timeGen + self.timeTrans, self.xmit + self.recv]
+
+
+# clone
+#  * check if we have done this repo
+#  * check if it is popular star > 100
+#  * check if it has at least 2 releases
+#  * clone 2 releases (last two)
+def getRepos(input_file):
+    repo_list = []
+    repos = json.load(open(input_file))
+    if len(repos)==0:
+        return repo_list
+    for repo in repos["items"]:
+        if repo["stargazers_count"] > 100 or repo["watchers_count"] > 100:
+            repo_list.append(str(repo["full_name"]))
+    writeWaitList(repo_list)
+    json.dump({},open(input_file,'w'))
+    return repo_list
+
+def writeWaitList(repo_list):
+    repo_set = set(repo_list)
+    old_set = set()
+    rfile = open("waitlist.txt","r")
+    for name in rfile.readlines():
+        old_set.add(str(name.strip('\n')))
+    repo_set = repo_set.difference(old_set)
+    fwrite = open("waitlist.txt",'a')
+    for repo_name in repo_set:
+        fwrite.write(repo_name+"\n")
+    fwrite.close()
+
+def cloneRepo(repo_name):
+    folder_name = repo_name[repo_name.find("/")+1:]
+    git.Git(os.environ['HOME']+"/Desktop/new").clone("https://github.com/"+repo_name+".git")
+
+    repo = git.Repo(os.environ['HOME']+"/Desktop/new/"+folder_name)
+    tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+    if len(tags)<2:
+        shutil.rmtree(os.environ['HOME']+"/Desktop/new/"+folder_name,True)
+        return False, "",""
+    tag_new = tags[-1]
+    tag_old = tags[-2]
+
+    g = git.Git(os.environ['HOME']+"/Desktop/new/"+folder_name)
+    g.checkout(tag_new)
+
+    git.Git(os.environ['HOME']+"/Desktop/old").clone("https://github.com/"+repo_name+".git")
+    g = git.Git(os.environ['HOME']+"/Desktop/old/"+folder_name)
+    g.checkout(tag_old)
+
+    return True, tag_old, tag_new
+
+def deleteRepo(repo_name):
+    folder_name = repo_name[repo_name.find("/")+1:]
+    shutil.rmtree(os.environ['HOME']+"/Desktop/new/"+folder_name,True)
+    shutil.rmtree(os.environ['HOME']+"/Desktop/old/"+folder_name,True)
+
+
+def sync(repo_name):
+    folder_name = repo_name[repo_name.find("/")+1:]
+    new_path = os.environ['HOME']+"/Desktop/new/"+folder_name
+    old_path = os.environ['HOME']+"/Desktop/old/"+folder_name
+    [RCDS_time, RCDS_comm] = RCDS_sync(old_path,new_path).get_costs()
+    [r_time, r_comm] = rsync_sync(old_path,new_path).get_costs()
+    return RCDS_time, RCDS_comm, r_time, r_comm
+    
+
+def waitlist():
+    list = []
+    rfile = open("waitlist.txt","r")
+    for name in rfile.readlines():
+        list.append(str(name.strip('\n')))
+    return list
+
+#Repo Name, latest version, laste second version, RCDS_comm, RCDS_time, rsync_comm, rsync_time, RCDS_is_Better
+def report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm):
+    print([repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm])
+    res = open("sync_repo_result.txt","a")
+    res.writelines([repo,old_v,new_v,str(RCDS_time), str(RCDS_comm), str(r_time), str(r_comm) , str(RCDS_comm<r_comm)]+"\n")
+    res.close()
+    
 
 
 if __name__=="__main__":
-    r = repo('418bab5f9af51e73c07de6eb163fecd81ea83e72')
-    repos = r.searchRepo('discover')
-    for repo in repos:
-        print(repo)
+    while True:
+        getRepos("sample_json.json")
+        for repo in waitlist():
+            iscloned,old_v,new_v = cloneRepo(repo)
+            if (not iscloned):
+                continue
+            print("We cloned: "+repo)
+            RCDS_time, RCDS_comm, r_time, r_comm = sync(repo)
+            report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm)
+            deleteRepo(repo)
+    # repos = searchRepo("repositories?q=stars:>10&sort=stars&order=desc")
+
+    # for repo in data:
+        # print(repo)
         # if(releaseVer(repo)):
             # print(releaseVer(repo))

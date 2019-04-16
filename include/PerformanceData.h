@@ -12,7 +12,7 @@
 #include <fstream>
 #include <numeric>
 #include <thread>
-
+#include <git2.h>
 
 static multiset<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_size) {
 
@@ -41,6 +41,29 @@ static multiset<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win
     }
 
     return multiset<size_t>(mins.begin(), mins.end());
+}
+
+/**
+ * check if we have done this repo
+ * check if it is popular star > 100
+ * check if it has at least 2 releases
+ * clone 2 releases (last two)
+ * @param repo_name
+ * @return
+ */
+static bool cloneRepo(string repo_name, string local_path, const string version){
+    repo_name = "https://https://github.com/"+repo_name+".git";
+    git_libgit2_init();
+    git_repository *repo = NULL;
+    git_clone(&repo, repo_name.c_str(), local_path.c_str(), NULL);
+    git_checkout_options opts = GIT_CHECKOUT_OPTIONS_INIT;
+    git_strarray tags = {0};
+    int error = git_tag_list(&tags, repo);
+    git_index *idx = NULL;
+    error = git_repository_index(&idx, repo);
+    error = git_checkout_index(repo, idx, &opts);
+
+    git_libgit2_shutdown();
 }
 
 
