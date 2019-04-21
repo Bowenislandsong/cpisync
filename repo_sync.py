@@ -16,7 +16,7 @@ import subprocess
 
 class rsync_sync:
     def __init__(self,org_fname,ed_fname):
-        self.res = subprocess.check_output(["rsync", "-v", "--stats", "--progress", org_fname, ed_fname]).decode("utf-8")
+        self.res = subprocess.check_output(["rsync", "-r", "--checksum", "--no-whole-file", "--stats", org_fname+"/", ed_fname+"/"]).decode("utf-8")
         self.xmit = 0
         self.recv = 0
         self.timeGen = 0
@@ -36,12 +36,11 @@ class rsync_sync:
                 self.recv = s[len('Total bytes received: '):]
             elif s.startswith('Total file size: '):
                 self.total_size = s[len('Total file size: '):].split(' ')[0]
-        return [str(self.timeGen + self.timeTrans), str(self.xmit + self.recv), self.total_size]
-
+        return [str(float(self.timeGen) + float(self.timeTrans)), str(int(self.xmit) + int(self.recv)), str(self.total_size)]
 
 class RCDS_sync:
     def __init__(self,org_fname,ed_fname):
-        self.res = subprocess.check_output(["./SCSync", "-intercpi", org_fname, ed_fname]).decode("utf-8")
+        self.res = subprocess.check_output(["./SCSync", "-cpi", org_fname, ed_fname]).decode("utf-8")
         self.time = 0
         self.comm = 0
     
@@ -90,7 +89,10 @@ def cloneRepo(repo_name):
     git.Git(os.environ['HOME']+"/Desktop/new").clone("https://github.com/"+repo_name+".git")
 
     repo = git.Repo(os.environ['HOME']+"/Desktop/new/"+folder_name)
-    tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+    try:
+        tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+    except:
+        return False, "",""
     if len(tags)<2:
         shutil.rmtree(os.environ['HOME']+"/Desktop/new/"+folder_name,True)
         return False, "",""
@@ -137,14 +139,14 @@ def waitlistRM(repo_name):
     rfile.close()
     wfile = open("waitlist.txt","w")
     for name in list:
-        fwrite.write(name)
-    fwrite.close()
+        wfile.write(name)
+    wfile.close()
 
 #Repo Name, latest version, laste second version, RCDS_comm, RCDS_time, rsync_comm, rsync_time, RCDS_is_Better
 def report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size):
     print([repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size])
     res = open("sync_repo_result.txt","a")
-    res.write(repo + " " + old_v + " " + new_v + " " + str(RCDS_time) + " " +  str(RCDS_comm) + " " +  str(r_time) + " " +  str(r_comm)  + " " + str(total_size)+" "+  str(RCDS_comm<r_comm)+"\n")
+    res.write(str(repo) + " " + str(old_v) + " " + str(new_v) + " " + str(RCDS_time) + " " +  str(RCDS_comm) + " " +  str(r_time) + " " +  str(r_comm)  + " " + str(total_size)+" "+  str(int(RCDS_comm)<int(r_comm))+"\n")
     res.close()
     
 
