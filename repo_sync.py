@@ -12,7 +12,7 @@ import json
 import os
 import shutil
 import subprocess
-
+import time
 
 class rsync_sync:
     def __init__(self,org_fname,ed_fname):
@@ -73,11 +73,20 @@ def getRepos(input_file):
     return repo_list
 
 def writeWaitList(repo_list):
+    '''avoid duplicating from wait list of result list'''
     repo_set = set(repo_list)
     old_set = set()
+    
     rfile = open("waitlist.txt","r")
     for name in rfile.readlines():
         old_set.add(str(name.strip('\n')))
+    rfile.close()
+    
+    rfile = open("sync_repo_result.txt","r")
+    for name in rfile.readlines():
+        old_set.add(str(name.split(" ")[0]))
+    rfile.close()
+    
     repo_set = repo_set.difference(old_set)
     fwrite = open("waitlist.txt",'a')
     for repo_name in repo_set:
@@ -149,24 +158,38 @@ def report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size):
     res.write(str(repo) + " " + str(old_v) + " " + str(new_v) + " " + str(RCDS_time) + " " +  str(RCDS_comm) + " " +  str(r_time) + " " +  str(r_comm)  + " " + str(total_size)+" "+  str(int(RCDS_comm)<int(r_comm))+"\n")
     res.close()
     
+def searchRepo(last_page=1):
+    # time.sleep(1)
+    oath = subprocess.check_output(["curl", "-H", "Authorization: token ", "https://api.github.com"])
+    repo_set = set()
+    r = requests.get('https://api.github.com/repositories?since='+last_id)
+    res = r.json()
+    with open('sample_json.json', 'w') as outfile:
+        json.dump(res, outfile)
+    # print(res)
+    print(res["items"][])
 
+    fwrite = open("waitlist.txt",'a')
+    for repo_name in repo_set:
+        fwrite.write(repo_name+"\n")
+    fwrite.close()
+
+https://api.github.com/search/repositories?q=a&sort=stars&order=desc&per_page=100&page=2
 
 if __name__=="__main__":
     while True:
-        getRepos("sample_json.json")
-        for repo in waitlist():
-            iscloned,old_v,new_v = cloneRepo(repo)
-            if (not iscloned):
-                waitlistRM(repo)
-                continue
-            print("We cloned: "+repo)
-            RCDS_time, RCDS_comm, r_time, r_comm, total_size = sync(repo)
-            report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size)
-            deleteRepo(repo)
-            waitlistRM(repo)
-    # repos = searchRepo("repositories?q=stars:>10&sort=stars&order=desc")
+        last_id = searchRepo(str(last_id))
+        print(last_id)
+        # getRepos("sample_json.json")
+        break
+        # for repo in waitlist():
+        #     iscloned,old_v,new_v = cloneRepo(repo)
+        #     if (not iscloned):
+        #         waitlistRM(repo)
+        #         continue
+        #     print("We cloned: "+repo)
+        #     RCDS_time, RCDS_comm, r_time, r_comm, total_size = sync(repo)
+        #     report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size)
+        #     deleteRepo(repo)
+        #     waitlistRM(repo)
 
-    # for repo in data:
-        # print(repo)
-        # if(releaseVer(repo)):
-            # print(releaseVer(repo))
