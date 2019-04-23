@@ -72,9 +72,9 @@ def getRepos(input_file):
     json.dump({},open(input_file,'w'))
     return repo_list
 
-def writeWaitList(repo_list):
+def writeWaitList(repo):
     '''avoid duplicating from wait list of result list'''
-    repo_set = set(repo_list)
+
     old_set = set()
     
     rfile = open("waitlist.txt","r")
@@ -87,11 +87,10 @@ def writeWaitList(repo_list):
         old_set.add(str(name.split(" ")[0]))
     rfile.close()
     
-    repo_set = repo_set.difference(old_set)
-    fwrite = open("waitlist.txt",'a')
-    for repo_name in repo_set:
-        fwrite.write(repo_name+"\n")
-    fwrite.close()
+    if repo not in old_set:
+        fwrite = open("waitlist.txt",'a')
+        fwrite.write(repo+"\n")
+        fwrite.close()
 
 def cloneRepo(repo_name):
     folder_name = repo_name[repo_name.find("/")+1:]
@@ -157,20 +156,31 @@ def report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size):
     res = open("sync_repo_result.txt","a")
     res.write(str(repo) + " " + str(old_v) + " " + str(new_v) + " " + str(RCDS_time) + " " +  str(RCDS_comm) + " " +  str(r_time) + " " +  str(r_comm)  + " " + str(total_size)+" "+  str(int(RCDS_comm)<int(r_comm))+"\n")
     res.close()
+
+def update(entire_json):
+    for i in range(len(entire_json["items"])):
+        release_url = entire_json["items"][i]["releases_url"].strip("{/id}")
+        r = requests.get(release_url)
+        json_res = r.json()
+        print(json_res)
+        if len(json_res)>= 2:
+            print(str(entire_json["items"][i]["full_name"]))
+            writeWaitList(str(entire_json["items"][i]["full_name"]))
     
 def searchRepo(key_word):
-    time.sleep(1)
+    # time.sleep(1)
     # oath = subprocess.check_output(["curl", "-H", "Authorization: token ", "https://api.github.com"])
     repo_set = set()
     # r = requests.get('https://api.github.com/repositories?since='+last_id)
     r = requests.get('https://api.github.com/search/repositories?q='+key_word+'&sort=stars&order=desc&per_page=100&page=1')
     res = r.json()
-    
+    update(res)
+    print(res["total_count"])
     if int(res["total_count"])<1000:
         return
     for i in range(2,11):
         r = requests.get('https://api.github.com/search/repositories?q='+key_word+'&sort=stars&order=desc&per_page=100&page='+str(i))
-    res = r.json()
+        update(r.json())
     with open('sample_json.json', 'w') as outfile:
         json.dump(res, outfile)
     # print(res)
@@ -181,12 +191,7 @@ def searchRepo(key_word):
         fwrite.write(repo_name+"\n")
     fwrite.close()
 
-def update(entire_json):
-    for i in range(len(entire_json["items"])):
-        release_url = json_res["items"][i]["releases_url"].strip("{/id}")
-        r = requests.get(release_url)
-        if len(r.json())>= 2:
-            writeWaitList(json_res["items"][i]["full_name"])
+
 
 
 
