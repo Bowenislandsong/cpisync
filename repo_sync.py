@@ -14,9 +14,15 @@ import shutil
 import subprocess
 import time
 
+Outh=("Bowenislandsong","ec7a1fc0cf69004f0276b6fe4e869fe237b003d0")
+
+
 class rsync_sync:
     def __init__(self,org_fname,ed_fname):
-        self.res = subprocess.check_output(["rsync", "-r", "--checksum", "--no-whole-file", "--stats", org_fname+"/", ed_fname+"/"]).decode("utf-8")
+        try:
+            self.res = subprocess.check_output(["rsync", "-r", "--checksum", "--no-whole-file", "--stats", org_fname+"/", ed_fname+"/"],timeout=4000).decode("utf-8")
+        except:
+            self.res = ""
         self.xmit = 0
         self.recv = 0
         self.timeGen = 0
@@ -40,7 +46,10 @@ class rsync_sync:
 
 class RCDS_sync:
     def __init__(self,org_fname,ed_fname):
-        self.res = subprocess.check_output(["./SCSync", "-cpi", org_fname, ed_fname]).decode("utf-8")
+        try:
+            self.res = subprocess.check_output(["./SCSync", "-cpi", "-p=3" ,org_fname, ed_fname],timeout=4000).decode("utf-8")
+        except:
+            self.res = ""
         self.time = 0
         self.comm = 0
     
@@ -162,14 +171,10 @@ def update(entire_json):
         release_url = entire_json["items"][i]["releases_url"].strip("{/id}")
         r = requests.get(release_url,auth=Outh)
         json_res = r.json()
-        print(json_res)
-        print(len(json_res))
         if len(json_res)>= 2:
-            print(str(entire_json["items"][i]["full_name"]))
             writeWaitList(str(entire_json["items"][i]["full_name"]))
     
 def searchRepo(key_word):
-    time.sleep(1)
     repo_set = set()
     # r = requests.get('https://api.github.com/repositories?since='+last_id)
     r = requests.get('https://api.github.com/search/repositories?q='+key_word+'&sort=stars&order=desc&per_page=100&page=1',auth=Outh)
@@ -198,18 +203,23 @@ def searchRepo(key_word):
 
 if __name__=="__main__":
     while True:
-        for key_word in range(1000):
+        for key_word in range(1,1000):
             searchRepo(str(key_word))
         # getRepos("sample_json.json")
         # break
-            for repo in waitlist():
-                iscloned,old_v,new_v = cloneRepo(repo)
-                if (not iscloned):
+            while len(waitlist())>0:
+                try:
+                    repo = waitlist()[0]
                     waitlistRM(repo)
+                    iscloned,old_v,new_v = cloneRepo(repo)
+                    if (not iscloned):
+                        waitlistRM(repo)
+                        continue
+                    print("We cloned: "+repo)
+                    RCDS_time, RCDS_comm, r_time, r_comm, total_size = sync(repo)
+                    report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size)
+                    deleteRepo(repo)
+                except:
+                    print("We skipped one")
                     continue
-                print("We cloned: "+repo)
-                RCDS_time, RCDS_comm, r_time, r_comm, total_size = sync(repo)
-                report(repo,old_v,new_v,RCDS_time, RCDS_comm, r_time, r_comm, total_size)
-                deleteRepo(repo)
-                waitlistRM(repo)
 
