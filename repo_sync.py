@@ -14,8 +14,8 @@ import shutil
 import subprocess
 import time
 
-Outh=("Bowenislandsong","ec7a1fc0cf69004f0276b6fe4e869fe237b003d0")
-
+Outh=("Bowenislandsong","180eb3be625d0f6d414585f3b1f1f7ae33df7822")
+inst = 0
 
 class rsync_sync:
     def __init__(self,org_fname,ed_fname):
@@ -47,7 +47,7 @@ class rsync_sync:
 class RCDS_sync:
     def __init__(self,org_fname,ed_fname):
         try:
-            self.res = subprocess.check_output(["./SCSync", "-cpi", "-p=3" ,org_fname, ed_fname],timeout=4000).decode("utf-8")
+            self.res = subprocess.check_output(["./SCSync", "-intercpi", "-p="+str(inst) ,org_fname, ed_fname],timeout=4000).decode("utf-8")
         except:
             self.res = ""
         self.time = 0
@@ -202,9 +202,12 @@ def searchRepo(key_word):
 
 
 if __name__=="__main__":
+    inst = input("instance number, first one 1:")
+    inst = int(inst)
     while True:
         for key_word in range(1,1000):
-            searchRepo(str(key_word))
+            if(inst==1):
+                searchRepo(str(key_word))
         # getRepos("sample_json.json")
         # break
             while len(waitlist())>0:
