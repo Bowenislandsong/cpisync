@@ -31,11 +31,11 @@ void kshinglingTest::testAll() {
 
     // init a string of random byte (shortest,longest) possible string len
     string Alicetxt = randSampleTxt(50);  // generate a string, no longer than 1e4
-    Alicetxt = "katanatamasaka";
+//    Alicetxt = "katanatamasaka";
     //string Bobtxt = randStringEdit(Alicetxt,10);  // Generate a edited string
 
     clock_t t1 = clock();
-    int shingle_size = 2;//ceil(log2(Alicetxt.size()));
+    int shingle_size = ceil(log2(Alicetxt.size()));
     K_Shingle Alice = K_Shingle(shingle_size);
 
     auto cycle_num = Alice.inject(Alicetxt, true);
@@ -45,8 +45,6 @@ void kshinglingTest::testAll() {
     clock_t t2 = clock();
 
     cout << to_string(double(t2 - t1) / CLOCKS_PER_SEC) << endl;
-
-
     CPPUNIT_ASSERT(cycle_num > 0);
     CPPUNIT_ASSERT(Alice.getOriginString() == str and success);
     CPPUNIT_ASSERT(Alice.getShingles().size() > 0);

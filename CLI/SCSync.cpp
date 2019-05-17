@@ -4,14 +4,14 @@
 
 #include "SCSync.h"
 
-commandline_interface::commandline_interface() : STR_RECON_PROTO(GenSync::StringSyncProtocol::SetsOfContent),
+commandline_interface::commandline_interface() : STR_RECON_PROTO(GenSync::StringSyncProtocol::RCDS),
                                                  SET_RECON_PROTO(GenSync::SyncProtocol::CPISync),
                                                  isMute(false), canSync(true) {
     param.lvl = NOT_SET;
     param.par = NOT_SET;
     param.shingle_size = NOT_SET;
-    param.port = 8001;
-    param.remoteHost = "localhost";
+    param.port = 8010;
+    param.host_name = "localhost";
 }
 
 
@@ -26,90 +26,72 @@ void commandline_interface::help() {
             "Please find source Code at https://github.com/Bowenislandsong/cpisync " << endl;
     cout << "Usage : SCSync [OPTION] ... <SRC> ... <DEST>" << endl;
     cout << "Options" << endl;
-
 }
 
 void commandline_interface::Sync() {
     // check if all parameters are there
-
-
     if (!canSync and error_msg.empty()) help();
     else if (canSync and !error_msg.empty())
         cout << error_msg << " For how to use SCSync, use -h to show help." << endl;
-    else {
-        DataObject *Bob_txt = new DataObject(scanTxtFromFile(src_path, INT_MAX));
-        DataObject *Alice_txt = new DataObject(scanTxtFromFile(dst_path, INT_MAX));
+    else { // all good, let's sync
+        DataObject *path_pt = new DataObject(param.file_path);
 
-        bool backtrack = false;
-        // set the unset parameters;
-        if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent) {
-            if (param.lvl <= NOT_SET)
-                param.lvl = (int) floor(log10(max(Alice_txt->to_string().size(), Bob_txt->to_string().size())));
-            if (param.par <= NOT_SET)param.par = 4;
-            param.shingle_size = 2;
-        } else if (STR_RECON_PROTO == GenSync::StringSyncProtocol::kshinglingSync) {
-            if (param.shingle_size <= NOT_SET)
-                param.shingle_size = (int) floor(log2(max(Alice_txt->to_string().size(), Bob_txt->to_string().size())));
-            backtrack = true;
-        }
 
-        if(isSRC)
-
-        // get the strings inserted
         GenSync mySync = GenSync::Builder().
-                setStringProto(STR_RECON_PROTO).
+                setStringProto(GenSync::StringSyncProtocol::RCDS).
                 setProtocol(SET_RECON_PROTO).
                 setComm(GenSync::SyncComm::socket).
-                setTerminalStrSize(10).
-                setNumPartitions(param.par).
-                setHost(param.remoteHost).
-                setShingleLen(param.shingle_size).
-                setSpace(param.par * 2).
-                setlvl(param.lvl).
+//                setHost(param.host_name).
                 setPort(param.port).
                 build();
 
 
-            Bob.addStr(Bob_txt, false);
+
+        clock_t start_time = clock();
+
+        mySync.addStr(path_pt, false);
+
+        double str_time = (double) (clock() - start_time) / CLOCKS_PER_SEC;
+        bool success;
+        if (param.isSRC) {
+            start_time = clock();
             Logger::gLog(Logger::COMM, "created a server process");
-            Bob.listenSync(0, false);
+            success = mySync.listenSync(0, false); // src
 
-
-            clock_t start_time = clock();
-            Alice.addStr(Alice_txt, backtrack);
-            double str_time = (double) (clock() - start_time) / CLOCKS_PER_SEC;
+        } else {
 
             start_time = clock();
-            bool success = Alice.startSync(0, false);
-            double totalTime = (double) (clock() - start_time) / CLOCKS_PER_SEC;
-            long bytesRTot = Alice.getRecvBytesTot(0);
-            long bytesXTot = Alice.getXmitBytesTot(0);
-            wait(&child_state);
-            if (!isMute) {
-                cout << "Number of Bytes Transmitted: " << bytesXTot << endl;
-                cout << "Number of Bytes Received: " << bytesRTot << endl;
-                if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent)
-                    cout << "Literal Data Transferred in Bytes: " << Alice.getCustomResult("Literal comm") << endl;
-                cout << "Time spent on preparation (Partition Tree):" << str_time << endl;
-                cout << "Time spent on reconciliation: " << totalTime << endl;
-
-                if (success) {
-
-                    string new_file = Alice.dumpString()->to_string();
-                    cout << "Set Recon Success, new file size in bytes: " << new_file.size() << endl;
-
-                    writeStrToFile(dst_path, new_file);
-                } else
-                    cout << "Set Recon Failed, File NOT Synchronized." << endl;
-
-                cout <<"\n"<< "Total Number of Bytes Communicated: " << bytesXTot + bytesRTot << endl;
-
-            }
-            delete Bob_txt;
-            delete Alice_txt;
+            success = mySync.startSync(0, false); // dest
         }
+
+        double totalTime = (double) (clock() - start_time) / CLOCKS_PER_SEC;
+        long bytesRTot = mySync.getRecvBytesTot(0);
+        long bytesXTot = mySync.getXmitBytesTot(0);
+
+        if (!isMute) {
+            cout << "Number of Bytes Transmitted: " << bytesXTot << endl;
+            cout << "Number of Bytes Received: " << bytesRTot << endl;
+//            if (STR_RECON_PROTO == GenSync::StringSyncProtocol::SetsOfContent)
+//                cout << "Literal Data Transferred in Bytes: " << mySync.getCustomResult("Literal comm") << endl;
+            cout << "Time spent on preparation (Partition Tree): " << str_time << endl;
+
+//            if (success) {
+//
+//                string new_file = mySync.dumpString()->to_string();
+//                cout << "Set Recon Success, new file size in bytes: " << new_file.size() << endl;
+//
+//                writeStrToFile(dest_path, new_file);
+//            } else
+//                cout << "Set Recon Failed, File NOT Synchronized." << endl;
+
+            cout << "\n" << "Total Number of Bytes Communicated: " << bytesXTot + bytesRTot << endl;
+            cout << "Total Time Elapsed: " << totalTime << endl;
+
+        }
+        delete path_pt;
     }
 }
+
 
 void commandline_interface::parse_arg(std::pair<option, int> arg) {
     if (arg.first == option::UNDEFINED) return;
@@ -124,7 +106,7 @@ void commandline_interface::parse_arg(std::pair<option, int> arg) {
             SET_RECON_PROTO = GenSync::SyncProtocol::InteractiveCPISync;
             break;
         case option::help:
-            canSync = false; // we don't sync, we help.
+            help();
             break;
         case option::SetsOfC:
             STR_RECON_PROTO = GenSync::StringSyncProtocol::SetsOfContent;
@@ -140,6 +122,10 @@ void commandline_interface::parse_arg(std::pair<option, int> arg) {
             break;
         case option::lvl:
             param.lvl = arg.second;
+            break;
+        case option::role:
+            if (arg.second == 0) param.isSRC = true;
+            else param.isSRC = false;
             break;
         case option::par:
             param.par = arg.second;

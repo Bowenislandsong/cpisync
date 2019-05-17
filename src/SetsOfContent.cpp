@@ -11,7 +11,7 @@ SetsOfContent::SetsOfContent(size_t terminal_str_size, size_t levels, size_t par
     SyncID = SYNC_TYPE::SetsOfContent;
     if (levels > USHRT_MAX or levels < 2)
         throw invalid_argument("Num of Level specified should be between 2 and " + to_string(USHRT_MAX));
-
+    useExisting = false;
 //    initResources(initRes);
 }
 
@@ -33,8 +33,8 @@ vector<size_t> SetsOfContent::create_HashSet(size_t str_hash, size_t space, size
     if (str_i.second <= TermStrSize) {
         hash_set = {str_hash};
     } else { // else we partitions it
-        if (space == 0) throw invalid_argument("Space for windowing is 0 at create_HashSet");
-        if (shingle_size < 2) throw invalid_argument("Shingle size should not go under 2");
+        if (space == 0)  Logger::error_and_quit("Space for windowing is 0 at create_HashSet");
+        if (shingle_size < 2)  Logger::error_and_quit("Shingle size should not go under 2");
         for (size_t i = 0; i < str.size() - shingle_size + 1; ++i) {
             std::hash<std::string> shash;
             hash_val.push_back(shash(str.substr(i, shingle_size)) % space);
@@ -86,7 +86,7 @@ vector<size_t> SetsOfContent::create_HashSet(size_t str_hash, size_t space, size
     else if (cyc_it->second != hash_set and cyc_it->second.size() == 1 and cyc_it->second.front() == cyc_it->first)
         cyc_dict[str_hash] = hash_set;// last stage no partition, update cyc_dict
     else if (cyc_it->second != hash_set) // check if it is getting overwritten
-        throw invalid_argument("More than one answer is possible for cyc_dict");
+        Logger::error_and_quit("More than one answer is possible for cyc_dict");
 
     return hash_set;
 }
@@ -99,7 +99,7 @@ void SetsOfContent::go_through_tree() {
                        TermStrSize; // calculate a supposed string size, a string size that make sense with the parameters
 
     if (String_Size < 1)
-        throw invalid_argument(
+        Logger::error_and_quit(
                 "fxn go_through_tree - parameters do not make sense - num of par: " + to_string(Partition) +
                 ", num of lvls: " +
                 to_string(Levels) + ", Terminal String Size: " + to_string(TermStrSize) + ", Actual String Size: " +
@@ -108,7 +108,7 @@ void SetsOfContent::go_through_tree() {
     size_t shingle_size = 2 * pow(shingle_c,
                                   Levels); //(Parameter c, terminal rolling hash window size)
     if (shingle_size < 1)
-        throw invalid_argument("Consider larger the parameters for auto shingle size to be more than 1");
+        Logger::error_and_quit("Consider larger the parameters for auto shingle size to be more than 1");
     size_t space = 4 * pow(space_c, Levels); //126 for ascii content (Parameter terminal space)
     vector<size_t> cur_level;
     // fill up the tree
@@ -157,7 +157,7 @@ void SetsOfContent::prepare_querys(list<DataObject *> &otherMinusSelf) {
             cyc_query.erase(shingle.second); // if duplicated, we want the lower level
         if (dictionary.find(shingle.second) == dictionary.end()) { // if it is not found anywhere
             if (shingle.lvl < Levels - 1)
-                cyc_query.emplace(shingle.second, cycle{.head=0, .len=0, .cyc=0});
+                cyc_query.emplace(shingle.second, cycle{0, 0, 0});
             else
                 term_query.emplace(shingle.second, "");
         }
@@ -194,7 +194,7 @@ bool SetsOfContent::answer_queries(std::set<size_t> &theirQueries) {
 }
 
 void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level) {
-    if (myTree.size() <= level) throw invalid_argument("We have exceeded the levels of the tree");
+    if (myTree.size() <= level)  Logger::error_and_quit("We have exceeded the levels of the tree");
     if (hash_vector.size() > 100)
         cout << "It is advised to not exceed 100 partitions for fast backtracking at Level: " + to_string(level) +
                 " Current set size: " + to_string(hash_vector.size()) << endl;
@@ -222,8 +222,7 @@ void SetsOfContent::update_tree_shingles(vector<size_t> hash_vector, sm_i level)
             Logger::error_and_quit(
                     "Shingle occurrance is larger than USHRT_MAX, (backtracking could be infeasiable and our shingle_hash carrier is overflown)");
         myTree[level].insert(
-                shingle_hash{.first = item->first.first, .second = item->first.second, .occurr = (sm_i) item->second,
-                        .lvl = level});
+                shingle_hash{item->first.first, item->first.second, level, (sm_i) item->second});
     }
 
 }
@@ -462,7 +461,7 @@ bool SetsOfContent::shingle2hash_train(cycle &cyc_info, const std::set<shingle_h
                 stateStack.pop_back();
             }
         } else if (stateStack.size() != nxtEdgeStack.size() + 1) {
-            throw invalid_argument("state stack and nxtEdge Stack size miss match" + to_string(stateStack.size())
+            Logger::error_and_quit("state stack and nxtEdge Stack size miss match" + to_string(stateStack.size())
                                    + ":" + to_string(nxtEdgeStack.size()));
         }
 
@@ -511,7 +510,7 @@ bool SetsOfContent::shingle2hash_train(cycle &cyc_info, const std::set<shingle_h
 
 
         if (strCollect_size == cyc_info.cyc && cyc_info.cyc != 0) {
-            HeapProfilerStop();
+            //HeapProfilerStop();
             return true;
         }
     }
@@ -581,7 +580,7 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
         invalid_argument("Terminal String size could end up less than 1, limited at" + to_string(TermStrSize) +
                          ", please consider lessen the levels or number of partitions");
 
-    if (Levels == NOT_SET) throw invalid_argument("Consider set a Level value bigger than 0");
+    if (Levels == NOT_SET)  Logger::error_and_quit("Consider set a Level value bigger than 0");
 
 
     go_through_tree();
@@ -606,7 +605,6 @@ bool SetsOfContent::addStr(DataObject *str_p, vector<DataObject *> &datum, bool 
     for (auto item : getHashShingles_ZZ()) {
         setPointers.push_back(new DataObject(item));
     }
-
     datum = setPointers;
     return true;
 }
@@ -654,9 +652,11 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
                                list<DataObject *> &otherMinusSelf) {
 
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncServer");
-
-    commSync->commListen();
-    RecvSyncParam(commSync);
+    if (!useExisting) {
+        cout<<"i should not be here"<<endl;
+        commSync->commListen();
+        RecvSyncParam(commSync);
+    }
 
     long mbar = 0;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
@@ -718,8 +718,10 @@ bool SetsOfContent::SyncServer(const shared_ptr<Communicant> &commSync, list<Dat
 
 //    commSync->commSend(SYNC_SUCCESS);
 //    cout<<"Server Close"<<endl;
-    Logger::gLog(Logger::METHOD, "Server Set Of Content Done");
-    commSync->commClose();
+    if (!useExisting) {
+        Logger::gLog(Logger::METHOD, "Server Set Of Content Done");
+        commSync->commClose();
+    }
     return success;
 }
 
@@ -727,9 +729,10 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
                                list<DataObject *> &otherMinusSelf, map<string, double> &CustomResult) {
 
     Logger::gLog(Logger::METHOD, "Entering SetsOfContent::SyncClient");
-
-    commSync->commConnect();
-    SendSyncParam(commSync);
+    if (!useExisting) {
+        commSync->commConnect();
+        SendSyncParam(commSync);
+    }
 
     long mbar = 0;
     if (GenSync::SyncProtocol::IBLTSyncSetDiff == baseSyncProtocol) {
@@ -801,7 +804,8 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
     for (int i = 0; i < term_query.size(); ++i) {
         auto tmp = commSync->commRecv_string();
         if (tmp != "$") {
-            auto it = cyc_query.find(add_str_to_dictionary(tmp)); // we search from bottom up, if there are strings reached terminal size and not partitioned later, it would not need cycle tracing
+            auto it = cyc_query.find(add_str_to_dictionary(
+                    tmp)); // we search from bottom up, if there are strings reached terminal size and not partitioned later, it would not need cycle tracing
             if (it != cyc_query.end())
                 cyc_query.erase(it);
         }
@@ -817,8 +821,10 @@ bool SetsOfContent::SyncClient(const shared_ptr<Communicant> &commSync, list<Dat
 
 
 //    cout<<"Client Close"<<endl;
-    Logger::gLog(Logger::METHOD, "Client Set Of Content Done");
-    commSync->commClose();
+    if (!useExisting) {
+        Logger::gLog(Logger::METHOD, "Client Set Of Content Done");
+        commSync->commClose();
+    }
     return success;
 }
 

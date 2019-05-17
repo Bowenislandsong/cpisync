@@ -24,6 +24,7 @@
 #include "ProcessData.h"
 #include <thread>
 
+
 #include "ForkHandle.h" // tobe removed
 
 using std::vector;
@@ -205,6 +206,14 @@ public:
     SetsOfContent(size_t terminal_str_size, size_t levels, size_t partition, GenSync::SyncProtocol base_set_proto,
                   size_t shingle_size = 2, size_t ter_space = 2);
 
+    SetsOfContent(GenSync::SyncProtocol base_set_proto, size_t levels, size_t partition, size_t terminal_str_size = 10)
+            : TermStrSize(terminal_str_size), Levels(levels), Partition(partition),
+              baseSyncProtocol(base_set_proto) {
+        useExisting = true;
+        shingle_c = 2;
+        space_c = 2;
+    };
+
     ~SetsOfContent();
 
     string retriveString();
@@ -268,7 +277,7 @@ private:
      */
     size_t add_str_to_dictionary(const string &str) {
         size_t
-        hash = str_to_hash(str);
+                hash = str_to_hash(str);
         dictionary.emplace(hash, make_pair(str, make_pair(0, 0)));
 //        if (!it.second and str != it.first->second.first and
 //            str != myString.substr(it.first->second.second.first, it.first->second.second.second))
@@ -278,7 +287,7 @@ private:
 
     size_t add_i_to_dictionary(size_t start_i, size_t len) {
         size_t
-        hash = str_to_hash(myString.substr(start_i, len));
+                hash = str_to_hash(myString.substr(start_i, len));
         dictionary.emplace(hash, make_pair("", make_pair(start_i, len)));
 //        if (!it.second and myString.substr(it.first->second.second.first, it.first->second.second.second) != myString.substr(start_i, len) and
 //            it.first->second.first != myString.substr(start_i, len))
@@ -367,7 +376,7 @@ private:
 
     size_t getNumofTreeNodes() {
         size_t
-        num_treenodes = 0;
+                num_treenodes = 0;
         for (auto lvl : myTree) num_treenodes += lvl.size();
         return num_treenodes;
     }

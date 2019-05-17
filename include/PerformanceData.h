@@ -13,7 +13,6 @@
 #include <numeric>
 #include <thread>
 
-
 static multiset<size_t> ContentDeptPartition(vector<size_t> hash_val, size_t win_size) {
 
     vector<size_t> mins; // min positions
@@ -70,6 +69,9 @@ public:
                        vector<int> str_sizeRange, vector<int> levelRange, vector<int> partitionRange,
                        vector<int> TershingleLen, vector<int> space, int confidence, string (*stringInput)(int, string),
                        string src, int instance, int mode);
+
+    void setsofcontentREPO(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange, int confidence,
+                           string repo_dir, int instance);
 
     void strataEst3D(pair<size_t, size_t> set_sizeRange, int confidence);
 

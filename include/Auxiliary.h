@@ -35,6 +35,7 @@
 #include <dirent.h>
 #include <stdio.h>
 
+
 // some standard names
 using std::cout;
 using std::clog;
@@ -84,7 +85,7 @@ inline string VecToStr(vector<byte> data) {
 inline string ZZtoStr(const ZZ &zz) {
     string str;
     str.resize(NumBytes(zz), 0);
-    BytesFromZZ((uint8_t * ) & str[0], zz, str.size());
+    BytesFromZZ((uint8_t *) &str[0], zz, str.size());
     return str;
 }
 
@@ -101,7 +102,7 @@ inline ZZ TtoZZ(T val) {
 template<typename T>
 inline T ZZtoT(const ZZ &zz, const T) {
     T val;
-    BytesFromZZ((uint8_t * ) & val, zz, sizeof(T));
+    BytesFromZZ((uint8_t *) &val, zz, sizeof(T));
     return val;
 }
 
@@ -493,7 +494,7 @@ inline string subprocess_commandline(const char *command) {
     // borrowed from https://stackoverflow.com/questions/478898/how-do-i-execute-a-command-and-get-output-of-command-within-c-using-posix
     char buffer[128];
     string result = "";
-    FILE *pipe = popen(command, "r");
+    FILE * pipe = popen(command, "r");
     if (!pipe) Logger::error("popen() failed!");
     try {
         while (fgets(buffer, sizeof buffer, pipe) != NULL) {
@@ -538,7 +539,7 @@ inline rsync_stats getRsyncStats(string origin, string target, bool full_report 
 // only works for one type of rsync outputs
     rsync_stats stats;
 
-    string res = subprocess_commandline(("rsync --checksum --no-whole-file --progress --stats " + origin + " " +
+    string res = subprocess_commandline(("rsync -r --checksum --no-whole-file --progress --stats " + origin + " " +
                                          target).c_str());  // -a archive -z compress -v for verbose
     try {
         stats.time = stod(extractStringIn(res, "File list generation time: ", "seconds"));
@@ -546,7 +547,7 @@ inline rsync_stats getRsyncStats(string origin, string target, bool full_report 
         stats.xmit = stoll(extractStringIn(res, "Total bytes sent: ", "\n"));
         stats.recv = stoll(extractStringIn(res, "Total bytes received: ", "\n"));
     } catch (const std::exception &exc) {
-        stats = rsync_stats{.time=0, .xmit=0, .recv=0};
+        stats = {0, 0, 0};
     }
     if (full_report)
         cout << res << endl;
@@ -573,7 +574,7 @@ inline string scanTxtFromFile(string dir, int len) {
         }
         myfile.close();
     } else {
-        throw invalid_argument("Directory " + dir + " does not exist.-");
+        Logger::error_and_quit("Directory: " + dir + " does not exist.");
     }
     return txt.str();
 }
@@ -596,16 +597,16 @@ inline bool isPathExist(const string &path) {
  */
 inline bool isFile(const string &path) {
     struct stat buf;
-    int a = stat(path.c_str(), &buf);
     if (stat(path.c_str(), &buf) == 0) {
         if (buf.st_mode & S_IFREG)
             return true;
         else if (buf.st_mode & S_IFDIR)
             return false;
         else
-            throw invalid_argument("Given path: " + path + " exist, but it is not a file nor directory");
+            Logger::error_and_quit("Given path: " + path + " exist, but it is not a file nor directory");
     }
-    throw invalid_argument("Given path: " + path + " does not exist.");
+    Logger::error_and_quit("Given path: " + path + " does not exist.");
+    return false;
 }
 
 inline size_t getFileSize(const string &path) {
@@ -617,9 +618,9 @@ inline size_t getFileSize(const string &path) {
 }
 
 /**
- * count the number of txt file avaliable in a folder
+ * Get names of file available in a folder
  */
-inline vector<string> getFileList(string dir_path, string file_type = ".txt") {
+inline vector<string> getFileList(string dir_path, string file_type = ".", bool relative = false) {
     vector<string> f_lst;
     if (isPathExist(dir_path) and not isFile(dir_path)) {
         DIR *dir;
@@ -627,8 +628,32 @@ inline vector<string> getFileList(string dir_path, string file_type = ".txt") {
         if ((dir = opendir(dir_path.c_str())) != NULL) {
             while ((dirp = readdir(dir)) != NULL) {
                 string f_name = string(dirp->d_name);
-                if (f_name.find(file_type) != std::string::npos)
-                    f_lst.push_back(f_name);
+                if (f_name.find(file_type) != std::string::npos and f_name != "." and f_name != "..") {
+                  if(!relative)  f_lst.push_back(dir_path + "/" + f_name);
+                  else f_lst.push_back(f_name);
+                }
+            }
+            closedir(dir);
+        } else {
+            throw invalid_argument("Failed at opening directory: " + dir_path);
+        }
+    }
+    return f_lst;
+}
+
+/**
+ * Get names of folder available in a folder
+ */
+inline vector<string> getFolderList(string dir_path) {
+    vector<string> f_lst;
+    if (!isFile(dir_path)) {
+        DIR *dir;
+        struct dirent *dirp;
+        if ((dir = opendir(dir_path.c_str())) != NULL) {
+            while ((dirp = readdir(dir)) != NULL) {
+                string f_name = string(dirp->d_name);
+                if(!isFile(dir_path+"/"+f_name) and f_name != "." and f_name != "..")
+                    f_lst.push_back(dir_path+"/"+f_name);
             }
             closedir(dir);
         } else {
@@ -661,16 +686,46 @@ inline string randTxt(int len, string loc) {
         vector<string> file_lst = getFileList(loc);
 //        std::random_shuffle ( file_lst.begin(), file_lst.end() );
         while (len > 0) {
-            string full_path = loc + file_lst[randLenBetween(0, file_lst.size() - 1)];
+            string full_path = file_lst[randLenBetween(0, file_lst.size() - 1)];
             string content = randTxt(len, full_path);
             full_txt += content;
             len -= content.size();
         }
         return full_txt;
     }
-
-
 }
+
+
+/**
+ * Walk recursively through a directory
+ * @param dir Absolute directory path
+ * @return All path of files
+ */
+inline list<string> walkabsDir(string dir) {
+    if (isFile(dir))  Logger::error_and_quit("Input path is a file."); // No Error Means it exist and is dir
+    list<string> res;
+    for (string file_name : getFileList(dir,".")){ // get all files
+        res.emplace_back(file_name);
+    }
+    for(string folder_name : getFolderList(dir)){
+        res.merge(walkabsDir(folder_name));
+    }
+    return res;
+}
+
+inline list<string> walkRelDir(string dir, int reduceLen = -1) {
+    if (isFile(dir))  Logger::error_and_quit("Input path is a file."); // No Error Means it exist and is dir
+    list<string> res;
+    if (reduceLen<0)reduceLen+=dir.size()+2;
+    for (string file_name : getFileList(dir,".")){ // get all files
+        res.emplace_back((file_name.substr(reduceLen)));
+    }
+    for(string folder_name : getFolderList(dir)){
+        res.merge(walkRelDir(folder_name,reduceLen));
+    }
+    return res;
+}
+
 
 inline string randSampleTxt(int len) {
     int MAX_LEN = (int) 2e6; // the sample file is 1e5 characters long
@@ -772,6 +827,34 @@ inline string randStringEditBurst(string str, int upperE, string loc) {
         str = EditBurst(str, burst, 1, loc);
     }
     return str;
+}
+
+/**
+ * Randome ly choose a file to change and copy the rest
+ * @param len
+ * @param dir
+ */
+inline void randInFolderChange(int len, int file_cap, string dir){
+    auto all_files = walkabsDir(dir);
+    map<int,int> f_e_vec; // file id : number of changes
+    while(len > 0) {
+        int n_changes = min(randLenBetween(0, len),file_cap);
+        int f_id = randLenBetween(0, all_files.size() - 1);
+        if(!f_e_vec.emplace(f_id,n_changes).second)
+            f_e_vec[f_id] += n_changes;
+        len-=n_changes;
+    }
+    auto f = all_files.begin();
+    for (int i = 0; i < all_files.size(); ++i) {
+        if((f_e_vec.end() != f_e_vec.find(i))){ // we change this file
+            string a = *f;
+            string full_txt = scanTxtFromFile((*f),INT_MAX);
+            full_txt = randStringEditBurst(full_txt,f_e_vec[i],*f);
+            writeStrToFile((*f),full_txt);
+        }
+
+        f++;
+    }
 }
 
 /**

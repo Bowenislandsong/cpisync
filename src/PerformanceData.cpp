@@ -288,15 +288,15 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
 
 
-                                    rsync_stats r_res{.recv = 0, .xmit=0, .time =0};
+                                    rsync_stats r_res{0, 0, 0};
 
                                     if (mode != 2 and mode != 3) {
                                         // rsync recon
                                         writeStrToFile("Alice" + to_string(instance) + ".txt", Alicetxt->to_string());
                                         writeStrToFile("Bob" + to_string(instance) + ".txt", Bobtxt->to_string());
 
-                                        auto r_res = getRsyncStats("Alice" + to_string(instance) + ".txt",
-                                                                   "Bob" + to_string(instance) + ".txt");
+                                        r_res = getRsyncStats("Alice" + to_string(instance) + ".txt",
+                                                              "Bob" + to_string(instance) + ".txt");
                                     }
 
 
@@ -362,6 +362,168 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
                 if (mode == 1 or mode == 4) break;
             }
+        }
+    }
+
+}
+
+
+void PerformanceData::setsofcontentREPO(GenSync::SyncProtocol setReconProto, vector<int> edit_distRange, int confidence,
+                                        string repo_dir, int instance) {
+
+
+    string protoName, str_type;
+    if (GenSync::SyncProtocol::IBLTSyncSetDiff == setReconProto) protoName = "IBLTSyncSetDiff";
+    if (GenSync::SyncProtocol::InteractiveCPISync == setReconProto) protoName = "InteractiveCPISync";
+    if (GenSync::SyncProtocol::CPISync == setReconProto) protoName = "CPISync";
+
+
+    string last_passed_before_exception;
+    vector<string> catag{"", "", "Total Comm (bytes)", "Literal comm", "Partition Sym Diff",
+                         "Total Num Partitions", "Time Tree(s)",
+                         "Time Recon(s)", "Time Backtrack (included in Time Recon) (s)", "Set Recon Success",
+                         "Str Recon Success", "Tree Heap SIze", "High Water Heap", "Rsync Comm"};
+    PlotRegister plot;
+
+    catag[0] = "REPO Name";
+    catag[1] = "Edit Dist ";
+    plot.create("Sets of Content " + protoName + " REPO", catag);
+
+
+    vector<string> report_vec;
+    for (string repo_name : getFolderList(repo_dir)) {
+        for (int edit_dist:edit_distRange) {
+            for (int con = 0; con < confidence; ++con) {
+
+                repo_name = repo_name.substr(repo_name.rfind("/"));
+                // cp folder
+                string orgfolder = repo_dir + repo_name;
+                string edfolder = repo_dir + "/changed";
+                subprocess_commandline(
+                        ("rsync -r " + orgfolder + " " + edfolder).c_str());
+                // edit folder
+                randInFolderChange(edit_dist, 300, edfolder);
+                // SCSync every file in folder
+                auto org = walkabsDir(orgfolder);
+                auto ed = walkabsDir(edfolder);
+                auto org_files = vector<string>{org.begin(), org.end()};
+                auto ed_files = vector<string>{ed.begin(), ed.end()};
+                sort(org_files.begin(), org_files.end());
+                sort(ed_files.begin(), ed_files.end());
+                if (org_files.size() != ed_files.size()) invalid_argument("folders are different");
+                long comm_cost = 0;
+                double literal_cost = 0;
+                for (int i = 0; i < org_files.size(); ++i) {
+                    // get total time and comm
+                    // rsync folder and get comm and time ...
+
+                    try {
+cout<<org_files[i]<<endl;
+                        DataObject *Alicetxt = new DataObject(scanTxtFromFile( org_files[i],INT_MAX));
+
+                        last_passed_before_exception = "Alice Create String"; // success Tag
+                        size_t lvl = (size_t)floor(log10(Alicetxt->to_string().size()));
+
+                        Resources initRes;
+//                    initResources(initRes);
+
+                        GenSync Alice = GenSync::Builder().
+                                setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
+                                setProtocol(setReconProto).
+                                setComm(GenSync::SyncComm::socket).
+                                setTerminalStrSize(10).
+                                setNumPartitions(4).
+                                setShingleLen(2).
+                                setSpace(8).
+                                setlvl(lvl).
+                                setPort(8005 + instance).
+                                build();
+
+                        last_passed_before_exception = "Alice GenSync"; // success Tag
+
+
+
+
+                        clock_t strStart = clock();
+                        Alice.addStr(Alicetxt, false);
+//                        auto tree_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
+//                    resourceReport(initRes);
+
+                        last_passed_before_exception = "Alice Add String"; // success Tag
+
+                        GenSync Bob = GenSync::Builder().
+                                setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
+                                setProtocol(setReconProto).
+                                setComm(GenSync::SyncComm::socket).
+                                setTerminalStrSize(10).
+                                setNumPartitions(4).
+                                setShingleLen(2).
+                                setSpace(8).
+                                setlvl(lvl).
+                                setPort(8005 + instance).
+                                build();
+
+                        last_passed_before_exception = "Bob GenSync"; // success Tag
+
+
+
+                        DataObject *Bobtxt = new DataObject(scanTxtFromFile( org_files[i],INT_MAX));
+
+                        last_passed_before_exception = "Bob Create String"; // success Tag
+
+
+
+                        Bob.addStr(Bobtxt, false);
+
+                        last_passed_before_exception = "Bob Add String"; // success Tag
+
+                        forkHandleReport report = forkHandle(Alice, Bob, false);
+
+                        last_passed_before_exception = "String Recon"; // success Tag
+
+                        bool success_StrRecon = (Alice.dumpString()->to_string() == Bobtxt->to_string());
+
+
+                        comm_cost += report.bytesXTot + report.bytesRTot;
+
+                        literal_cost += Alice.getCustomResult("Literal comm");
+
+                        delete Alicetxt;
+                        delete Bobtxt;
+                    } catch (const std::exception &exc) {
+                        cout << "We failed after " << last_passed_before_exception << endl;
+                        std::cerr << exc.what() << endl;
+                        report_vec = {to_string(randTxt(INT_MAX, org_files[i]).size()),
+                                      to_string(randTxt(INT_MAX, org_files[i]).size()), to_string(0), to_string(0),
+                                      to_string(0),
+                                      to_string(0), to_string(0), to_string(0), to_string(0), to_string(0),
+                                      to_string(0), to_string(0), to_string(0), to_string(0)};
+
+                    }
+                }
+                auto r_res = getRsyncStats(orgfolder,
+                                           edfolder);
+
+
+                report_vec = {repo_name, to_string(edit_dist),
+                              to_string(comm_cost),
+                              to_string(literal_cost),
+                              to_string(0),
+                              to_string(0),
+                              to_string(0),
+                              to_string(0),
+                              to_string(0),
+                              to_string(0),
+                              to_string(0),
+                              to_string(0),
+                              to_string(0),
+                              to_string(r_res.xmit + r_res.recv)};
+
+                plot.add(report_vec);
+
+                plot.update();
+            }
+
         }
     }
 

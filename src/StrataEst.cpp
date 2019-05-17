@@ -70,7 +70,7 @@ size_t StrataEst::estimate() {
             return count;
         }
     }
-    throw invalid_argument("Set diff inestimable with current Strata "
+    Logger::error_and_quit("Set diff inestimable with current Strata "
                            "Estimation setting which could predict up to"
                            + to_string(pow(2, numStrata)) + "differences");
 }

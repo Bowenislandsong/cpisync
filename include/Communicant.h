@@ -231,7 +231,7 @@ public:
      * @param strata vector of IBLTs
      * @param sync sync Should be true iff EstablishModSend/Recv called and/or the receiver knows the number of IBLTs
      */
-    void commSend(const vector<IBLT>& strata, bool sync);
+    void commSend(const vector<IBLT> &strata, bool sync);
 
     /**
      * Receives up to MAX_BUF_SIZE characters from the socket.
@@ -318,7 +318,7 @@ public:
      * @param size number of iblt in the vector
      * @return vector<IBLT> as Strata
      */
-    StrataEst commRecv_Strata(size_t size=NOT_SET);
+    StrataEst commRecv_Strata(size_t size = NOT_SET);
 
     // Informational
 
@@ -356,6 +356,14 @@ public:
      * @return The count of CPU seconds when this object was created.
      */
     clock_t getTotalTime();
+
+    /**
+     * Add bytes into comuncation quote (if we just want a quote)
+     * @param numBytes
+     */
+    void addRecvBytesQuote(long numBytes) {
+        addRecvBytes(numBytes - sizeof(long));
+    };
 
     /**
      * @return A name for this communicant.
