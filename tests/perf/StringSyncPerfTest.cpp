@@ -119,13 +119,13 @@ void KshingleSyncPerf::setsofcontent3D() {
 
 
 
-    vector<int> numError = {1, 2, 3, 4, 5, 6, 7, 8};
+//    vector<int> numError = {1, 2, 3, 4, 5, 6, 7, 8};
 //    window = {2};
 //    space = {4};
 
 
 
-    test.cascadingMissmatch(numError, window, space);
+//    test.cascadingMissmatch(numError, window, space);
 
 }
 

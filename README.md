@@ -5,6 +5,22 @@ Current Version - 2.0.3
 
 ------------------------------
 
+## Reconciliation Protocols:
+
+### Set Symmetric Difference Estimator
+    * Strata Estimator
+
+### Set Reconciliation:
+    * CPISync
+    * InterCPISync
+    * IBLT
+
+### String Reconciliation:
+    * Kshingling
+    * Uniquely Decodable Shingles
+    * Recursive Content-Dependent Shingling
+
+------------------------------
 
 ## References:
 
@@ -66,6 +82,16 @@ This project has the following dependencies:
    * cppunit - For testing
    * cmake - For building
    * Gperftool - For heap profiling
+
+## Docker:
+
+This project is set up on Docker. To run:
+    * $ docker login
+    * $ cd cpisync
+    * $ docker build -t cpisync .
+    * $ docker run -i -t cpisync bash
+
+
 
 ------------------------------
 

@@ -42,9 +42,7 @@ struct Resources{
 // use PERFTOOLS_VERBOSE=-4 at commandline to get rid of gperf tool printing
 
 using namespace std;
-
-
-
+#if __APPLE__
 inline size_t getHeapSize() {
     size_t mem_size = 0;
     char *tmp = GetHeapProfile();
@@ -98,7 +96,7 @@ inline void resourceReport(Resources& res){
 
  // VM currently Used by my process
 
-#if __APPLE__
+
 inline void printMemUsage() {
     struct task_basic_info t_info;
     mach_msg_type_number_t t_info_count = TASK_BASIC_INFO_COUNT;
