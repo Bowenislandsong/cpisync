@@ -86,10 +86,10 @@ This project has the following dependencies:
 ## Docker:
 
 This project is set up on Docker. To run:
-    $ docker login
-    $ cd cpisync
-    $ docker build -t cpisync .
-    $ docker run -i -t cpisync bash
+   * $ docker login
+   * $ cd cpisync
+   * $ docker build -t cpisync .
+   * $ docker run -i -t cpisync bash
 
 
 
