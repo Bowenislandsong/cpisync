@@ -89,7 +89,7 @@ This project is set up on Docker. To run:
    * $ docker login
    * $ cd cpisync
    * $ docker build -t cpisync .
-   * $ docker run -i -t cpisync bash
+   * $ docker run -v $(pwd):/cpisync --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -i -t cpisync bash
 
 
 

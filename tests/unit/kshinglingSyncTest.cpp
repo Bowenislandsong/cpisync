@@ -48,7 +48,8 @@ void kshinglingSyncTest::testAll() {
             setShingleLen(shingle_len).
             setPort(8001).
             build();
-    Alice.addStr(new DataObject(Alicetxt), false);
+    auto at = new DataObject(Alicetxt);
+    Alice.addStr(at, false);
 
 
     GenSync Bob = GenSync::Builder().
@@ -58,7 +59,8 @@ void kshinglingSyncTest::testAll() {
             setShingleLen(shingle_len).
             setPort(8001).
             build();
-    Bob.addStr(new DataObject(Bobtxt), true);
+            auto bt = new DataObject(Bobtxt);
+    Bob.addStr(bt, true);
 
     forkHandleReport report = forkHandle(Alice, Bob, false);
 
@@ -87,6 +89,8 @@ if(recoveredAlice == Alicetxt)
 //    cout << "Btyes: "<< report.bytes<<endl;
 //    if(recoveredAlice != Bobtxt) cout<< "enable starting recon in GenSync"<<endl;
     CPPUNIT_ASSERT(recoveredAlice == Bobtxt);
+    delete at;
+    delete bt;
 //    CPPUNIT_ASSERT(report.success);
 
 }
