@@ -216,7 +216,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
 
 
                                     Resources initRes;
-                                    initResources(initRes);
+                                    //initResources(initRes);
 
                                     GenSync Alice = GenSync::Builder().
                                             setStringProto(GenSync::StringSyncProtocol::SetsOfContent).
@@ -238,7 +238,7 @@ void PerformanceData::setsofcontent(GenSync::SyncProtocol setReconProto, vector<
                                     clock_t strStart = clock();
                                     Alice.addStr(Alicetxt, false);
                                     auto tree_time = (double) (clock() - strStart) / CLOCKS_PER_SEC;
-                                    resourceReport(initRes);
+                                    //resourceReport(initRes);
 
                                     last_passed_before_exception = "Alice Add String"; // success Tag
 
@@ -541,7 +541,7 @@ void PerformanceData::strataEst3D(pair<size_t, size_t> set_sizeRange, int confid
         (set_size < set_sizeRange.first + (set_sizeRange.second - set_sizeRange.first) / 2) ? confidence
                                                                                             : confidence = 5;
         cout << "Current Set Size:" + to_string(set_size) << endl;
-        printMemUsage();
+        // printMemUsage();
         int top_set_diff = set_size / 10;
         int set_diffinterval = floor((top_set_diff) / tesPts);
 

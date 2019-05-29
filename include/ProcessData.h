@@ -19,13 +19,8 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-#elif __linux__ // TODO: Implement Libraries for linux
-    #include "sys/types.h"
-    #include "sys/sysinfo.h"
-    #include "stdlib.h"
-    #include "stdio.h"
 
-#endif
+
 
 #include <cstring>
 #include <string>
@@ -244,7 +239,7 @@ inline bool virtualMemMonitor(size_t & virtualMem=NOT_SET, const int MaxMem = 2e
 //    sysctl(mib, 2, &physical_memory, &length, NULL, 0);
 //    cout << "Total RAM Available: "+to_string(physical_memory)+" length:"+to_string(length) <<endl;
 //}
-
+#endif
 #endif //CPISYNCLIB_PROCESSDATA_H
 
 //Process Resident size:0.293176 virtual size:0.981849

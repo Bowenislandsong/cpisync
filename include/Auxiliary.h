@@ -53,6 +53,16 @@ using std::invalid_argument;
 using std::runtime_error;
 // FUNCTIONS
 
+
+
+static size_t NOT_SET = 0; // not set parameters are not used
+
+struct Resources{
+    struct timespec start_time, finish_time;
+    double TimeElapsed;
+    size_t VmemUsed;
+};
+
 /**
  * Converts a string into a vector of bytes
  * @param data The string to be converted
@@ -930,6 +940,8 @@ inline T getMedian(vector<T> vec) {
     if (vec.size() % 2 == 0) return vec[vec.size() / 2];
     else return (vec[floor(vec.size() / 2)] + vec[ceil(vec.size() / 2)]) / 2;
 };
+
+
 
 #endif    /* AUX_H */
 

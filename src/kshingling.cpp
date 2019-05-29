@@ -10,7 +10,7 @@
 
 K_Shingle::K_Shingle(const size_t shingle_size, const char stop_word)
         : k(shingle_size), stopword(stop_word) {
-    virtualMemMonitor(initVM);
+    //virtualMemMonitor(initVM);
 
 }
 

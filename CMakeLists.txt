@@ -7,7 +7,7 @@ if (APPLE)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEFAULT_LOGLEVEL=TEST -lprofiler -ltcmalloc")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEFAULT_LOGLEVEL=TEST -lprofiler -ltcmalloc -O3") # -O3 makes it impossible to debug
 else ()
-    set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST -lprofiler -ltcmalloc")
+    set(CMAKE_CXX_FLAGS "-DDEFAULT_LOGLEVEL=TEST")
 endif (APPLE)
 
 #set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -Wall")
@@ -89,7 +89,13 @@ macro(add_group_test dir name)
 
     FOREACH (test ${testPaths})
         GET_FILENAME_COMPONENT(testName ${test} NAME_WE)
-        TARGET_LINK_LIBRARIES(${name} cpisynclib ntl cppunit gmp pthread tcmalloc)
+
+        if (APPLE)
+            TARGET_LINK_LIBRARIES(${name} cpisynclib ntl cppunit gmp pthread tcmalloc)
+        else ()
+            TARGET_LINK_LIBRARIES(${name} cpisynclib ntl cppunit gmp)
+        endif(APPLE)
+
         ADD_TEST(${testName} ${name})
     ENDFOREACH (test)
 endmacro()

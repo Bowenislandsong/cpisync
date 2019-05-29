@@ -147,7 +147,7 @@ void SetsOfContentTest::testAll() {
     auto report = forkHandle(Alice, Bob, false);
     double recon_time = (double) (clock() - recon_t) / CLOCKS_PER_SEC;
 //    HeapProfilerDump("BO");
-    resourceReport(initRes);
+    //resourceReport(initRes);
     string finally = Alice.dumpString()->to_string();
 
 
