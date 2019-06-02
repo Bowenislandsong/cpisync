@@ -9,7 +9,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(CPITest);
 void CPITest::CPISyncTest() {
     long bits = sizeof(randZZ())*8;
     long Diff = 25;
-    long Tot = 2000;
+    long Tot = 200;
 
     vector <ZZ> S_A, S_B;
 

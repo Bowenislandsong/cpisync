@@ -20,6 +20,17 @@ using std::stringstream;
 using std::pair;
 using namespace NTL;
 
+/**
+ * is shingle part of a cycle
+ * is shingle visited
+ * shingle number
+ */
+struct cvi{
+    bool isVisited, isCycle;
+    size_t idx;
+};
+
+
 
 class UniqueDecode {
 public:
@@ -48,7 +59,7 @@ public:
 protected:
     void UDonline(const string& str, std::map<string,std::set<size_t>>& merg_idx);
 
-    void mergeNredo(const string cur,std::map<string, size_t>& order_reference,vector<string>& shingle_history, size_t& j, AdjMtx& adjMatrix,map<string, pair<bool, bool>>& isCycVis);
+    void mergeNredo(const string cur,vector<string>& shingle_history, size_t& j, AdjMtx& adjMatrix,map<string, cvi>& isCycVis);
 
     int longgestNxtShingle(int str_i, vector<ZZ> shingle_set, string str);
 
