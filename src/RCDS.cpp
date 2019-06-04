@@ -154,8 +154,8 @@ bool RCDS::SyncClient(const shared_ptr<Communicant> &commSync, list<DataObject *
                 int par = 4;
                 string syncContent = stringSyncClient(commSync, FolderName + f_name, levels, par);
                 if (!Quota_mode) writeStrToFile(FolderName + f_name, syncContent);
-cout<<"Bytes: "<<commSync->getRecvBytesTot()+commSync->getXmitBytesTot()<<endl;
-cout<<"Session Bytes:"<<commSync->getRecvBytes()+commSync->getXmitBytes()<<endl;
+                cout<<"Bytes: "<<commSync->getRecvBytesTot()+commSync->getXmitBytesTot()<<endl;
+                cout<<"Session Bytes:"<<commSync->getRecvBytes()+commSync->getXmitBytes()<<endl;
             } else Logger::error_and_quit("Unkonwn Sync Mode, should never happen in RCDS");
 
         }

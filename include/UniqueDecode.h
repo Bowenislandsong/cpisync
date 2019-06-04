@@ -20,6 +20,17 @@ using std::stringstream;
 using std::pair;
 using namespace NTL;
 
+/**
+ * is shingle part of a cycle
+ * is shingle visited
+ * shingle number
+ */
+struct cvi{
+    bool isVisited, isCycle;
+    size_t idx;
+};
+
+
 
 class UniqueDecode {
 public:
@@ -27,7 +38,7 @@ public:
      * Construct a K_Shingle set object with k as each shingle size
      * @param k fixing shingle size to be k
      */
-    UniqueDecode(const size_t shingle_len, const char stop_word);
+    UniqueDecode(const int shingle_len, const char stop_word = '$');
 
     // Default deconstructor
     ~UniqueDecode();
@@ -48,7 +59,7 @@ public:
 protected:
     void UDonline(const string& str, std::map<string,std::set<size_t>>& merg_idx);
 
-    void mergeNredo(const string cur,std::map<string, size_t>& order_reference,vector<string>& shingle_history, size_t& j, AdjMtx& adjMatrix,map<string, pair<bool, bool>>& isCycVis);
+    void mergeNredo(const string cur,vector<string>& shingle_history, size_t& j, AdjMtx& adjMatrix, map<string,cvi>& isCycVis);
 
     int longgestNxtShingle(int str_i, vector<ZZ> shingle_set, string str);
 
@@ -62,7 +73,7 @@ protected:
 
 private:
     char stopWord;
-    size_t shingleLen;
+    int shingleLen;
     string origStr;
     map<string,std::set<size_t>> MergIndex; //str is the second shingle to be merged with index of a shingle (first shingle) which has index value as the order of shingle set
 };

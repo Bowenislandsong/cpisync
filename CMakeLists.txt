@@ -89,7 +89,7 @@ macro(add_group_test dir name)
 
     FOREACH (test ${testPaths})
         GET_FILENAME_COMPONENT(testName ${test} NAME_WE)
-        TARGET_LINK_LIBRARIES(${name} cpisynclib ntl cppunit gmp pthread tcmalloc)
+        TARGET_LINK_LIBRARIES(${name} cpisynclib ntl cppunit gmp tcmalloc)
         ADD_TEST(${testName} ${name})
     ENDFOREACH (test)
 endmacro()
