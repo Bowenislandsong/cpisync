@@ -50,13 +50,21 @@ int main(int argc, char *argv[]) {
 
     const int METHOD = 0; // index of method to sync
 
+    auto printElems = [](GenSync &genSync){
+        // Print out local elements.
+        cout << "print local elements: ";
+        for (string dop : genSync.dumpElements())
+			cout<< dop << " ";
+        cout << endl;
+    };
+
     GenSync genSync = GenSync::Builder().
 			setProtocol(prot).
 			setComm(GenSync::SyncComm::socket).
 			setPort(PORT).
 			setErr(ERR).
 			setMbar(M_BAR).
-			setBits((prot == GenSync::SyncProtocol::IBLTSync || prot == GenSync::SyncProtocol::OneWayIBLTSync ? BITS : BITS * CHAR_BIT)).
+			setBits((prot == GenSync::SyncProtocol::IBLTSync || prot == GenSync::SyncProtocol::OneWayIBLTSync ? BITS : BITS * sizeof(char))).
 			setNumPartitions(PARTS).
 			setExpNumElems(EXP_ELTS).
             build();
@@ -67,16 +75,20 @@ int main(int argc, char *argv[]) {
 
     if(strcmp(argv[1], "client")==0) {
         genSync.addElem(make_shared<DataObject>('d'));
+        printElems(genSync);
 
         cout << "listening on port " << PORT << "..." << endl;
 		genSync.clientSyncBegin(0);
+        printElems(genSync);
         cout << "sync succeeded." << endl;
 
     } else {
         genSync.addElem(make_shared<DataObject>('e'));
+        printElems(genSync);
 
         cout << "connecting on port " << PORT << "..." << endl;
 		genSync.serverSyncBegin(0);
+        printElems(genSync);
         cout << "sync succeeded." << endl;
     }
 }

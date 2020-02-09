@@ -146,7 +146,7 @@ bool GenSync::clearData(){
 const list<string> GenSync::dumpElements() {
 	list<string> dump;
 	for(auto itr : myData){
-		dump.push_back(itr->print());
+		dump.push_back(itr->to_string());
 	}
 	return dump;
 }
